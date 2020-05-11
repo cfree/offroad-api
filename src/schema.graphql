@@ -8,6 +8,13 @@ type SuccessTime {
 }
 
 type Mutation {
+  register(
+    firstName: String
+    lastName: String
+    email: String!
+    confirmEmail: String!
+    source: String!
+  ): SuccessMessage
   signUp(
     email: String!
     password: String!
@@ -16,8 +23,10 @@ type Mutation {
     username: String!
     gender: Gender!
     birthdate: DateTime!
-  ): User!
-  login(username: String!, password: String!): User!
+    token: String!
+  ): SuccessMessage!
+  unlockNewAccount(username: String!): SuccessMessage!
+  login(username: String!, password: String!): SuccessMessage!
   logout: SuccessMessage
   requestReset(email: String!): SuccessMessage
   resetPassword(
@@ -67,6 +76,7 @@ type Query {
     orderBy: [String]
   ): [User]!
   user(username: String): User!
+  getRegistration(token: String): User
   getDuesLastReceived(username: String!): SuccessTime
   getOfficer(office: Office!): User!
   getMembers(accountTypes: [AccountType]): [User]!
@@ -90,11 +100,27 @@ type Query {
   getElection(id: ID!): Election!
   getUserVote(ballot: ID): [Vote]!
   getElections(startTime: DateTime, endTime: DateTime): [Election]!
+  getMembershipLogItems(
+    username: String!
+    messageCode: MembershipMessageCode!
+  ): [MembershipLogItem]!
   # adminStats: AdminStats
   # activeMembersPerYear: MemberCount
   # guestsWithLockedAccounts: [User]!
   # guestsAskedToJoin: [User]!
   # guestsEligibleForMembership: [User]!
+}
+
+type Registration {
+  id: ID
+  createdAt: DateTime!
+  # ipAddress: String!
+  firstName: String
+  lastName: String
+  email: String!
+  source: String!
+  token: String!
+  tokenExpiry: DateTime!
 }
 
 type User {
@@ -164,7 +190,7 @@ type Event {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   trail: Trail
   bandaids: [Bandaid]
@@ -245,7 +271,6 @@ input UserUpdateInput {
   preferencesId: ID
   emergencyContactName: String!
   emergencyContactPhone: String!
-  showPhoneNumber: Boolean!
 }
 
 input UserAdminUpdateInput {
@@ -259,12 +284,13 @@ input UserAdminUpdateInput {
 }
 
 input UpsertEventInput {
+  type: String!
   title: String!
   description: String
   startTime: DateTime!
   endTime: DateTime!
   address: String
-  trailDifficulty: TrailDifficulty!
+  trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
   rallyTime: DateTime
@@ -345,8 +371,8 @@ input TrailInput {
 
 input VehicleInput {
   year: Int
-  make: String!
-  model: String!
+  make: String
+  model: String
   trim: String
   name: String
   outfitLevel: OutfitLevel

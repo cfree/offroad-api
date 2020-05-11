@@ -1,5 +1,10 @@
 const { addFragmentToInfo } = require("graphql-binding");
-const { hasRole, hasAccountType, hasAccountStatus } = require("../utils");
+const {
+  hasRole,
+  hasAccountType,
+  hasAccountStatus,
+  resetTokenTimeoutInMs
+} = require("../utils");
 const config = require("../config");
 
 const Query = {
@@ -83,9 +88,9 @@ const Query = {
   },
   async user(parent, args, ctx, info) {
     // Logged in?
-    // if (!ctx.request.userId) {
-    //   throw new Error("You must be logged in");
-    // }
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged in");
+    }
 
     if (args.username && args.username !== ctx.request.user.username) {
       // Requesting user has proper account type?
@@ -121,6 +126,30 @@ const Query = {
       },
       info
     );
+  },
+  async getRegistration(parent, args, ctx, info) {
+    const registration = await ctx.db.query.registrations(
+      {
+        where: {
+          token: args.token,
+          tokenExpiry_gte: Date.now() - resetTokenTimeoutInMs
+        },
+        first: 1
+      },
+      info
+    );
+
+    console.log("token expiry", registration);
+
+    if (!registration) {
+      throw new Error("Token invalid or expired, please register again.");
+    }
+
+    if (registration.length <= 0) {
+      throw new Error("Registration invalid, please register again.");
+    }
+
+    return registration[0];
   },
   async getDuesLastReceived(parent, args, ctx, info) {
     // Logged in?
@@ -381,6 +410,11 @@ const Query = {
       },
       info
     );
+
+    if (!result) {
+      throw new Error("Event cannot be found");
+    }
+
     return result;
   },
   async getNextEvent(parent, args, ctx, info) {
@@ -595,7 +629,7 @@ const Query = {
     );
 
     return votes;
-  }
+  },
   // async adminStats(parent, args, ctx, info) {
   //   // Logged in?
   //   if (!ctx.request.userId) {
@@ -793,6 +827,59 @@ const Query = {
   //   // Filter at least 1 run
   //   // Filter at least 1 meeting
   // }
+  async getMembershipLogItems(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.request.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    // Requesting user has proper account type?
+    if (!hasAccountType(ctx.request.user, ["FULL", "ASSOCIATE"], false)) {
+      return [];
+    }
+
+    if (args.username.toLowerCase() === "self") {
+      return ctx.db.query.membershipLogItems(
+        {
+          where: {
+            AND: [
+              { messageCode: args.messageCode },
+              {
+                user: {
+                  id: ctx.request.userId
+                }
+              }
+            ]
+          },
+          orderBy: "time_DESC"
+        },
+        info
+      );
+    }
+
+    // Requesting user has proper account status?
+    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+
+    // Requesting user has proper role?
+    hasRole(ctx.request.user, ["ADMIN", "OFFICER"]);
+
+    return ctx.db.query.membershipLogItems(
+      {
+        where: {
+          AND: [
+            { messageCode: args.messageCode },
+            {
+              user: {
+                username: args.username
+              }
+            }
+          ]
+        },
+        orderBy: "time_DESC"
+      },
+      info
+    );
+  }
 };
 
 module.exports = Query;

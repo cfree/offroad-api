@@ -1,5 +1,5 @@
-const { monthInMs } = require('../utils');
-const { subDays } = require('date-fns');
+const { monthInMs } = require("../utils");
+const { subDays } = require("date-fns");
 
 const Trail = {
   // Pattern borrowed from playbook:
@@ -8,8 +8,8 @@ const Trail = {
     // Get all difficulties from run reports for this trail
     const reports = await ctx.db.query.runReports({
       where: {
-        trail: { id: parent.id },
-      },
+        trail: { id: parent.id }
+      }
     });
 
     // Convert to array
@@ -17,39 +17,39 @@ const Trail = {
       UNKNOWN: 0,
       BEGINNER: 1,
       INTERMEDIATE: 2,
-      ADVANCED: 3,
+      ADVANCED: 3
     };
 
     // Determine total
     const counts = reports.reduce(
       (accumulator, report) => scale[report.difficulty] + accumulator,
-      0,
+      0
     );
 
     if (counts) {
       const avg = Math.round(counts / reports.length);
       const entries = Object.entries(scale);
-      console.log('entries', entries);
+      console.log("entries", entries);
       const avgDifficulty = entries.find(entry => avg === entry[1]);
 
       return avgDifficulty[0];
     }
-    
-    return 'UNKNOWN';
+
+    return "UNKNOWN";
   },
   async avgRatings(parent, args, ctx, info) {
     // Get all ratings from run reports and checkins for this trail, determine average
     // Get all difficulties from run reports for this trail
     const reports = await ctx.db.query.runReports({
       where: {
-        trail: { id: parent.id },
-      },
+        trail: { id: parent.id }
+      }
     });
 
     // Determine total
     const counts = reports.reduce(
       (accumulator, report) => report.rating + accumulator,
-      0,
+      0
     );
 
     if (counts) {
@@ -66,16 +66,18 @@ const Trail = {
         report: {
           AND: [
             { trail: { id } },
-            { startTime_lte: new Date(Date.now() - monthInMs) },
-          ],
-        },
+            { startTime_lte: new Date(Date.now() - monthInMs) }
+          ]
+        }
       },
-      first: 1,
+      first: 1
     });
 
-    if (conditions.length > 0) { return conditions[0].status; }
+    if (conditions.length > 0) {
+      return conditions[0].status;
+    }
 
-    return 'UNKNOWN';
+    return "UNKNOWN";
   },
   async conditionsLastReported({ id }, args, ctx, info) {
     // Get count of all people who favorited this trail
@@ -85,14 +87,16 @@ const Trail = {
         report: {
           AND: [
             { trail: { id } },
-            { startTime_lte: new Date(Date.now() - monthInMs) },
-          ],
-        },
+            { startTime_lte: new Date(Date.now() - monthInMs) }
+          ]
+        }
       },
-      first: 1,
+      first: 1
     });
 
-    if (conditions.length > 0) { return conditions[0].dateReported; }
+    if (conditions.length > 0) {
+      return conditions[0].dateReported;
+    }
 
     return null;
   },
@@ -100,16 +104,12 @@ const Trail = {
     // Get count of all people who favorited this trail
     const reports = await ctx.db.query.runReports({
       where: {
-        AND: [
-          { trail: { id } },
-          { favorite: true }
-        ],
-        
-      },
+        AND: [{ trail: { id } }, { favorite: true }]
+      }
     });
 
     return reports.length;
-  },
+  }
 };
 
 module.exports = Trail;

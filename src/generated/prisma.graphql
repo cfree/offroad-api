@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Sun Mar 15 2020 19:06:10 GMT-0600 (Mountain Daylight Time)
+# timestamp: Wed May 06 2020 17:22:16 GMT-0600 (Mountain Daylight Time)
 
 enum AccountStatus {
   ACTIVE
@@ -660,6 +660,10 @@ type AggregateMembershipLogItem {
 }
 
 type AggregatePreference {
+  count: Int!
+}
+
+type AggregateRegistration {
   count: Int!
 }
 
@@ -3251,7 +3255,7 @@ type Event implements Node {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   trail: Trail
   bandaids(where: BandaidWhereInput, orderBy: BandaidOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bandaid!]
   runReports(where: RunReportWhereInput, orderBy: RunReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RunReport!]
@@ -3279,7 +3283,7 @@ input EventCreateInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
@@ -3331,7 +3335,7 @@ input EventCreateWithoutBandaidsInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
@@ -3352,7 +3356,7 @@ input EventCreateWithoutCreatorInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3373,7 +3377,7 @@ input EventCreateWithoutHostInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
@@ -3394,7 +3398,7 @@ input EventCreateWithoutRsvpsInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
@@ -3415,7 +3419,7 @@ input EventCreateWithoutRunReportsInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
@@ -3436,7 +3440,7 @@ input EventCreateWithoutTrailInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
@@ -3499,7 +3503,7 @@ type EventPreviousValues {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
 }
 
@@ -3860,46 +3864,28 @@ input EventScalarWhereInput {
 
   """All values not ending with the given string."""
   rallyAddress_not_ends_with: String
-  rallyTime: String
+  rallyTime: DateTime
 
   """All values that are not equal to given value."""
-  rallyTime_not: String
+  rallyTime_not: DateTime
 
   """All values that are contained in given list."""
-  rallyTime_in: [String!]
+  rallyTime_in: [DateTime!]
 
   """All values that are not contained in given list."""
-  rallyTime_not_in: [String!]
+  rallyTime_not_in: [DateTime!]
 
   """All values less than the given value."""
-  rallyTime_lt: String
+  rallyTime_lt: DateTime
 
   """All values less than or equal the given value."""
-  rallyTime_lte: String
+  rallyTime_lte: DateTime
 
   """All values greater than the given value."""
-  rallyTime_gt: String
+  rallyTime_gt: DateTime
 
   """All values greater than or equal the given value."""
-  rallyTime_gte: String
-
-  """All values containing the given string."""
-  rallyTime_contains: String
-
-  """All values not containing the given string."""
-  rallyTime_not_contains: String
-
-  """All values starting with the given string."""
-  rallyTime_starts_with: String
-
-  """All values not starting with the given string."""
-  rallyTime_not_starts_with: String
-
-  """All values ending with the given string."""
-  rallyTime_ends_with: String
-
-  """All values not ending with the given string."""
-  rallyTime_not_ends_with: String
+  rallyTime_gte: DateTime
   membersOnly: Boolean
 
   """All values that are not equal to given value."""
@@ -3962,7 +3948,7 @@ input EventUpdateInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
@@ -3983,7 +3969,7 @@ input EventUpdateManyDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
 }
 
@@ -3997,7 +3983,7 @@ input EventUpdateManyMutationInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
 }
 
@@ -4077,7 +4063,7 @@ input EventUpdateWithoutBandaidsDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
@@ -4097,7 +4083,7 @@ input EventUpdateWithoutCreatorDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4117,7 +4103,7 @@ input EventUpdateWithoutHostDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
@@ -4137,7 +4123,7 @@ input EventUpdateWithoutRsvpsDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
@@ -4157,7 +4143,7 @@ input EventUpdateWithoutRunReportsDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
@@ -4177,7 +4163,7 @@ input EventUpdateWithoutTrailDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   membersOnly: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
@@ -4592,46 +4578,28 @@ input EventWhereInput {
 
   """All values not ending with the given string."""
   rallyAddress_not_ends_with: String
-  rallyTime: String
+  rallyTime: DateTime
 
   """All values that are not equal to given value."""
-  rallyTime_not: String
+  rallyTime_not: DateTime
 
   """All values that are contained in given list."""
-  rallyTime_in: [String!]
+  rallyTime_in: [DateTime!]
 
   """All values that are not contained in given list."""
-  rallyTime_not_in: [String!]
+  rallyTime_not_in: [DateTime!]
 
   """All values less than the given value."""
-  rallyTime_lt: String
+  rallyTime_lt: DateTime
 
   """All values less than or equal the given value."""
-  rallyTime_lte: String
+  rallyTime_lte: DateTime
 
   """All values greater than the given value."""
-  rallyTime_gt: String
+  rallyTime_gt: DateTime
 
   """All values greater than or equal the given value."""
-  rallyTime_gte: String
-
-  """All values containing the given string."""
-  rallyTime_contains: String
-
-  """All values not containing the given string."""
-  rallyTime_not_contains: String
-
-  """All values starting with the given string."""
-  rallyTime_starts_with: String
-
-  """All values not starting with the given string."""
-  rallyTime_not_starts_with: String
-
-  """All values ending with the given string."""
-  rallyTime_ends_with: String
-
-  """All values not ending with the given string."""
-  rallyTime_not_ends_with: String
+  rallyTime_gte: DateTime
   membersOnly: Boolean
 
   """All values that are not equal to given value."""
@@ -5235,6 +5203,7 @@ enum MembershipMessageCode {
 }
 
 type Mutation {
+  createRegistration(data: RegistrationCreateInput!): Registration!
   createUser(data: UserCreateInput!): User!
   createContactInfo(data: ContactInfoCreateInput!): ContactInfo!
   createPreference(data: PreferenceCreateInput!): Preference!
@@ -5253,6 +5222,7 @@ type Mutation {
   createRigImage(data: RigImageCreateInput!): RigImage!
   createCloudinaryImage(data: CloudinaryImageCreateInput!): CloudinaryImage!
   createBallot(data: BallotCreateInput!): Ballot!
+  updateRegistration(data: RegistrationUpdateInput!, where: RegistrationWhereUniqueInput!): Registration
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateContactInfo(data: ContactInfoUpdateInput!, where: ContactInfoWhereUniqueInput!): ContactInfo
   updatePreference(data: PreferenceUpdateInput!, where: PreferenceWhereUniqueInput!): Preference
@@ -5271,6 +5241,7 @@ type Mutation {
   updateRigImage(data: RigImageUpdateInput!, where: RigImageWhereUniqueInput!): RigImage
   updateCloudinaryImage(data: CloudinaryImageUpdateInput!, where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
   updateBallot(data: BallotUpdateInput!, where: BallotWhereUniqueInput!): Ballot
+  deleteRegistration(where: RegistrationWhereUniqueInput!): Registration
   deleteUser(where: UserWhereUniqueInput!): User
   deleteContactInfo(where: ContactInfoWhereUniqueInput!): ContactInfo
   deletePreference(where: PreferenceWhereUniqueInput!): Preference
@@ -5289,6 +5260,7 @@ type Mutation {
   deleteRigImage(where: RigImageWhereUniqueInput!): RigImage
   deleteCloudinaryImage(where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
   deleteBallot(where: BallotWhereUniqueInput!): Ballot
+  upsertRegistration(where: RegistrationWhereUniqueInput!, create: RegistrationCreateInput!, update: RegistrationUpdateInput!): Registration!
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertContactInfo(where: ContactInfoWhereUniqueInput!, create: ContactInfoCreateInput!, update: ContactInfoUpdateInput!): ContactInfo!
   upsertPreference(where: PreferenceWhereUniqueInput!, create: PreferenceCreateInput!, update: PreferenceUpdateInput!): Preference!
@@ -5307,6 +5279,7 @@ type Mutation {
   upsertRigImage(where: RigImageWhereUniqueInput!, create: RigImageCreateInput!, update: RigImageUpdateInput!): RigImage!
   upsertCloudinaryImage(where: CloudinaryImageWhereUniqueInput!, create: CloudinaryImageCreateInput!, update: CloudinaryImageUpdateInput!): CloudinaryImage!
   upsertBallot(where: BallotWhereUniqueInput!, create: BallotCreateInput!, update: BallotUpdateInput!): Ballot!
+  updateManyRegistrations(data: RegistrationUpdateManyMutationInput!, where: RegistrationWhereInput): BatchPayload!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyContactInfoes(data: ContactInfoUpdateManyMutationInput!, where: ContactInfoWhereInput): BatchPayload!
   updateManyPreferences(data: PreferenceUpdateManyMutationInput!, where: PreferenceWhereInput): BatchPayload!
@@ -5323,6 +5296,7 @@ type Mutation {
   updateManyVehicles(data: VehicleUpdateManyMutationInput!, where: VehicleWhereInput): BatchPayload!
   updateManyCloudinaryImages(data: CloudinaryImageUpdateManyMutationInput!, where: CloudinaryImageWhereInput): BatchPayload!
   updateManyBallots(data: BallotUpdateManyMutationInput!, where: BallotWhereInput): BatchPayload!
+  deleteManyRegistrations(where: RegistrationWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyContactInfoes(where: ContactInfoWhereInput): BatchPayload!
   deleteManyPreferences(where: PreferenceWhereInput): BatchPayload!
@@ -5723,6 +5697,7 @@ input PreferenceWhereUniqueInput {
 }
 
 type Query {
+  registrations(where: RegistrationWhereInput, orderBy: RegistrationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Registration]!
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   contactInfoes(where: ContactInfoWhereInput, orderBy: ContactInfoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContactInfo]!
   preferences(where: PreferenceWhereInput, orderBy: PreferenceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Preference]!
@@ -5741,6 +5716,7 @@ type Query {
   rigImages(where: RigImageWhereInput, orderBy: RigImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RigImage]!
   cloudinaryImages(where: CloudinaryImageWhereInput, orderBy: CloudinaryImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CloudinaryImage]!
   ballots(where: BallotWhereInput, orderBy: BallotOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ballot]!
+  registration(where: RegistrationWhereUniqueInput!): Registration
   user(where: UserWhereUniqueInput!): User
   contactInfo(where: ContactInfoWhereUniqueInput!): ContactInfo
   preference(where: PreferenceWhereUniqueInput!): Preference
@@ -5759,6 +5735,7 @@ type Query {
   rigImage(where: RigImageWhereUniqueInput!): RigImage
   cloudinaryImage(where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
   ballot(where: BallotWhereUniqueInput!): Ballot
+  registrationsConnection(where: RegistrationWhereInput, orderBy: RegistrationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RegistrationConnection!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   contactInfoesConnection(where: ContactInfoWhereInput, orderBy: ContactInfoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContactInfoConnection!
   preferencesConnection(where: PreferenceWhereInput, orderBy: PreferenceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PreferenceConnection!
@@ -5783,6 +5760,457 @@ type Query {
     """The ID of an object"""
     id: ID!
   ): Node
+}
+
+type Registration implements Node {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  firstName: String
+  lastName: String
+  email: String!
+  source: String!
+  token: String!
+  tokenExpiry: Float!
+}
+
+"""A connection to a list of items."""
+type RegistrationConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [RegistrationEdge]!
+  aggregate: AggregateRegistration!
+}
+
+input RegistrationCreateInput {
+  id: ID
+  firstName: String
+  lastName: String
+  email: String!
+  source: String!
+  token: String!
+  tokenExpiry: Float!
+}
+
+"""An edge in a connection."""
+type RegistrationEdge {
+  """The item at the end of the edge."""
+  node: Registration!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum RegistrationOrderByInput {
+  id_ASC
+  id_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  firstName_ASC
+  firstName_DESC
+  lastName_ASC
+  lastName_DESC
+  email_ASC
+  email_DESC
+  source_ASC
+  source_DESC
+  token_ASC
+  token_DESC
+  tokenExpiry_ASC
+  tokenExpiry_DESC
+}
+
+type RegistrationPreviousValues {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  firstName: String
+  lastName: String
+  email: String!
+  source: String!
+  token: String!
+  tokenExpiry: Float!
+}
+
+type RegistrationSubscriptionPayload {
+  mutation: MutationType!
+  node: Registration
+  updatedFields: [String!]
+  previousValues: RegistrationPreviousValues
+}
+
+input RegistrationSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RegistrationSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RegistrationSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RegistrationSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: RegistrationWhereInput
+}
+
+input RegistrationUpdateInput {
+  firstName: String
+  lastName: String
+  email: String
+  source: String
+  token: String
+  tokenExpiry: Float
+}
+
+input RegistrationUpdateManyMutationInput {
+  firstName: String
+  lastName: String
+  email: String
+  source: String
+  token: String
+  tokenExpiry: Float
+}
+
+input RegistrationWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RegistrationWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RegistrationWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RegistrationWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  createdAt: DateTime
+
+  """All values that are not equal to given value."""
+  createdAt_not: DateTime
+
+  """All values that are contained in given list."""
+  createdAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  createdAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  createdAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  createdAt_lte: DateTime
+
+  """All values greater than the given value."""
+  createdAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+
+  """All values that are not equal to given value."""
+  updatedAt_not: DateTime
+
+  """All values that are contained in given list."""
+  updatedAt_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updatedAt_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updatedAt_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updatedAt_lte: DateTime
+
+  """All values greater than the given value."""
+  updatedAt_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updatedAt_gte: DateTime
+  firstName: String
+
+  """All values that are not equal to given value."""
+  firstName_not: String
+
+  """All values that are contained in given list."""
+  firstName_in: [String!]
+
+  """All values that are not contained in given list."""
+  firstName_not_in: [String!]
+
+  """All values less than the given value."""
+  firstName_lt: String
+
+  """All values less than or equal the given value."""
+  firstName_lte: String
+
+  """All values greater than the given value."""
+  firstName_gt: String
+
+  """All values greater than or equal the given value."""
+  firstName_gte: String
+
+  """All values containing the given string."""
+  firstName_contains: String
+
+  """All values not containing the given string."""
+  firstName_not_contains: String
+
+  """All values starting with the given string."""
+  firstName_starts_with: String
+
+  """All values not starting with the given string."""
+  firstName_not_starts_with: String
+
+  """All values ending with the given string."""
+  firstName_ends_with: String
+
+  """All values not ending with the given string."""
+  firstName_not_ends_with: String
+  lastName: String
+
+  """All values that are not equal to given value."""
+  lastName_not: String
+
+  """All values that are contained in given list."""
+  lastName_in: [String!]
+
+  """All values that are not contained in given list."""
+  lastName_not_in: [String!]
+
+  """All values less than the given value."""
+  lastName_lt: String
+
+  """All values less than or equal the given value."""
+  lastName_lte: String
+
+  """All values greater than the given value."""
+  lastName_gt: String
+
+  """All values greater than or equal the given value."""
+  lastName_gte: String
+
+  """All values containing the given string."""
+  lastName_contains: String
+
+  """All values not containing the given string."""
+  lastName_not_contains: String
+
+  """All values starting with the given string."""
+  lastName_starts_with: String
+
+  """All values not starting with the given string."""
+  lastName_not_starts_with: String
+
+  """All values ending with the given string."""
+  lastName_ends_with: String
+
+  """All values not ending with the given string."""
+  lastName_not_ends_with: String
+  email: String
+
+  """All values that are not equal to given value."""
+  email_not: String
+
+  """All values that are contained in given list."""
+  email_in: [String!]
+
+  """All values that are not contained in given list."""
+  email_not_in: [String!]
+
+  """All values less than the given value."""
+  email_lt: String
+
+  """All values less than or equal the given value."""
+  email_lte: String
+
+  """All values greater than the given value."""
+  email_gt: String
+
+  """All values greater than or equal the given value."""
+  email_gte: String
+
+  """All values containing the given string."""
+  email_contains: String
+
+  """All values not containing the given string."""
+  email_not_contains: String
+
+  """All values starting with the given string."""
+  email_starts_with: String
+
+  """All values not starting with the given string."""
+  email_not_starts_with: String
+
+  """All values ending with the given string."""
+  email_ends_with: String
+
+  """All values not ending with the given string."""
+  email_not_ends_with: String
+  source: String
+
+  """All values that are not equal to given value."""
+  source_not: String
+
+  """All values that are contained in given list."""
+  source_in: [String!]
+
+  """All values that are not contained in given list."""
+  source_not_in: [String!]
+
+  """All values less than the given value."""
+  source_lt: String
+
+  """All values less than or equal the given value."""
+  source_lte: String
+
+  """All values greater than the given value."""
+  source_gt: String
+
+  """All values greater than or equal the given value."""
+  source_gte: String
+
+  """All values containing the given string."""
+  source_contains: String
+
+  """All values not containing the given string."""
+  source_not_contains: String
+
+  """All values starting with the given string."""
+  source_starts_with: String
+
+  """All values not starting with the given string."""
+  source_not_starts_with: String
+
+  """All values ending with the given string."""
+  source_ends_with: String
+
+  """All values not ending with the given string."""
+  source_not_ends_with: String
+  token: String
+
+  """All values that are not equal to given value."""
+  token_not: String
+
+  """All values that are contained in given list."""
+  token_in: [String!]
+
+  """All values that are not contained in given list."""
+  token_not_in: [String!]
+
+  """All values less than the given value."""
+  token_lt: String
+
+  """All values less than or equal the given value."""
+  token_lte: String
+
+  """All values greater than the given value."""
+  token_gt: String
+
+  """All values greater than or equal the given value."""
+  token_gte: String
+
+  """All values containing the given string."""
+  token_contains: String
+
+  """All values not containing the given string."""
+  token_not_contains: String
+
+  """All values starting with the given string."""
+  token_starts_with: String
+
+  """All values not starting with the given string."""
+  token_not_starts_with: String
+
+  """All values ending with the given string."""
+  token_ends_with: String
+
+  """All values not ending with the given string."""
+  token_not_ends_with: String
+  tokenExpiry: Float
+
+  """All values that are not equal to given value."""
+  tokenExpiry_not: Float
+
+  """All values that are contained in given list."""
+  tokenExpiry_in: [Float!]
+
+  """All values that are not contained in given list."""
+  tokenExpiry_not_in: [Float!]
+
+  """All values less than the given value."""
+  tokenExpiry_lt: Float
+
+  """All values less than or equal the given value."""
+  tokenExpiry_lte: Float
+
+  """All values greater than the given value."""
+  tokenExpiry_gt: Float
+
+  """All values greater than or equal the given value."""
+  tokenExpiry_gte: Float
+}
+
+input RegistrationWhereUniqueInput {
+  id: ID
+  token: String
 }
 
 type RigImage implements Node {
@@ -7408,6 +7836,7 @@ input RunReportWhereUniqueInput {
 }
 
 type Subscription {
+  registration(where: RegistrationSubscriptionWhereInput): RegistrationSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   contactInfo(where: ContactInfoSubscriptionWhereInput): ContactInfoSubscriptionPayload
   preference(where: PreferenceSubscriptionWhereInput): PreferenceSubscriptionPayload

@@ -5,6 +5,8 @@ const { promisify } = require("util");
 const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
 
+const promisifiedRandomBytes = promisify(randomBytes);
+
 cloudinary.config({
   cloud_name: process.env.CLOUNDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
@@ -39,54 +41,338 @@ const tokenSettings = {
 };
 
 const Mutations = {
+  async register(parent, args, ctx, info) {
+    const { firstName, lastName, email, confirmEmail, source } = args;
+
+    const lowercaseEmail = email.toLowerCase();
+    const lowercaseConfirmEmail = confirmEmail.toLowerCase();
+
+    // VALIDATION
+    if (!email) {
+      throw new Error("Email is required");
+    }
+
+    if (lowercaseEmail !== lowercaseConfirmEmail) {
+      throw new Error("Emails do not match");
+    }
+
+    // Create registration in database
+    const resetToken = (await promisifiedRandomBytes(20)).toString("hex");
+
+    await ctx.db.mutation.createRegistration(
+      {
+        data: {
+          firstName,
+          lastName,
+          email: lowercaseEmail,
+          source,
+          token: resetToken,
+          tokenExpiry: Date.now() + resetTokenTimeoutInMs
+        }
+      },
+      info
+    );
+
+    let emailDetails;
+
+    switch (source) {
+      case "website": // User initiated
+        emailDetails = {
+          to: lowercaseEmail,
+          from: "no-reply@4-playersofcolorado.org",
+          subject: "Your 4-Players Account Registration",
+          text: `
+            ${firstName},
+    
+            Thanks for opting in!
+    
+            Visit this URL to create your profile:
+            ${process.env.FRONTEND_URL}/signup?token=${resetToken}
+
+            If you have any questions, please contact webmaster@4-playersofcolorado.org
+          `,
+          html: `
+            <p>${firstName},</p>
+    
+            <p>Thanks for opting in!</p>
+    
+            <p>Visit this URL to create your profile:
+          ${process.env.FRONTEND_URL}/signup?token=${resetToken}</p>
+
+            <p>If you have any questions, please contact the <a href="mailto:webmaster@4-playersofcolorado.org">webmaster</a></p>
+          `
+        };
+        break;
+      case "run": // User attended run
+      case "meeting": // User attended meeting
+        emailDetails = {
+          to: lowercaseEmail,
+          from: "no-reply@4-playersofcolorado.org",
+          subject: "Invitation to register at the 4-Players website",
+          text: `
+          Hi ${firstName},
+  
+          You recently attended a 4-Players of Colorado event as a guest and have been invited to create an account on the 4-Players website.
+  
+          Visit this URL to create your profile:
+          ${process.env.FRONTEND_URL}/signup?token=${resetToken}
+
+          If you have any questions, please contact webmaster@4-playersofcolorado.org
+
+          If this message was sent to you in error, kindly disregard.
+        `,
+          html: `
+          <p>Hi ${firstName},</p>
+  
+          <p>You recently attended a 4-Players of Colorado event as a guest and have been invited to create an account on the 4-Players website.</p>
+
+          <p>Visit this URL to create your profile:
+        ${process.env.FRONTEND_URL}/signup?token=${resetToken}</p>
+
+          <p>If you have any questions, please contact the <a href="mailto:webmaster@4-playersofcolorado.org">webmaster</a></p>
+
+          <p><small>If this message was sent to you in error, kindly disregard.</small></p>
+        `
+        };
+        break;
+      case "admin": // Admin invited user directly
+      default:
+        emailDetails = {
+          to: lowercaseEmail,
+          from: "no-reply@4-playersofcolorado.org",
+          subject: "Invitation to register at the 4-Players website",
+          text: `
+            Hi ${firstName},
+    
+            You've been invited by ${
+              ctx.request.user.firstName
+            } to create an account on the 4-Players of Colorado website.
+    
+            Visit this URL to create your profile:
+            ${process.env.FRONTEND_URL}/signup?token=${resetToken}
+
+            If you have any questions, please contact webmaster@4-playersofcolorado.org
+
+            If this message was sent to you in error, kindly disregard.
+          `,
+          html: `
+            <p>Hi ${firstName},</p>
+    
+            <p>You've been invited by ${
+              ctx.request.user.firstName
+            } to create an account on the 4-Players of Colorado website.</p>
+
+            <p>Visit this URL to create your profile:
+          ${process.env.FRONTEND_URL}/signup?token=${resetToken}</p>
+
+            <p>If you have any questions, please contact the <a href="mailto:webmaster@4-playersofcolorado.org">webmaster</a></p>
+
+            <p><small>If this message was sent to you in error, kindly disregard.</small></p>
+          `
+        };
+    }
+
+    // Email reset token
+    return sendTransactionalEmail(emailDetails)
+      .then(() => ({
+        message: "Registration was successful. Please check your email."
+      }))
+      .catch(err => {
+        //Extract error msg
+        // const { message, code, response } = err;
+
+        //Extract response msg
+        // const { headers, body } = response;
+
+        throw new Error(err.toString());
+      });
+  },
   async signUp(parent, args, ctx, info) {
     const email = args.email.toLowerCase();
 
     // VALIDATION
-    // throw new Error('');
 
-    // Birthdate - lock out if under 18
+    // TODO Confirm all fields valid
+
+    // TODO Lock out if under 18
 
     // Hash the password
     const password = await getHash(args.password);
 
+    const { token, firstName, lastName, username, ...newUser } = args;
+
     // Create user in database
-    const user = await ctx.db.mutation.createUser(
-      {
-        data: {
-          ...args,
-          email,
-          password,
-          lastLogin: new Date()
-        }
-      },
-      info
-    );
-
-    // Create JWT token for new user
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET);
-
-    // Set the JWT as a cookie
-    ctx.response.cookie("token", token, tokenSettings);
-
-    // Log activity
-    await ctx.db.mutation.createMembershipLogItem(
-      {
-        data: {
-          time: new Date(),
-          message: "Account created",
-          messageCode: "ACCOUNT_CREATED",
-          user: {
-            connect: {
-              id: user.id
+    try {
+      const user = await ctx.db.mutation.createUser(
+        {
+          data: {
+            ...newUser,
+            email,
+            firstName,
+            lastName,
+            username,
+            password,
+            lastLogin: new Date(),
+            membershipLog: {
+              create: [
+                {
+                  time: new Date(),
+                  message: "Account created",
+                  messageCode: "ACCOUNT_CREATED"
+                }
+              ]
             }
           }
+        },
+        info
+      );
+
+      // Remove registration from database
+      await ctx.db.mutation.deleteRegistration({
+        where: { token }
+      });
+
+      // Create JWT token for new user
+      // const jwToken = jwt.sign({ userId: user.id }, JWT_SECRET);
+
+      // Set the JWT as a cookie
+      // ctx.response.cookie("token", jwToken, tokenSettings);
+
+      // Send email to secretary
+      return sendTransactionalEmail({
+        to: `4-Players Secretary <secretary@4-playersofcolorado.org>`,
+        from: `4-Players Webmaster <no-reply@4-playersofcolorado.org>`,
+        subject: "[4-Players] New Account Registration",
+        text: `
+        A new guest account has been created:
+        ${process.env.FRONTEND_URL}/profile/${username}
+      `,
+        html: `
+        <p>A new guest account has been created:
+        ${process.env.FRONTEND_URL}/profile/${username}</p>
+      `
+      })
+        .then(
+          // Send email to user
+          sendTransactionalEmail({
+            to: `${firstName} ${lastName} <${email}>`,
+            from: `4-Players Webmaster <no-reply@4-playersofcolorado.org>`,
+            subject: "[4-Players] New Account Registration",
+            text: `
+          Hi ${firstName},
+  
+          Congratulations! Your new account has been created:
+          ${process.env.FRONTEND_URL}/profile/${username}
+
+          The secretary will review your account within 1-2 business days. Please make sure your profile is filled out.
+        `,
+            html: `
+          <p>Hi ${firstName},</p>
+  
+          <p>Congratulations! Your new account has been created:
+          ${process.env.FRONTEND_URL}/profile/${username}</p>
+
+          <p>The secretary will review your account within 1-2 business days. Please make sure your profile is filled out.</p>
+        `
+          })
+        )
+        .then(() => ({ message: "Account created" }))
+        .catch(err => {
+          //Extract error msg
+          // const { message, code, response } = err;
+
+          //Extract response msg
+          // const { headers, body } = response;
+
+          throw new Error(err);
+        });
+    } catch (error) {
+      if (
+        error.message ===
+        "A unique constraint would be violated on User. Details: Field name = username"
+      ) {
+        throw new Error("That username is taken.");
+      }
+
+      if (
+        error.message ===
+        "A unique constraint would be violated on User. Details: Field name = email"
+      ) {
+        throw new Error(
+          "There is already an account with that email address. Try resetting your password."
+        );
+      }
+
+      throw new Error(error);
+    }
+  },
+  async unlockNewAccount() {
+    // Add membership log
+    const logs = [
+      {
+        time: new Date(),
+        message: `Account unlocked by ${ctx.request.user.firstName} ${
+          ctx.request.user.lastName
+        }`,
+        messageCode: "ACCOUNT_UNLOCKED",
+        logger: {
+          connect: {
+            id: ctx.request.userId
+          }
+        }
+      }
+    ];
+
+    // Update status
+    await ctx.db.mutation.updateUser(
+      {
+        data: {
+          accountStatus: args.accountStatus,
+          membershipLog: {
+            create: logs
+          }
+        },
+        where: {
+          id: args.userId
         }
       },
       info
     );
 
-    return user;
+    // Send email to user
+    // TODO Hook up to welcome email template
+    return sendTransactionalEmail({
+      to: lowercaseEmail,
+      from: "secretary@4-playersofcolorado.org",
+      subject: "[4-Players] Account Approval",
+      text: `
+        Welcome, ${firstName}!
+
+        Thanks for signing up!
+
+        Visit this URL to log in:
+        ${process.env.FRONTEND_URL}/login
+      `,
+      html: `
+        <p>Welcome, ${firstName}!</p>
+
+        <p>Thanks for signing up!</p>
+
+        <p><a href="${
+          process.env.FRONTEND_URL
+        }/login">Visit the site</a> to log in</p>
+      `
+    })
+      .then(() => ({ message: "Account unlock successful." }))
+      .catch(err => {
+        //Extract error msg
+        // const { message, code, response } = err;
+
+        //Extract response msg
+        // const { headers, body } = response;
+
+        throw new Error(err);
+      });
   },
   async login(parent, { username, password }, ctx, info) {
     // Check if there is a user with that username
@@ -123,7 +409,7 @@ const Mutations = {
     );
 
     // Return the user
-    return user;
+    return { message: "Successfully logged in" };
   },
   logout(parent, args, ctx, info) {
     ctx.response.clearCookie("token");
@@ -140,7 +426,6 @@ const Mutations = {
     }
 
     // Set reset token and expiry
-    const promisifiedRandomBytes = promisify(randomBytes);
     const resetToken = (await promisifiedRandomBytes(20)).toString("hex");
     const resetTokenExpiry = Date.now() + resetTokenTimeoutInMs;
     const res = await ctx.db.mutation.updateUser({
@@ -159,13 +444,13 @@ const Mutations = {
         Your password reset token for user "${user.username}" is here!
 
         Visit this URL to reset your password:
-        ${process.env.FRONTEND_URL}/reset?token=${resetToken}
+        ${process.env.FRONTEND_URL}/forgot-password?token=${resetToken}
       `,
       html: `
         Your password reset token for user "${user.username}" is here!
         <a href="${
           process.env.FRONTEND_URL
-        }/reset?token=${resetToken}">Click here to reset your password</a>
+        }/forgot-password?token=${resetToken}">Click here to reset your password</a>
       `
     })
       .then(() => ({ message: "Password reset is en route" }))
@@ -420,7 +705,7 @@ const Mutations = {
       });
     }
 
-    // Update role
+    // Update status
     return ctx.db.mutation.updateUser(
       {
         data: {
@@ -641,6 +926,7 @@ const Mutations = {
     ];
 
     const data = {
+      type: event.type,
       title: event.title,
       description: event.description || "",
       startTime: new Date(event.startTime),
@@ -1026,9 +1312,6 @@ const Mutations = {
       hasRole(ctx.request.user, ["ADMIN", "OFFICER"], false) ||
       isSelf(ctx.request.user, args.id, false)
     ) {
-      // Requesting user has proper account status?
-      hasAccountStatus(ctx.request.user, ["ACTIVE"]);
-
       // Query the current user
       const currentUser = await ctx.db.query.user(
         {
@@ -1147,7 +1430,6 @@ const Mutations = {
 
     // Have proper roles to do this?
     if (!hasRole(ctx.request.user, ["ADMIN", "OFFICER"], false)) {
-      console.log("TRY AGAN", ctx.request.user);
       throw new Error(
         "User profile can only be updated by an admin or an officer"
       );
@@ -1546,7 +1828,7 @@ const Mutations = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    // hasAccountStatus(ctx.request.user, ["ACTIVE"]);
 
     const { vehicle, id: vehicleId } = args;
     const { outfitLevel, mods, ...restVehicle } = vehicle;

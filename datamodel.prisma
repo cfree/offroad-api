@@ -120,6 +120,18 @@ enum EventType {
 
 scalar DateTime
 
+type Registration {
+  id: ID! @unique @id
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
+  firstName: String
+  lastName: String
+  email: String!
+  source: String!
+  token: String! @unique
+  tokenExpiry: Float!
+}
+
 type User {
   id: ID! @unique @id
   createdAt: DateTime! @createdAt
@@ -215,7 +227,7 @@ type Event {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: String
+  rallyTime: DateTime
   trail: Trail @relation(name: "EventTrail")
   bandaids: [Bandaid] @relation(name: "EventBandaid")
   runReports: [RunReport] @relation(name: "EventRunReport")
