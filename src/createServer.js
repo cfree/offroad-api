@@ -12,7 +12,7 @@ const Election = require("./resolvers/Election");
 const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 const db = require("./db");
-const typeDefs = importSchema("./src/schema.graphql");
+const typeDefs = importSchema("src/schema.graphql");
 
 const schema = makeExecutableSchema({
   typeDefs: gql`

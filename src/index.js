@@ -85,5 +85,6 @@ if (process.env.NODE_ENV === "development") {
   //     console.log(`Server is now running on http://localhost:${details.port}`);
   //   }
   // );
+}
 
-module.exports.app = app;
+exports.app = app;
