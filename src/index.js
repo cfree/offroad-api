@@ -1,17 +1,57 @@
 require("dotenv").config({ path: "variables.env" });
 const express = require("express");
-
+const {
+  ApolloServer,
+  gql,
+  makeExecutableSchema
+} = require("apollo-server-express");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
+const { Prisma } = require("prisma-binding");
+const { importSchema } = require("graphql-import");
 
-const { createServer } = require("./createServer");
+const Mutation = require("./resolvers/Mutation");
+const Query = require("./resolvers/Query");
+const Election = require("./resolvers/Election");
+const Ballot = require("./resolvers/Ballot");
+const Trail = require("./resolvers/Trail");
 
-const db = require("./db");
+const isLambda = process.env.NODE_ENV === "production";
+const src = isLambda ? "functions/bundle" : "src";
+const typeDefs = importSchema(`${src}/schema.graphql`);
+
+const db = new Prisma({
+  typeDefs: `${src}/generated/prisma.graphql`,
+  endpoint: process.env.PRISMA_ENDPOINT,
+  secret: process.env.PRISMA_SECRET,
+  debug: process.env.NODE_ENV === "development"
+});
 
 const corsOptions = {
   credentials: true,
   origin: process.env.FRONTEND_URL
+};
+
+const schema = makeExecutableSchema({
+  typeDefs,
+  resolvers: {
+    Mutation,
+    Query,
+    Trail,
+    Election,
+    Ballot
+  },
+  resolverValidationOptions: { requireResolversForResolveType: false }
+});
+
+// Create GraphQL yoga server
+const createServer = () => {
+  //   typeDefs: "src/schema.graphql",
+  return new ApolloServer({
+    schema,
+    context: req => ({ ...req, db })
+  });
 };
 
 const app = express();
@@ -77,14 +117,6 @@ if (process.env.NODE_ENV === "development") {
   app.listen({ port: 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
   );
-  // server.start(
-  //   {
-  //     cors: corsOptions
-  //   },
-  //   details => {
-  //     console.log(`Server is now running on http://localhost:${details.port}`);
-  //   }
-  // );
 }
 
 exports.app = app;
