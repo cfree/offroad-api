@@ -139,8 +139,6 @@ const Query = {
       info
     );
 
-    console.log("token expiry", registration);
-
     if (!registration) {
       throw new Error("Token invalid or expired, please register again.");
     }
