@@ -1,13 +1,21 @@
 require("dotenv").config({ path: "variables.env" });
+const express = require("express");
+const serverlessHttp = require("serverless-http");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
-const createServer = require("./createServer");
+const { createServer } = require("./createServer");
+
 const db = require("./db");
 
-const server = createServer();
+const corsOptions = {
+  credentials: true,
+  origin: process.env.FRONTEND_URL
+};
 
-server.express.use(cookieParser());
+const app = express();
+const server = createServer();
 
 // Daily Automation:::
 
@@ -34,8 +42,11 @@ server.express.use(cookieParser());
 // - Post run report: Notify board of report
 // - Post run report: Change Active Guest status to Limited if 3 runs attended, notify board
 
+app.use(cors(corsOptions));
+app.use(cookieParser());
+
 // Decode the JWT to get user ID on each request
-server.express.use(async (req, res, next) => {
+app.use(async (req, res, next) => {
   const { token } = req.cookies;
 
   if (token) {
@@ -47,7 +58,7 @@ server.express.use(async (req, res, next) => {
 });
 
 // See info about the user if logged in
-server.express.use(async (req, res, next) => {
+app.use(async (req, res, next) => {
   if (!req.userId) {
     return next();
   }
@@ -60,14 +71,32 @@ server.express.use(async (req, res, next) => {
   next();
 });
 
-server.start(
-  {
-    cors: {
-      credentials: true,
-      origin: process.env.FRONTEND_URL
+server.applyMiddleware({ app, cors: false });
+
+if (process.env.NODE_ENV === "development") {
+  app.listen({ port: 4000 }, () =>
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+  );
+  // server.start(
+  //   {
+  //     cors: corsOptions
+  //   },
+  //   details => {
+  //     console.log(`Server is now running on http://localhost:${details.port}`);
+  //   }
+  // );
+} else {
+  module.exports.handler = serverlessHttp(app, {
+    /**
+     * **** IMPORTANT ****
+     * this request() function is important because
+     * it adds the lambda's event and context object
+     * into the express's req object so you can access
+     * inside the resolvers or routes if youre not using apollo
+     */
+    request(req, event, context) {
+      req.event = event;
+      req.context = context;
     }
-  },
-  details => {
-    console.log(`Server is now running on http://localhost:${details.port}`);
-  }
-);
+  });
+}

@@ -29,7 +29,7 @@ const Trail = {
     if (counts) {
       const avg = Math.round(counts / reports.length);
       const entries = Object.entries(scale);
-      console.log("entries", entries);
+      // console.log("entries", entries);
       const avgDifficulty = entries.find(entry => avg === entry[1]);
 
       return avgDifficulty[0];

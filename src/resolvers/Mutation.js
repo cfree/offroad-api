@@ -145,7 +145,7 @@ const Mutations = {
             Hi ${firstName},
     
             You've been invited by ${
-              ctx.request.user.firstName
+              ctx.req.user.firstName
             } to create an account on the 4-Players of Colorado website.
     
             Visit this URL to create your profile:
@@ -159,7 +159,7 @@ const Mutations = {
             <p>Hi ${firstName},</p>
     
             <p>You've been invited by ${
-              ctx.request.user.firstName
+              ctx.req.user.firstName
             } to create an account on the 4-Players of Colorado website.</p>
 
             <p>Visit this URL to create your profile:
@@ -236,7 +236,7 @@ const Mutations = {
       // const jwToken = jwt.sign({ userId: user.id }, JWT_SECRET);
 
       // Set the JWT as a cookie
-      // ctx.response.cookie("token", jwToken, tokenSettings);
+      // ctx.res.cookie("token", jwToken, tokenSettings);
 
       // Send email to secretary
       return sendTransactionalEmail({
@@ -311,13 +311,13 @@ const Mutations = {
     const logs = [
       {
         time: new Date(),
-        message: `Account unlocked by ${ctx.request.user.firstName} ${
-          ctx.request.user.lastName
+        message: `Account unlocked by ${ctx.req.user.firstName} ${
+          ctx.req.user.lastName
         }`,
         messageCode: "ACCOUNT_UNLOCKED",
         logger: {
           connect: {
-            id: ctx.request.userId
+            id: ctx.req.userId
           }
         }
       }
@@ -393,7 +393,7 @@ const Mutations = {
     const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
 
     // Set the cookie with the token
-    ctx.response.cookie("token", token, tokenSettings);
+    ctx.res.cookie("token", token, tokenSettings);
 
     // Update role
     await ctx.db.mutation.updateUser(
@@ -412,7 +412,7 @@ const Mutations = {
     return { message: "Successfully logged in" };
   },
   logout(parent, args, ctx, info) {
-    ctx.response.clearCookie("token");
+    ctx.res.clearCookie("token");
     return { message: "Goodbye" };
   },
   async requestReset(parent, { email }, ctx, info) {
@@ -499,13 +499,13 @@ const Mutations = {
     const token = jwt.sign({ userId: updatedUser.id }, process.env.JWT_SECRET);
 
     // Set JWT cookie
-    ctx.response.cookie("token", token, tokenSettings);
+    ctx.res.cookie("token", token, tokenSettings);
 
     // Return the new user
     return updatedUser;
   },
   async changePassword(parent, args, ctx, info) {
-    const { user, userId } = ctx.request;
+    const { user, userId } = ctx.req;
 
     if (!userId) {
       throw new Error("User must be logged in");
@@ -531,12 +531,12 @@ const Mutations = {
     // const token = jwt.sign({ userId: updatedUser.id }, process.env.JWT_SECRET);
 
     // // Set JWT cookie
-    // ctx.response.cookie('token', token, tokenSettings);
+    // ctx.res.cookie('token', token, tokenSettings);
 
     return { message: "Your password has been changed" };
   },
   async changeEmail(parent, args, ctx, info) {
-    const { userId } = ctx.request;
+    const { userId } = ctx.req;
     const email = args.email.toLowerCase();
 
     if (!userId) {
@@ -555,14 +555,14 @@ const Mutations = {
   },
   async updateRole(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Query the current user
     const currentUser = await ctx.db.query.user(
       {
-        where: { id: ctx.request.userId }
+        where: { id: ctx.req.userId }
       },
       info
     );
@@ -571,7 +571,7 @@ const Mutations = {
     hasRole(currentUser, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     // Update role
     try {
@@ -584,12 +584,12 @@ const Mutations = {
                 {
                   time: new Date(),
                   message: `Role changed to "${args.role}" by ${
-                    ctx.request.user.firstName
-                  } ${ctx.request.user.lastName}`,
+                    ctx.req.user.firstName
+                  } ${ctx.req.user.lastName}`,
                   messageCode: "ACCOUNT_CHANGED",
                   logger: {
                     connect: {
-                      id: ctx.request.userId
+                      id: ctx.req.userId
                     }
                   }
                 }
@@ -608,27 +608,27 @@ const Mutations = {
   },
   async updateAccountType(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN"]);
+    hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     // Changing account type to 'FULL', add membership log
     const logs = [
       {
         time: new Date(),
         message: `Account type changed to "${args.accountType}" by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "ACCOUNT_CHANGED",
         logger: {
           connect: {
-            id: ctx.request.userId
+            id: ctx.req.userId
           }
         }
       }
@@ -652,15 +652,15 @@ const Mutations = {
   },
   async updateAccountStatus(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN"]);
+    hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     // Query the current user
     const currentUser = await ctx.db.query.user(
@@ -675,12 +675,12 @@ const Mutations = {
       {
         time: new Date(),
         message: `Account status changed to "${args.accountStatus}" by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "ACCOUNT_CHANGED",
         logger: {
           connect: {
-            id: ctx.request.userId
+            id: ctx.req.userId
           }
         }
       }
@@ -693,13 +693,13 @@ const Mutations = {
     ) {
       logs.push({
         time: new Date(),
-        message: `Account unlocked by ${ctx.request.user.firstName} ${
-          ctx.request.user.lastName
+        message: `Account unlocked by ${ctx.req.user.firstName} ${
+          ctx.req.user.lastName
         }`,
         messageCode: "ACCOUNT_UNLOCKED",
         logger: {
           connect: {
-            id: ctx.request.userId
+            id: ctx.req.userId
           }
         }
       });
@@ -723,15 +723,15 @@ const Mutations = {
   },
   async updateOffice(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper account status to do this?
-    hasRole(ctx.request.user, ["ADMIN"]);
+    hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { office: existingOffice } = await ctx.db.query.user(
       { where: { id: args.userId } },
@@ -746,7 +746,7 @@ const Mutations = {
       time: new Date(),
       logger: {
         connect: {
-          id: ctx.request.userId
+          id: ctx.req.userId
         }
       }
     };
@@ -756,9 +756,9 @@ const Mutations = {
     // Add new value
     if (existingOffice === null && typeof args.office === "string") {
       logs.push({
-        message: `"${args.office}" office added by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+        message: `"${args.office}" office added by ${ctx.req.user.firstName} ${
+          ctx.req.user.lastName
+        }`,
         messageCode: "OFFICE_ADDED"
       });
     }
@@ -766,8 +766,8 @@ const Mutations = {
     else if (typeof existingOffice === "string" && args.office === null) {
       logs.push({
         message: `"${existingOffice}" office removed by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "OFFICE_REMOVED"
       });
     }
@@ -776,14 +776,14 @@ const Mutations = {
       logs.push(
         {
           message: `"${existingOffice}" office removed by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+            ctx.req.user.firstName
+          } ${ctx.req.user.lastName}`,
           messageCode: "OFFICE_REMOVED"
         },
         {
           message: `"${args.office}" office added by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+            ctx.req.user.firstName
+          } ${ctx.req.user.lastName}`,
           messageCode: "OFFICE_ADDED"
         }
       );
@@ -812,15 +812,15 @@ const Mutations = {
   },
   async updateTitle(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN"]);
+    hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { title: existingTitle } = await ctx.db.query.user(
       { where: { id: args.userId } },
@@ -835,7 +835,7 @@ const Mutations = {
       time: new Date(),
       logger: {
         connect: {
-          id: ctx.request.userId
+          id: ctx.req.userId
         }
       }
     };
@@ -845,9 +845,9 @@ const Mutations = {
     // Add new value
     if (existingTitle === null && typeof args.title === "string") {
       logs.push({
-        message: `"${args.title}" title added by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+        message: `"${args.title}" title added by ${ctx.req.user.firstName} ${
+          ctx.req.user.lastName
+        }`,
         messageCode: "TITLE_ADDED"
       });
     }
@@ -855,8 +855,8 @@ const Mutations = {
     else if (typeof existingTitle === "string" && args.title === null) {
       logs.push({
         message: `"${existingTitle}" title removed by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "TITLE_REMOVED"
       });
     }
@@ -865,14 +865,14 @@ const Mutations = {
       logs.push(
         {
           message: `"${existingTitle}" title removed by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+            ctx.req.user.firstName
+          } ${ctx.req.user.lastName}`,
           messageCode: "TITLE_REMOVED"
         },
         {
-          message: `"${args.title}" title added by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+          message: `"${args.title}" title added by ${ctx.req.user.firstName} ${
+            ctx.req.user.lastName
+          }`,
           messageCode: "TITLE_ADDED"
         }
       );
@@ -902,15 +902,15 @@ const Mutations = {
   },
   async createEvent(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { event } = args;
 
@@ -938,7 +938,7 @@ const Mutations = {
       rallyTime: event.rallyTime || "",
       membersOnly: false, // TODO
       creator: {
-        connect: { id: ctx.request.userId }
+        connect: { id: ctx.req.userId }
       },
       host: {
         connect: {
@@ -964,15 +964,15 @@ const Mutations = {
   },
   async updateEvent(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { event, id: eventId } = args;
 
@@ -998,7 +998,7 @@ const Mutations = {
       rallyTime: event.rallyTime || "",
       membersOnly: false, // TODO
       creator: {
-        connect: { id: ctx.request.userId }
+        connect: { id: ctx.req.userId }
       },
       host: {
         connect: {
@@ -1058,18 +1058,18 @@ const Mutations = {
   },
   async setRSVP(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     const { rsvp } = args;
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     // Requesting user has proper role?
-    if (ctx.request.userId !== rsvp.userId) {
-      hasRole(ctx.request.user, ["ADMIN", "OFFICER"]);
+    if (ctx.req.userId !== rsvp.userId) {
+      hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);
     }
 
     // Query the current user
@@ -1129,12 +1129,12 @@ const Mutations = {
   },
   async sendMessage(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Requesting user has proper account status?
-    const { user } = ctx.request;
+    const { user } = ctx.req;
 
     const { to, subject, htmlText } = args;
 
@@ -1303,14 +1303,14 @@ const Mutations = {
   },
   async updateUserProfileSettings(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
     if (
-      hasRole(ctx.request.user, ["ADMIN", "OFFICER"], false) ||
-      isSelf(ctx.request.user, args.id, false)
+      hasRole(ctx.req.user, ["ADMIN", "OFFICER"], false) ||
+      isSelf(ctx.req.user, args.id, false)
     ) {
       // Query the current user
       const currentUser = await ctx.db.query.user(
@@ -1334,7 +1334,7 @@ const Mutations = {
           messageCode: "MEMBERSHIP_GRANTED",
           logger: {
             connect: {
-              id: ctx.request.userId
+              id: ctx.req.userId
             }
           }
         });
@@ -1347,13 +1347,13 @@ const Mutations = {
       ) {
         logs.push({
           time: new Date(),
-          message: `Account unlocked by ${ctx.request.user.firstName} ${
-            ctx.request.user.lastName
+          message: `Account unlocked by ${ctx.req.user.firstName} ${
+            ctx.req.user.lastName
           }`,
           messageCode: "ACCOUNT_UNLOCKED",
           logger: {
             connect: {
-              id: ctx.request.userId
+              id: ctx.req.userId
             }
           }
         });
@@ -1424,19 +1424,19 @@ const Mutations = {
   },
   async updateUserAdminProfileSettings(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    if (!hasRole(ctx.request.user, ["ADMIN", "OFFICER"], false)) {
+    if (!hasRole(ctx.req.user, ["ADMIN", "OFFICER"], false)) {
       throw new Error(
         "User profile can only be updated by an admin or an officer"
       );
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { data } = args;
 
@@ -1451,7 +1451,7 @@ const Mutations = {
       time: new Date(),
       logger: {
         connect: {
-          id: ctx.request.userId
+          id: ctx.req.userId
         }
       }
     };
@@ -1461,9 +1461,9 @@ const Mutations = {
     // Add new title
     if (currentUser.title === null && typeof data.title === "string") {
       logs.push({
-        message: `"${data.title}" title added by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+        message: `"${data.title}" title added by ${ctx.req.user.firstName} ${
+          ctx.req.user.lastName
+        }`,
         messageCode: "TITLE_ADDED"
       });
     }
@@ -1471,8 +1471,8 @@ const Mutations = {
     else if (typeof currentUser.title === "string" && data.title === null) {
       logs.push({
         message: `"${currentUser.title}" title removed by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "TITLE_REMOVED"
       });
     }
@@ -1485,14 +1485,14 @@ const Mutations = {
       logs.push(
         {
           message: `"${currentUser.title}" title removed by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+            ctx.req.user.firstName
+          } ${ctx.req.user.lastName}`,
           messageCode: "TITLE_REMOVED"
         },
         {
-          message: `"${data.title}" title added by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+          message: `"${data.title}" title added by ${ctx.req.user.firstName} ${
+            ctx.req.user.lastName
+          }`,
           messageCode: "TITLE_ADDED"
         }
       );
@@ -1501,9 +1501,9 @@ const Mutations = {
     // Add new office
     if (currentUser.office === null && typeof data.office === "string") {
       logs.push({
-        message: `"${data.office}" office added by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+        message: `"${data.office}" office added by ${ctx.req.user.firstName} ${
+          ctx.req.user.lastName
+        }`,
         messageCode: "OFFICE_ADDED"
       });
     }
@@ -1511,8 +1511,8 @@ const Mutations = {
     else if (typeof currentUser.office === "string" && data.office === null) {
       logs.push({
         message: `"${currentUser.office}" office removed by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "OFFICE_REMOVED"
       });
     }
@@ -1525,14 +1525,14 @@ const Mutations = {
       logs.push(
         {
           message: `"${currentUser.office}" office removed by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+            ctx.req.user.firstName
+          } ${ctx.req.user.lastName}`,
           messageCode: "OFFICE_REMOVED"
         },
         {
           message: `"${data.office}" office added by ${
-            ctx.request.user.firstName
-          } ${ctx.request.user.lastName}`,
+            ctx.req.user.firstName
+          } ${ctx.req.user.lastName}`,
           messageCode: "OFFICE_ADDED"
         }
       );
@@ -1540,9 +1540,9 @@ const Mutations = {
 
     if (currentUser.role !== data.role) {
       logs.push({
-        message: `Role changed to "${data.role}" by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+        message: `Role changed to "${data.role}" by ${ctx.req.user.firstName} ${
+          ctx.req.user.lastName
+        }`,
         messageCode: "ACCOUNT_CHANGED"
       });
     }
@@ -1550,8 +1550,8 @@ const Mutations = {
     if (currentUser.accountStatus !== data.accountStatus) {
       logs.push({
         message: `Account status changed to "${data.accountStatus}" by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "ACCOUNT_CHANGED"
       });
     }
@@ -1559,8 +1559,8 @@ const Mutations = {
     if (currentUser.accountType !== data.accountType) {
       logs.push({
         message: `Account type changed to "${data.accountType}" by ${
-          ctx.request.user.firstName
-        } ${ctx.request.user.lastName}`,
+          ctx.req.user.firstName
+        } ${ctx.req.user.lastName}`,
         messageCode: "ACCOUNT_CHANGED"
       });
     }
@@ -1595,7 +1595,7 @@ const Mutations = {
   },
   async updateAvatar(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
@@ -1641,7 +1641,7 @@ const Mutations = {
           }
         }
       },
-      where: { id: ctx.request.userId }
+      where: { id: ctx.req.userId }
     };
 
     const results = await ctx.db.mutation.updateUser(obj, info);
@@ -1651,10 +1651,10 @@ const Mutations = {
         time: new Date(),
         message: `Added a new profile photo`,
         messageCode: "PROFILE_PHOTO_SUBMITTED",
-        link: `/profile/${ctx.request.user.username}`,
+        link: `/profile/${ctx.req.user.username}`,
         user: {
           connect: {
-            id: ctx.request.userId
+            id: ctx.req.userId
           }
         }
       }
@@ -1668,7 +1668,7 @@ const Mutations = {
   },
   async deleteAvatar(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
@@ -1693,7 +1693,7 @@ const Mutations = {
           delete: true
         }
       },
-      where: { id: ctx.request.userId }
+      where: { id: ctx.req.userId }
     };
 
     const results = await ctx.db.mutation.updateUser(obj, info);
@@ -1705,7 +1705,7 @@ const Mutations = {
   },
   async updateRig(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
@@ -1759,7 +1759,7 @@ const Mutations = {
           }
         }
       },
-      where: { id: ctx.request.userId }
+      where: { id: ctx.req.userId }
     };
 
     const results = await ctx.db.mutation.updateUser(obj, info);
@@ -1769,10 +1769,10 @@ const Mutations = {
         time: new Date(),
         message: `Added a new rigbook photo`,
         messageCode: "RIGBOOK_PHOTO_SUBMITTED",
-        link: `/profile/${ctx.request.user.username}`,
+        link: `/profile/${ctx.req.user.username}`,
         user: {
           connect: {
-            id: ctx.request.userId
+            id: ctx.req.userId
           }
         }
       }
@@ -1786,7 +1786,7 @@ const Mutations = {
   },
   async deleteRig(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
@@ -1811,7 +1811,7 @@ const Mutations = {
           delete: true
         }
       },
-      where: { id: ctx.request.userId }
+      where: { id: ctx.req.userId }
     };
 
     const results = await ctx.db.mutation.updateUser(obj, info);
@@ -1823,12 +1823,12 @@ const Mutations = {
   },
   async updateVehicle(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Requesting user has proper account status?
-    // hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    // hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { vehicle, id: vehicleId } = args;
     const { outfitLevel, mods, ...restVehicle } = vehicle;
@@ -1858,7 +1858,7 @@ const Mutations = {
       {
         data,
         where: {
-          id: ctx.request.userId
+          id: ctx.req.userId
         }
       },
       info
@@ -1868,15 +1868,15 @@ const Mutations = {
   },
   async submitElection(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN", "OFFICER"]);
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { election } = args;
 
@@ -1903,15 +1903,15 @@ const Mutations = {
   },
   async submitVote(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Requesting user has proper account type?
-    hasAccountType(ctx.request.user, ["FULL"]);
+    hasAccountType(ctx.req.user, ["FULL"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     // Have they voted for this ballot before?
     const { vote } = args;
@@ -1920,7 +1920,7 @@ const Mutations = {
         where: {
           AND: [
             { ballot: { id: vote.ballot } },
-            { voter: { id: ctx.request.userId } }
+            { voter: { id: ctx.req.userId } }
           ]
         }
       },
@@ -1940,7 +1940,7 @@ const Mutations = {
       },
       voter: {
         connect: {
-          id: ctx.request.userId
+          id: ctx.req.userId
         }
       }
     };
@@ -1958,15 +1958,15 @@ const Mutations = {
   },
   async createTrail(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { trail } = args;
     const { featuredImage, newFeaturedImage, ...filteredTrail } = trail;
@@ -1988,15 +1988,15 @@ const Mutations = {
   },
   async updateTrail(parent, args, ctx, info) {
     // Logged in?
-    if (!ctx.request.userId) {
+    if (!ctx.req.userId) {
       throw new Error("User must be logged in");
     }
 
     // Have proper roles to do this?
-    hasRole(ctx.request.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.request.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
 
     const { trail, id: trailId } = args;
     const { newFeaturedImage, featuredImage, ...filteredTrail } = trail;

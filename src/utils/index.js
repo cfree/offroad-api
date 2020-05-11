@@ -74,7 +74,7 @@ module.exports.isSelf = function isSelf(
 ) {
   const result = currentUser.id === idInQuestion;
 
-  console.log("current user id", currentUser.id);
+  // console.log("current user id", currentUser.id);
 
   if (!result && shouldThrow) {
     throw new Error("You can only update your own information");
