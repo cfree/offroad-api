@@ -18,9 +18,9 @@ const Election = require("./resolvers/Election");
 const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 
-const isLambda = process.env.NODE_ENV === "production";
-const src = isLambda ? "functions/bundle" : "src";
-const typeDefs = importSchema(`./${src}/schema.graphql`);
+const isLambda = process.env.LAMBDA_TASK_ROOT;
+const src = isLambda ? isLambda : "src";
+const typeDefs = importSchema(`${src}/schema.graphql`);
 console.log(__dirname);
 
 const db = new Prisma({
