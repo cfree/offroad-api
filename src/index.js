@@ -10,7 +10,6 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const { Prisma } = require("prisma-binding");
 const { importSchema } = require("graphql-import");
-// import * as typeDefs from "./schema.graphql";
 
 const Mutation = require("./resolvers/Mutation");
 const Query = require("./resolvers/Query");
@@ -18,13 +17,18 @@ const Election = require("./resolvers/Election");
 const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 
-const isLambda = process.env.LAMBDA_TASK_ROOT;
-const src = isLambda ? `${isLambda}/bundle` : "src";
-const typeDefs = importSchema(`${src}/schema.graphql`);
-console.log(__dirname);
+// const { general, prisma } = require("./typeDefs");
+
+// const isLambda = process.env.LAMBDA_TASK_ROOT;
+// const src = isLambda ? `${isLambda}/bundle` : "src";
+const typeDefs = importSchema(require.resolve("./schema.graphql"));
+const prismaTypeDefs = importSchema(
+  require.resolve("./generated/prisma.graphql")
+);
+// console.log(__dirname);
 
 const db = new Prisma({
-  typeDefs: `${src}/generated/prisma.graphql`,
+  typeDefs: prismaTypeDefs,
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
   debug: process.env.NODE_ENV === "development"
@@ -36,7 +40,9 @@ const corsOptions = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs,
+  typeDefs: gql`
+    ${typeDefs}
+  `,
   resolvers: {
     Mutation,
     Query,
