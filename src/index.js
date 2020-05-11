@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const { Prisma } = require("prisma-binding");
 const { importSchema } = require("graphql-import");
+// import * as typeDefs from "./schema.graphql";
 
 const Mutation = require("./resolvers/Mutation");
 const Query = require("./resolvers/Query");
@@ -18,8 +19,9 @@ const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 
 const isLambda = process.env.NODE_ENV === "production";
-const src = isLambda ? "bundle" : "src";
-const typeDefs = importSchema(`${src}/schema.graphql`);
+const src = isLambda ? "functions/bundle" : "src";
+const typeDefs = importSchema(`./${src}/schema.graphql`);
+console.log(__dirname);
 
 const db = new Prisma({
   typeDefs: `${src}/generated/prisma.graphql`,
