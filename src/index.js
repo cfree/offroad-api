@@ -19,7 +19,7 @@ const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 
 const isLambda = process.env.LAMBDA_TASK_ROOT;
-const src = isLambda ? isLambda : "src";
+const src = isLambda ? `${isLambda}/bundle` : "src";
 const typeDefs = importSchema(`${src}/schema.graphql`);
 console.log(__dirname);
 
