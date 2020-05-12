@@ -5,7 +5,7 @@
   "description": "The backend of offroad club members site",
   "scripts": {
     "start": "node .",
-    "bundle": "cpx 'src/**/*' 'build/functions'",
+    "bundle": "cpx 'src/**/*' 'functions' && cpx 'package.json' 'functions'",
     "restart": "nodemon -e js,graphql -x node .",
     "dev": "nodemon -e js,graphql -x node --inspect .",
     "test": "jest",
