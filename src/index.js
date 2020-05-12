@@ -8,9 +8,10 @@ const {
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const { Prisma } = require("./generated");
-const { shared, typeDefs } = require("./schema");
-// const { importSchema } = require("graphql-import");
+// const { Prisma } = require("./generated");
+const { Prisma } = require("prisma-binding");
+// const { shared, typeDefs } = require("./schema");
+const { importSchema } = require("graphql-import");
 
 const Mutation = require("./resolvers/Mutation");
 const Query = require("./resolvers/Query");
@@ -24,8 +25,21 @@ const Trail = require("./resolvers/Trail");
 // const isLambda = process.env.LAMBDA_TASK_ROOT;
 // const src = isLambda ? `${isLambda}/bundle` : "src";
 
-// const generalTypeDefs = importSchema(require.resolve("./schema.graphql"));
-// const prismaTypeDefs = importSchema(require__dirname.concat("/generated/prisma.graphql"));
+// process.env.PWD
+// Get current path
+// Find where in the current path process.env.PWD is
+// Take everything
+
+// /etc/users/src/file.txt  <- Current path
+const currentPath = __dirname;
+// /etc/users/              <- Root directory
+const rootDirectory = process.env.PWD;
+// src/file.txt             <- path from root
+const pathFromRoot = "." + currentPath.replace(rootDirectory, "");
+console.log("PATG", pathFromRoot);
+
+const generalTypeDefs = importSchema(pathFromRoot + "/schema.graphql");
+const prismaTypeDefs = importSchema(pathFromRoot + "/generated/prisma.graphql");
 
 const isDev = process.env.NODE_ENV === "development";
 const src = isDev ? "./src" : "./bundle";
@@ -33,13 +47,18 @@ const src = isDev ? "./src" : "./bundle";
 // const prismaTypeDefs = `${src}/generated/prisma.graphql`;
 // const generalTypeDefs = importSchema(`${src}/schema.graphql`);
 
+// const db = new Prisma({
+//   endpoint: process.env.PRISMA_ENDPOINT,
+//   secret: process.env.PRISMA_SECRET,
+//   debug: process.env.NODE_ENV === "development"
+// });
+
 const db = new Prisma({
+  typeDefs: prismaTypeDefs,
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
   debug: process.env.NODE_ENV === "development"
 });
-
-console.log("db", db);
 
 /*
 "- /var/task/bundle/index.js",
@@ -54,7 +73,7 @@ const corsOptions = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: shared.concat(typeDefs),
+  typeDefs: gql(generalTypeDefs),
   resolvers: {
     Mutation,
     Query,
@@ -127,7 +146,7 @@ app.use(async (req, res, next) => {
   if (!req.userId) {
     return next();
   }
-  const user = await db.user(
+  const user = await db.query.user(
     { where: { id: req.userId } },
     "{ id, role, accountType, accountStatus, email, firstName, lastName, username }"
   );
