@@ -5,7 +5,7 @@
   "description": "The backend of offroad club members site",
   "scripts": {
     "start": "node .",
-    "bundle": "cpx 'src/**/*' 'functions/bundle'",
+    "bundle": "cpx 'src/**/*' 'functions/bundle' && cpx 'package.json' 'build'",
     "restart": "nodemon -e js,graphql -x node .",
     "dev": "nodemon -e js,graphql -x node --inspect .",
     "test": "jest",
@@ -38,7 +38,7 @@
     "nodemon": "1.18.4",
     "npm-run-all": "^4.1.3",
     "prisma": "^1.34.10",
-    "prisma-binding": "^2.1.6",
+    "prisma-binding": "^2.3.16",
     "serverless-http": "^2.3.2",
     "stripe": "^6.12.1"
   },

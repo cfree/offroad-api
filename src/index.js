@@ -17,15 +17,16 @@ const Election = require("./resolvers/Election");
 const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 
-// const { general, prisma } = require("./typeDefs");
+// const typeDefs = require("./schema");
+// const { typeDefs: prismaTypeDefs } = require("./generated/prisma-schema");
 
 // const isLambda = process.env.LAMBDA_TASK_ROOT;
 // const src = isLambda ? `${isLambda}/bundle` : "src";
-const typeDefs = importSchema(require.resolve("./schema.graphql"));
-const prismaTypeDefs = importSchema(
-  require.resolve("./generated/prisma.graphql")
-);
-// console.log(__dirname);
+
+// const generalTypeDefs = importSchema(require.resolve("./schema.graphql"));
+// const prismaTypeDefs = require__dirname.concat("/generated/prisma.graphql");
+const prismaTypeDefs = `${__dirname}/generated/prisma.graphql`;
+const generalTypeDefs = importSchema(`${__dirname}/schema.graphql`);
 
 const db = new Prisma({
   typeDefs: prismaTypeDefs,
@@ -34,15 +35,20 @@ const db = new Prisma({
   debug: process.env.NODE_ENV === "development"
 });
 
+/*
+"- /var/task/bundle/index.js",
+"- /var/task/graphql.js",
+"- /var/runtime/UserFunction.js",
+"- /var/runtime/index.js",
+*/
+
 const corsOptions = {
   credentials: true,
   origin: process.env.FRONTEND_URL
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: gql`
-    ${typeDefs}
-  `,
+  typeDefs: gql(generalTypeDefs),
   resolvers: {
     Mutation,
     Query,
@@ -53,17 +59,22 @@ const schema = makeExecutableSchema({
   resolverValidationOptions: { requireResolversForResolveType: false }
 });
 
-// Create GraphQL yoga server
-const createServer = () => {
-  //   typeDefs: "src/schema.graphql",
-  return new ApolloServer({
-    schema,
-    context: req => ({ ...req, db })
-  });
-};
+// Create GraphQL server
+// const createServer = () => {
+//   //   typeDefs: "src/schema.graphql",
+//   return new ApolloServer({
+//     schema,
+//     context: req => ({ ...req, db })
+//   });
+// };
 
 const app = express();
-const server = createServer();
+// const server = createServer();
+// Create GraphQL server
+const server = new ApolloServer({
+  schema,
+  context: req => ({ ...req, db })
+});
 
 // Daily Automation:::
 
