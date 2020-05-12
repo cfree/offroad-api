@@ -1,6 +1,6 @@
 const serverlessHttp = require("serverless-http");
 
-const { app } = require("./bundle/index.js");
+const { app } = require("../functions/bundle/index.js");
 
 exports.handler = serverlessHttp(app, {
   /**
