@@ -1,4 +1,5 @@
 require("dotenv").config({ path: "variables.env" });
+const serverlessHttp = require("serverless-http");
 const express = require("express");
 const {
   ApolloServer,
@@ -163,4 +164,16 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
-exports.app = app;
+module.exports.handler = serverlessHttp(app, {
+  /**
+   * **** IMPORTANT ****
+   * this request() function is important because
+   * it adds the lambda's event and context object
+   * into the express's req object so you can access
+   * inside the resolvers or routes if youre not using apollo
+   */
+  request(req, event, context) {
+    req.event = event;
+    req.context = context;
+  }
+});
