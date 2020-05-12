@@ -1,5 +1,5 @@
-const { monthInMs } = require("../utils");
-const { subDays } = require("date-fns");
+import { monthInMs } from "../utils";
+import { subDays } from "date-fns";
 
 const Trail = {
   // Pattern borrowed from playbook:
@@ -112,4 +112,4 @@ const Trail = {
   }
 };
 
-module.exports = Trail;
+export default Trail;

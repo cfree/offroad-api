@@ -1,8 +1,4 @@
-module.exports.hasRole = function hasRole(
-  user,
-  rolesNeeded,
-  shouldThrow = true
-) {
+export const hasRole = function hasRole(user, rolesNeeded, shouldThrow = true) {
   const matchedRoles = rolesNeeded.includes(user.role);
 
   if (!matchedRoles && shouldThrow) {
@@ -16,7 +12,7 @@ module.exports.hasRole = function hasRole(
   return matchedRoles;
 };
 
-module.exports.hasAccountStatus = function hasAccountStatus(
+export const hasAccountStatus = function hasAccountStatus(
   user,
   statusNeeded,
   shouldThrow = true
@@ -34,7 +30,7 @@ module.exports.hasAccountStatus = function hasAccountStatus(
   return matchedStatus;
 };
 
-module.exports.hasAccountType = function hasAccountType(
+export const hasAccountType = function hasAccountType(
   user,
   typeNeeded,
   shouldThrow = true
@@ -52,7 +48,7 @@ module.exports.hasAccountType = function hasAccountType(
   return matchedType;
 };
 
-module.exports.hasRoleOrIsSelf = function hasRoleOrIsSelf(
+export const hasRoleOrIsSelf = function hasRoleOrIsSelf(
   currentUser,
   rolesNeeded,
   idInQuestion,
@@ -67,7 +63,7 @@ module.exports.hasRoleOrIsSelf = function hasRoleOrIsSelf(
   }
 };
 
-module.exports.isSelf = function isSelf(
+export const isSelf = function isSelf(
   currentUser,
   idInQuestion,
   shouldThrow = true
@@ -83,11 +79,11 @@ module.exports.isSelf = function isSelf(
   return result;
 };
 
-module.exports.yearInMs = 1000 * 60 * 60 * 24 * 365; // 1 year
-module.exports.monthInMs = 1000 * 60 * 60 * 24 * 30;
-module.exports.resetTokenTimeoutInMs = 3600000; // 1 hour
+export const yearInMs = 1000 * 60 * 60 * 24 * 365; // 1 year
+export const monthInMs = 1000 * 60 * 60 * 24 * 30;
+export const resetTokenTimeoutInMs = 3600000; // 1 hour
 
-module.exports.getUploadLocation = appendage =>
+export const getUploadLocation = appendage =>
   process.env.NODE_ENV === "development"
     ? `dev_${appendage}`
     : `prod_${appendage}`;

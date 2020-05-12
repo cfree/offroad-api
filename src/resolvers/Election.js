@@ -1,4 +1,4 @@
-const { addFragmentToInfo } = require('graphql-binding');
+import { addFragmentToInfo } from "graphql-binding";
 
 const Election = {
   races(parent, args, ctx, info) {
@@ -7,4 +7,4 @@ const Election = {
   }
 };
 
-module.exports = Election;
+export default Election;

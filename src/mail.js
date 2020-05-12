@@ -1,9 +1,9 @@
-const SendGrid = require("@sendgrid/mail");
-const nodemailer = require("nodemailer");
+import SendGrid from "@sendgrid/mail";
+import nodemailer from "nodemailer";
 
 SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
 
-const sendTransactionalEmail = async emailData => {
+export const sendTransactionalEmail = async emailData => {
   const mailSettings = {};
 
   if (process.env.NODE_ENV === "production") {
@@ -60,5 +60,3 @@ const sendTransactionalEmail = async emailData => {
   //   // },
   // },
 };
-
-module.exports.sendTransactionalEmail = sendTransactionalEmail;

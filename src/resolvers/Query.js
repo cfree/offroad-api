@@ -1,11 +1,11 @@
-const { addFragmentToInfo } = require("graphql-binding");
-const {
+import { addFragmentToInfo } from "graphql-binding";
+import {
   hasRole,
   hasAccountType,
   hasAccountStatus,
   resetTokenTimeoutInMs
-} = require("../utils");
-const config = require("../config");
+} from "../utils";
+import { accountType } from "../config";
 
 const Query = {
   myself(parent, args, ctx, info) {
@@ -289,7 +289,7 @@ const Query = {
     }
 
     if (hasRole(user, ["ADMIN", "OFFICER"], false)) {
-      query.where = { accountType_in: config.accountType };
+      query.where = { accountType_in: accountType };
     } else if (hasAccountType(user, members, false)) {
       query.where = {
         AND: [{ accountStatus: "ACTIVE" }, { accountType_in: members }]
@@ -881,4 +881,4 @@ const Query = {
   }
 };
 
-module.exports = Query;
+export default Query;

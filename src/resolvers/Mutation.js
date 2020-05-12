@@ -1,9 +1,9 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { randomBytes } = require("crypto");
-const { promisify } = require("util");
-const fetch = require("node-fetch");
-const cloudinary = require("cloudinary").v2;
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { randomBytes } from "crypto";
+import { promisify } from "util";
+import fetch from "node-fetch";
+import { v2 as cloudinary } from "cloudinary";
 
 const promisifiedRandomBytes = promisify(randomBytes);
 
@@ -18,8 +18,8 @@ const promisifiedDestroy = promisify(cloudinary.uploader.destroy);
 
 const HASH_SECRET = process.env.HASH_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
-const { sendTransactionalEmail } = require("../mail");
-const {
+import { sendTransactionalEmail } from "../mail";
+import {
   yearInMs,
   resetTokenTimeoutInMs,
   hasRole,
@@ -27,8 +27,8 @@ const {
   hasAccountType,
   isSelf,
   getUploadLocation
-} = require("../utils");
-const { roles, emailGroups } = require("../config");
+} from "../utils";
+import { roles, emailGroups } from "../config";
 
 const getHash = async pw => {
   const salt = await bcrypt.hash(HASH_SECRET, 10);
@@ -40,7 +40,7 @@ const tokenSettings = {
   maxAge: yearInMs
 };
 
-const Mutations = {
+const Mutation = {
   async register(parent, args, ctx, info) {
     const { firstName, lastName, email, confirmEmail, source } = args;
 
@@ -2050,4 +2050,4 @@ const Mutations = {
   }
 };
 
-module.exports = Mutations;
+export default Mutation;

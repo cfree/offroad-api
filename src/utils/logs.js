@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   accountCreated: () => ({
     message: "Account created"
   }),
@@ -11,7 +11,9 @@ module.exports = {
     //   : `${property} automatically changed from "${beforeState}" to "${afterState}"`,
     return {
       time: new Date(),
-      message: `Account type changed to "${afterState}" by ${logger.firstName} ${logger.lastName}`,
+      message: `Account type changed to "${afterState}" by ${
+        logger.firstName
+      } ${logger.lastName}`,
       messageCode: "ACCOUNT_CHANGED",
       logger: {
         connect: {

@@ -1,23 +1,20 @@
-require("dotenv").config({ path: "variables.env" });
-const express = require("express");
-const {
-  ApolloServer,
-  gql,
-  makeExecutableSchema
-} = require("apollo-server-express");
-const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken");
-const cors = require("cors");
-const { Prisma } = require("prisma-binding");
-const { importSchema } = require("graphql-import");
+import { config } from "dotenv";
+config({ path: "variables.env" });
 
-const Mutation = require("./resolvers/Mutation");
-const Query = require("./resolvers/Query");
-const Election = require("./resolvers/Election");
-const Ballot = require("./resolvers/Ballot");
-const Trail = require("./resolvers/Trail");
+import express from "express";
+import { ApolloServer, gql, makeExecutableSchema } from "apollo-server-express";
+import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
+import cors from "cors";
+import { Prisma } from "prisma-binding";
+import { importSchema } from "graphql-import";
 
-// const typeDefs = require("./schema");
+import Mutation from "./resolvers/Mutation";
+import Query from "./resolvers/Query";
+import Election from "./resolvers/Election";
+import Ballot from "./resolvers/Ballot";
+import Trail from "./resolvers/Trail";
+
 // const { typeDefs: prismaTypeDefs } = require("./generated/prisma-schema");
 
 // const isLambda = process.env.LAMBDA_TASK_ROOT;
@@ -25,11 +22,13 @@ const Trail = require("./resolvers/Trail");
 
 // const generalTypeDefs = importSchema(require.resolve("./schema.graphql"));
 // const prismaTypeDefs = importSchema(require__dirname.concat("/generated/prisma.graphql"));
-const prismaTypeDefs = `${__dirname}/generated/prisma.graphql`;
-const generalTypeDefs = importSchema(`${__dirname}/schema.graphql`);
+const generalTypeDefs = importSchema("./src/schema.graphql");
+// const generalTypeDefs = importSchema("./src/generated/prisma.graphql");
+// import generalTypeDefs from "./src/schema.graphql";
+// import prismaTypeDefs from "./generated/prisma.graphql";
 
 const db = new Prisma({
-  typeDefs: "src/generated/prisma.graphql",
+  typeDefs: "./src/generated/prisma.graphql",
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
   debug: process.env.NODE_ENV === "development"
@@ -132,10 +131,10 @@ app.use(async (req, res, next) => {
 
 server.applyMiddleware({ app, cors: false });
 
-if (process.env.NODE_ENV === "development") {
+if (process.env.NODE_ENV !== "production") {
   app.listen({ port: 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
   );
 }
 
-exports.app = app;
+export default app;
