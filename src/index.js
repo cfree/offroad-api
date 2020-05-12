@@ -25,11 +25,15 @@ const Trail = require("./resolvers/Trail");
 
 // const generalTypeDefs = importSchema(require.resolve("./schema.graphql"));
 // const prismaTypeDefs = importSchema(require__dirname.concat("/generated/prisma.graphql"));
-const prismaTypeDefs = `${__dirname}/generated/prisma.graphql`;
-const generalTypeDefs = importSchema(`${__dirname}/schema.graphql`);
+
+const isDev = process.env.NODE_ENV === "development";
+const src = isDev ? "./src" : "./bundle";
+
+const prismaTypeDefs = `${src}/generated/prisma.graphql`;
+const generalTypeDefs = importSchema(`${src}/schema.graphql`);
 
 const db = new Prisma({
-  typeDefs: "src/generated/prisma.graphql",
+  typeDefs: prismaTypeDefs,
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
   debug: process.env.NODE_ENV === "development"
