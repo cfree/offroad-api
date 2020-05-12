@@ -1,8 +1,8 @@
-import serverlessHttp from "serverless-http";
+const serverlessHttp = require("serverless-http");
 
-import app from "./index.js";
+const app = require("./index.js");
 
-export const handler = serverlessHttp(app, {
+module.exports.handler = serverlessHttp(app, {
   /**
    * **** IMPORTANT ****
    * this request() function is important because
