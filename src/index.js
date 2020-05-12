@@ -8,8 +8,9 @@ const {
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-const { Prisma } = require("prisma-binding");
-const { importSchema } = require("graphql-import");
+const { Prisma } = require("./generated");
+const { shared, typeDefs } = require("./schema");
+// const { importSchema } = require("graphql-import");
 
 const Mutation = require("./resolvers/Mutation");
 const Query = require("./resolvers/Query");
@@ -29,15 +30,16 @@ const Trail = require("./resolvers/Trail");
 const isDev = process.env.NODE_ENV === "development";
 const src = isDev ? "./src" : "./bundle";
 
-const prismaTypeDefs = `${src}/generated/prisma.graphql`;
-const generalTypeDefs = importSchema(`${src}/schema.graphql`);
+// const prismaTypeDefs = `${src}/generated/prisma.graphql`;
+// const generalTypeDefs = importSchema(`${src}/schema.graphql`);
 
 const db = new Prisma({
-  typeDefs: prismaTypeDefs,
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
   debug: process.env.NODE_ENV === "development"
 });
+
+console.log("db", db);
 
 /*
 "- /var/task/bundle/index.js",
@@ -52,7 +54,7 @@ const corsOptions = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: gql(generalTypeDefs),
+  typeDefs: shared.concat(typeDefs),
   resolvers: {
     Mutation,
     Query,
@@ -125,7 +127,7 @@ app.use(async (req, res, next) => {
   if (!req.userId) {
     return next();
   }
-  const user = await db.query.user(
+  const user = await db.user(
     { where: { id: req.userId } },
     "{ id, role, accountType, accountStatus, email, firstName, lastName, username }"
   );
