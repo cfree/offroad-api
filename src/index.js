@@ -164,7 +164,7 @@ if (process.env.NODE_ENV === "development") {
   );
 }
 
-module.exports.handler = serverlessHttp(app, {
+module.exports.app = serverlessHttp(app, {
   /**
    * **** IMPORTANT ****
    * this request() function is important because

@@ -1,3 +1,3 @@
-const { handler } = require("./bundle/index.js");
+const { app } = require("./bundle/index.js");
 
-exports.handler = handler;
+exports.handler = app;
