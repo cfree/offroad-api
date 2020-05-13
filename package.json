@@ -5,6 +5,8 @@
   "description": "The backend of offroad club members site",
   "scripts": {
     "start": "node .",
+    "prebuild": "cpx 'src/**/*' 'lambda/graphql' && cpx 'package.json' 'lambda/graphql'",
+    "build": "netlify-lambda build lambda/graphql",
     "prebundle": "cpx 'src/**/*' 'lambda/graphql' && cpx 'package.json' 'lambda/graphql'",
     "bundle": "cd lambda; npm i; cd ..; zip -r ./functions/graphql.zip lambda",
     "restart": "nodemon -e js,graphql -x node .",
