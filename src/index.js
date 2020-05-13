@@ -158,11 +158,11 @@ app.use(async (req, res, next) => {
 
 server.applyMiddleware({ app, cors: false });
 
-if (process.env.NODE_ENV === "development") {
-  app.listen({ port: 4000 }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-  );
-}
+// if (process.env.NODE_ENV === "development") {
+app.listen({ port: 4000 }, () =>
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+);
+// }
 
 module.exports.app = serverlessHttp(app, {
   /**
