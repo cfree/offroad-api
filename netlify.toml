@@ -1,4 +1,4 @@
 [build]
 functions = "functions"
 publish = "public"
-command = "npm ci && npm run bundle"
+command = "npm run bundle"
