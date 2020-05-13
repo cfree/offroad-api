@@ -1,4 +1,4 @@
 [build]
 functions = "functions"
 publish = "public"
-command = "npm install &&  && netlify-lambda build func"
+command = "npm ci && npm run bundle"
