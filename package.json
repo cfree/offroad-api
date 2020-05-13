@@ -12,6 +12,9 @@
     "test": "jest",
     "deploy": "prisma deploy --env-file variables.env"
   },
+  "engines": {
+    "node": "13.13.0"
+  },
   "main": "src/index.js",
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",

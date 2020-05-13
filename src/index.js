@@ -163,7 +163,9 @@ if (process.env.NODE_ENV === "development") {
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
   );
 } else {
-  app.listen({ port: 4000 });
+  app.listen({ port: 4000 }, () =>
+    console.log(`🚀 Server ready: ${server.graphqlPath}`)
+  );
 }
 
 module.exports.app = serverlessHttp(app, {
