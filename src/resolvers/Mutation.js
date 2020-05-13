@@ -37,7 +37,9 @@ const getHash = async pw => {
 
 const tokenSettings = {
   httpOnly: true,
-  maxAge: yearInMs
+  maxAge: yearInMs,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "Lax" : "None"
 };
 
 const Mutations = {
