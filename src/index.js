@@ -9,9 +9,7 @@ const {
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
-// const { Prisma } = require("./generated");
 const { Prisma } = require("prisma-binding");
-// const { shared, typeDefs } = require("./schema");
 const { importSchema } = require("graphql-import");
 
 const Mutation = require("./resolvers/Mutation");
@@ -32,18 +30,17 @@ const Trail = require("./resolvers/Trail");
 // Take everything
 
 // /etc/users/src/file.txt  <- Current path
-const currentPath = __dirname;
+// const currentPath = __dirname;
 // /etc/users/              <- Root directory
-const rootDirectory = process.env.PWD;
+// const rootDirectory = process.env.PWD;
 // src/file.txt             <- path from root
-const pathFromRoot = "." + currentPath.replace(rootDirectory, "");
-console.log("PATG", pathFromRoot);
+// const pathFromRoot = "." + currentPath.replace(rootDirectory, "");
+// console.log("PATG", pathFromRoot);
 
-const generalTypeDefs = importSchema(pathFromRoot + "/schema.graphql");
-const prismaTypeDefs = importSchema(pathFromRoot + "/generated/prisma.graphql");
+// const generalTypeDefs = importSchema(pathFromRoot + "");
 
-const isDev = process.env.NODE_ENV === "development";
-const src = isDev ? "./src" : "./bundle";
+// const isDev = process.env.NODE_ENV === "development";
+// const src = isDev ? "./src" : "./bundle";
 
 // const prismaTypeDefs = `${src}/generated/prisma.graphql`;
 // const generalTypeDefs = importSchema(`${src}/schema.graphql`);
@@ -55,7 +52,7 @@ const src = isDev ? "./src" : "./bundle";
 // });
 
 const db = new Prisma({
-  typeDefs: prismaTypeDefs,
+  typeDefs: "src/generated/prisma.graphql",
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
   debug: process.env.NODE_ENV === "development"
@@ -74,7 +71,7 @@ const corsOptions = {
 };
 
 const schema = makeExecutableSchema({
-  typeDefs: gql(generalTypeDefs),
+  typeDefs: importSchema("src/schema.graphql"),
   resolvers: {
     Mutation,
     Query,
