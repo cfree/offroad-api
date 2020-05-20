@@ -43,7 +43,10 @@ const schema = makeExecutableSchema({
 const app = express();
 const server = new ApolloServer({
   schema,
-  context: req => ({ ...req, db })
+  context: req => {
+    console.log("SETUP", req);
+    return { ...req, db };
+  }
 });
 
 // Daily Automation:::
