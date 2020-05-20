@@ -45,7 +45,7 @@ const server = new ApolloServer({
   schema,
   context: req => {
     console.log("SETUP", req);
-    return { ...req, db };
+    return { req, db };
   }
 });
 
