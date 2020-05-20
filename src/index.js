@@ -66,7 +66,8 @@ const db = new Prisma({
 */
 
 const corsOptions = {
-  credentials: true
+  credentials: true,
+  origin: process.env.FRONTEND_URL
 };
 
 const schema = makeExecutableSchema({
