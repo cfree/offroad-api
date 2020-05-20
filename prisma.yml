@@ -1,6 +1,7 @@
-endpoint: ${env:PRISMA_ENDPOINT}
+#endpoint: ${env:PRISMA_ENDPOINT}
+endpoint: https://fourplayers-staging-0f46ad9926.herokuapp.com/backend/staging
 datamodel: datamodel.prisma
-# secret: ${env:PRISMA_SECRET}
+secret: ${env:PRISMA_SECRET}
 # generate:
 #   - generator: javascript-client
 #     output: ./src/generated
