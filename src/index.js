@@ -27,28 +27,6 @@ const corsOptions = {
   origin: process.env.FRONTEND_URL
 };
 
-const schema = makeExecutableSchema({
-  typeDefs: importSchema("src/schema.graphql"),
-  resolvers: {
-    Mutation,
-    Query,
-    Trail,
-    Election,
-    Ballot
-  },
-  resolverValidationOptions: { requireResolversForResolveType: false }
-});
-
-// Create GraphQL server
-const app = express();
-const server = new ApolloServer({
-  schema,
-  context: ({ req, res }) => {
-    console.log("SETUP");
-    return { req, res, db };
-  }
-});
-
 // Daily Automation:::
 
 // Automatically change Active Full Member status to Past Due
@@ -74,13 +52,15 @@ const server = new ApolloServer({
 // - Post run report: Notify board of report
 // - Post run report: Change Active Guest status to Limited if 3 runs attended, notify board
 
+const app = express();
+
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
 // Decode the JWT to get user ID on each request
 app.use(async (req, res, next) => {
   const { token } = req.cookies;
-  console.log("1. Decode JWT", token);
+  console.log("1. Decode JWT", req.cookies);
   if (token) {
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     console.log("JWT", userId);
@@ -104,6 +84,27 @@ app.use(async (req, res, next) => {
   req.user = user;
 
   next();
+});
+
+const schema = makeExecutableSchema({
+  typeDefs: importSchema("src/schema.graphql"),
+  resolvers: {
+    Mutation,
+    Query,
+    Trail,
+    Election,
+    Ballot
+  },
+  resolverValidationOptions: { requireResolversForResolveType: false }
+});
+
+// Create GraphQL server
+const server = new ApolloServer({
+  schema,
+  context: ({ req, res }) => {
+    console.log("3. SETUP");
+    return { req, res, db };
+  }
 });
 
 server.applyMiddleware({ app, cors: false });
