@@ -43,7 +43,7 @@ const schema = makeExecutableSchema({
 const app = express();
 const server = new ApolloServer({
   schema,
-  context: (req, res) => {
+  context: ({ req, res }) => {
     console.log("SETUP", req);
     return { req, res, db };
   }
