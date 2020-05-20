@@ -133,6 +133,7 @@ app.use(async (req, res, next) => {
 
   if (token) {
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("JWT", userId);
     req.userId = userId;
   }
 
@@ -142,12 +143,14 @@ app.use(async (req, res, next) => {
 // See info about the user if logged in
 app.use(async (req, res, next) => {
   if (!req.userId) {
+    console.log("NO USER ID");
     return next();
   }
   const user = await db.query.user(
     { where: { id: req.userId } },
     "{ id, role, accountType, accountStatus, email, firstName, lastName, username }"
   );
+  console.log("LOGGED IN", user.id);
   req.user = user;
 
   next();
@@ -156,7 +159,7 @@ app.use(async (req, res, next) => {
 server.applyMiddleware({ app, cors: false });
 
 if (process.env.NODE_ENV === "development") {
-  app.listen({ port: 4000 }, () =>
+  app.listen({ port: process.env.PORT }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
   );
 } else {
