@@ -1,11 +1,8 @@
 require("dotenv").config({ path: "variables.env" });
-const serverlessHttp = require("serverless-http");
+
 const express = require("express");
-const {
-  ApolloServer,
-  gql,
-  makeExecutableSchema
-} = require("apollo-server-express");
+const { ApolloServer, makeExecutableSchema } = require("apollo-server-express");
+
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
 const cors = require("cors");
@@ -18,52 +15,12 @@ const Election = require("./resolvers/Election");
 const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 
-// const typeDefs = require("./schema");
-// const { typeDefs: prismaTypeDefs } = require("./generated/prisma-schema");
-
-// const isLambda = process.env.LAMBDA_TASK_ROOT;
-// const src = isLambda ? `${isLambda}/bundle` : "src";
-
-// process.env.PWD
-// Get current path
-// Find where in the current path process.env.PWD is
-// Take everything
-
-// /etc/users/src/file.txt  <- Current path
-// const currentPath = __dirname;
-// /etc/users/              <- Root directory
-// const rootDirectory = process.env.PWD;
-// src/file.txt             <- path from root
-// const pathFromRoot = "." + currentPath.replace(rootDirectory, "");
-// console.log("PATG", pathFromRoot);
-
-// const generalTypeDefs = importSchema(pathFromRoot + "");
-
-// const isDev = process.env.NODE_ENV === "development";
-// const src = isDev ? "./src" : "./bundle";
-
-// const prismaTypeDefs = `${src}/generated/prisma.graphql`;
-// const generalTypeDefs = importSchema(`${src}/schema.graphql`);
-
-// const db = new Prisma({
-//   endpoint: process.env.PRISMA_ENDPOINT,
-//   secret: process.env.PRISMA_SECRET,
-//   debug: process.env.NODE_ENV === "development"
-// });
-
 const db = new Prisma({
   typeDefs: "src/generated/prisma.graphql",
   endpoint: process.env.PRISMA_ENDPOINT,
   secret: process.env.PRISMA_SECRET,
   debug: process.env.NODE_ENV === "development"
 });
-
-/*
-"- /var/task/bundle/index.js",
-"- /var/task/graphql.js",
-"- /var/runtime/UserFunction.js",
-"- /var/runtime/index.js",
-*/
 
 const corsOptions = {
   credentials: true,
@@ -83,17 +40,7 @@ const schema = makeExecutableSchema({
 });
 
 // Create GraphQL server
-// const createServer = () => {
-//   //   typeDefs: "src/schema.graphql",
-//   return new ApolloServer({
-//     schema,
-//     context: req => ({ ...req, db })
-//   });
-// };
-
 const app = express();
-// const server = createServer();
-// Create GraphQL server
 const server = new ApolloServer({
   schema,
   context: req => ({ ...req, db })
@@ -167,17 +114,3 @@ if (process.env.NODE_ENV === "development") {
     console.log(`🚀 Server ready: ${server.graphqlPath}`)
   );
 }
-
-module.exports.app = serverlessHttp(app, {
-  /**
-   * **** IMPORTANT ****
-   * this request() function is important because
-   * it adds the lambda's event and context object
-   * into the express's req object so you can access
-   * inside the resolvers or routes if youre not using apollo
-   */
-  request(req, event, context) {
-    req.event = event;
-    req.context = context;
-  }
-});
