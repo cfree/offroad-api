@@ -9,7 +9,7 @@ const config = require("../config");
 
 const Query = {
   myself(parent, args, ctx, info) {
-    console.log("LOGIN", ctx, ctx.req.userId, ctx.req.user);
+    console.log("4. MYSELF");
     // Check if there is a current user
     if (!ctx.req.userId) {
       return null;

@@ -380,6 +380,8 @@ const Mutations = {
     // Check if there is a user with that username
     const user = await ctx.db.query.user({ where: { username } });
 
+    console.log("3. LOGIN", user);
+
     if (!user) {
       throw new Error("Username or password incorrect");
     }

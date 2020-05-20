@@ -44,7 +44,7 @@ const app = express();
 const server = new ApolloServer({
   schema,
   context: ({ req, res }) => {
-    console.log("SETUP", req);
+    console.log("SETUP");
     return { req, res, db };
   }
 });
@@ -80,7 +80,7 @@ app.use(cookieParser());
 // Decode the JWT to get user ID on each request
 app.use(async (req, res, next) => {
   const { token } = req.cookies;
-
+  console.log("1. Decode JWT", token);
   if (token) {
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     console.log("JWT", userId);
@@ -93,7 +93,7 @@ app.use(async (req, res, next) => {
 // See info about the user if logged in
 app.use(async (req, res, next) => {
   if (!req.userId) {
-    console.log("NO USER ID");
+    console.log("2. NO USER ID");
     return next();
   }
   const user = await db.query.user(
