@@ -16,6 +16,7 @@ cloudinary.config({
 const promisifiedUpload = promisify(cloudinary.uploader.unsigned_upload);
 const promisifiedDestroy = promisify(cloudinary.uploader.destroy);
 
+const isDev = process.env.NODE_ENV === "development";
 const HASH_SECRET = process.env.HASH_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
 const { sendTransactionalEmail } = require("../mail");
@@ -37,9 +38,9 @@ const getHash = async pw => {
 
 const tokenSettings = {
   httpOnly: true,
-  maxAge: yearInMs,
-  secure: true,
-  sameSite: "lax"
+  maxAge: yearInMs
+  // secure: !isDev,
+  // sameSite: isDev ? "lax" : "none"
 };
 
 const Mutations = {
