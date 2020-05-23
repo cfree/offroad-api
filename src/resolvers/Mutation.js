@@ -5,6 +5,18 @@ const { promisify } = require("util");
 const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
 
+const { sendTransactionalEmail } = require("../mail");
+const {
+  getSecretaryNewUserEmail,
+  getUserNewAccountEmail,
+  getUserWelcomeEmail,
+  getUserWebsiteRegistrationEmail,
+  getUserEventRegistrationEmail,
+  getUserResetTokenEmail
+} = require("../utils/mail-templates");
+const activityLog = require("../utils/activity-log");
+const membershipLog = require("../utils/membership-log");
+
 const promisifiedRandomBytes = promisify(randomBytes);
 
 cloudinary.config({
@@ -19,7 +31,6 @@ const promisifiedDestroy = promisify(cloudinary.uploader.destroy);
 const isDev = process.env.NODE_ENV === "development";
 const HASH_SECRET = process.env.HASH_SECRET;
 const JWT_SECRET = process.env.JWT_SECRET;
-const { sendTransactionalEmail } = require("../mail");
 const {
   yearInMs,
   resetTokenTimeoutInMs,
@@ -80,99 +91,31 @@ const Mutations = {
 
     switch (source) {
       case "website": // User initiated
-        emailDetails = {
-          to: lowercaseEmail,
-          from: "no-reply@4-playersofcolorado.org",
-          subject: "Your 4-Players Account Registration",
-          text: `
-            ${firstName},
-    
-            Thanks for opting in!
-    
-            Visit this URL to create your profile:
-            ${process.env.FRONTEND_URL}/signup?token=${resetToken}
-
-            If you have any questions, please contact webmaster@4-playersofcolorado.org
-          `,
-          html: `
-            <p>${firstName},</p>
-    
-            <p>Thanks for opting in!</p>
-    
-            <p>Visit this URL to create your profile:
-          ${process.env.FRONTEND_URL}/signup?token=${resetToken}</p>
-
-            <p>If you have any questions, please contact the <a href="mailto:webmaster@4-playersofcolorado.org">webmaster</a></p>
-          `
-        };
+        emailDetails = getUserWebsiteRegistrationEmail({
+          user: lowercaseEmail,
+          firstName,
+          lastName,
+          resetToken
+        });
         break;
       case "run": // User attended run
       case "meeting": // User attended meeting
-        emailDetails = {
-          to: lowercaseEmail,
-          from: "no-reply@4-playersofcolorado.org",
-          subject: "Invitation to register at the 4-Players website",
-          text: `
-          Hi ${firstName},
-  
-          You recently attended a 4-Players of Colorado event as a guest and have been invited to create an account on the 4-Players website.
-  
-          Visit this URL to create your profile:
-          ${process.env.FRONTEND_URL}/signup?token=${resetToken}
-
-          If you have any questions, please contact webmaster@4-playersofcolorado.org
-
-          If this message was sent to you in error, kindly disregard.
-        `,
-          html: `
-          <p>Hi ${firstName},</p>
-  
-          <p>You recently attended a 4-Players of Colorado event as a guest and have been invited to create an account on the 4-Players website.</p>
-
-          <p>Visit this URL to create your profile:
-        ${process.env.FRONTEND_URL}/signup?token=${resetToken}</p>
-
-          <p>If you have any questions, please contact the <a href="mailto:webmaster@4-playersofcolorado.org">webmaster</a></p>
-
-          <p><small>If this message was sent to you in error, kindly disregard.</small></p>
-        `
-        };
+        emailDetails = getUserEventRegistrationEmail({
+          user: lowercaseEmail,
+          firstName,
+          lastName,
+          resetToken
+        });
         break;
       case "admin": // Admin invited user directly
       default:
-        emailDetails = {
-          to: lowercaseEmail,
-          from: "no-reply@4-playersofcolorado.org",
-          subject: "Invitation to register at the 4-Players website",
-          text: `
-            Hi ${firstName},
-    
-            You've been invited by ${
-              ctx.req.user.firstName
-            } to create an account on the 4-Players of Colorado website.
-    
-            Visit this URL to create your profile:
-            ${process.env.FRONTEND_URL}/signup?token=${resetToken}
-
-            If you have any questions, please contact webmaster@4-playersofcolorado.org
-
-            If this message was sent to you in error, kindly disregard.
-          `,
-          html: `
-            <p>Hi ${firstName},</p>
-    
-            <p>You've been invited by ${
-              ctx.req.user.firstName
-            } to create an account on the 4-Players of Colorado website.</p>
-
-            <p>Visit this URL to create your profile:
-          ${process.env.FRONTEND_URL}/signup?token=${resetToken}</p>
-
-            <p>If you have any questions, please contact the <a href="mailto:webmaster@4-playersofcolorado.org">webmaster</a></p>
-
-            <p><small>If this message was sent to you in error, kindly disregard.</small></p>
-          `
-        };
+        emailDetails = getUserAdminRegistrationEmail({
+          user: lowercaseEmail,
+          firstName,
+          lastName,
+          resetToken,
+          inviter: ctx.req.user.firstName
+        });
     }
 
     // Email reset token
@@ -217,13 +160,7 @@ const Mutations = {
             password,
             lastLogin: new Date(),
             membershipLog: {
-              create: [
-                {
-                  time: new Date(),
-                  message: "Account created",
-                  messageCode: "ACCOUNT_CREATED"
-                }
-              ]
+              create: [membershipLog.accountCreated()]
             }
           }
         },
@@ -242,42 +179,16 @@ const Mutations = {
       // ctx.res.cookie("token", jwToken, tokenSettings);
 
       // Send email to secretary
-      return sendTransactionalEmail({
-        to: `4-Players Secretary <secretary@4-playersofcolorado.org>`,
-        from: `4-Players Webmaster <no-reply@4-playersofcolorado.org>`,
-        subject: "[4-Players] New Account Registration",
-        text: `
-        A new guest account has been created:
-        ${process.env.FRONTEND_URL}/profile/${username}
-      `,
-        html: `
-        <p>A new guest account has been created:
-        ${process.env.FRONTEND_URL}/profile/${username}</p>
-      `
-      })
+      return sendTransactionalEmail(getSecretaryNewUserEmail(username))
         .then(
-          // Send email to user
-          sendTransactionalEmail({
-            to: `${firstName} ${lastName} <${email}>`,
-            from: `4-Players Webmaster <no-reply@4-playersofcolorado.org>`,
-            subject: "[4-Players] New Account Registration",
-            text: `
-          Hi ${firstName},
-  
-          Congratulations! Your new account has been created:
-          ${process.env.FRONTEND_URL}/profile/${username}
-
-          The secretary will review your account within 1-2 business days. Please make sure your profile is filled out.
-        `,
-            html: `
-          <p>Hi ${firstName},</p>
-  
-          <p>Congratulations! Your new account has been created:
-          ${process.env.FRONTEND_URL}/profile/${username}</p>
-
-          <p>The secretary will review your account within 1-2 business days. Please make sure your profile is filled out.</p>
-        `
-          })
+          sendTransactionalEmail(
+            getUserNewAccountEmail({
+              firstName,
+              lastName,
+              email,
+              username
+            })
+          )
         )
         .then(() => ({ message: "Account created" }))
         .catch(err => {
@@ -311,20 +222,7 @@ const Mutations = {
   },
   async unlockNewAccount() {
     // Add membership log
-    const logs = [
-      {
-        time: new Date(),
-        message: `Account unlocked by ${ctx.req.user.firstName} ${
-          ctx.req.user.lastName
-        }`,
-        messageCode: "ACCOUNT_UNLOCKED",
-        logger: {
-          connect: {
-            id: ctx.req.userId
-          }
-        }
-      }
-    ];
+    const logs = [accountUnlocked(ctx.req.userId)];
 
     // Update status
     await ctx.db.mutation.updateUser(
@@ -344,28 +242,13 @@ const Mutations = {
 
     // Send email to user
     // TODO Hook up to welcome email template
-    return sendTransactionalEmail({
-      to: lowercaseEmail,
-      from: "secretary@4-playersofcolorado.org",
-      subject: "[4-Players] Account Approval",
-      text: `
-        Welcome, ${firstName}!
-
-        Thanks for signing up!
-
-        Visit this URL to log in:
-        ${process.env.FRONTEND_URL}/login
-      `,
-      html: `
-        <p>Welcome, ${firstName}!</p>
-
-        <p>Thanks for signing up!</p>
-
-        <p><a href="${
-          process.env.FRONTEND_URL
-        }/login">Visit the site</a> to log in</p>
-      `
-    })
+    return sendTransactionalEmail(
+      getUserWelcomeEmail({
+        firstName,
+        lastName,
+        user: lowercaseEmail
+      })
+    )
       .then(() => ({ message: "Account unlock successful." }))
       .catch(err => {
         //Extract error msg
@@ -380,8 +263,6 @@ const Mutations = {
   async login(parent, { username, password }, ctx, info) {
     // Check if there is a user with that username
     const user = await ctx.db.query.user({ where: { username } });
-
-    console.log("3. LOGIN", user);
 
     if (!user) {
       throw new Error("Username or password incorrect");
@@ -423,7 +304,7 @@ const Mutations = {
   async requestReset(parent, { email }, ctx, info) {
     // Check if this is a real user
     const user = await ctx.db.query.user({
-      where: { email: email }
+      where: { email }
     });
 
     if (!user) {
@@ -433,31 +314,22 @@ const Mutations = {
     // Set reset token and expiry
     const resetToken = (await promisifiedRandomBytes(20)).toString("hex");
     const resetTokenExpiry = Date.now() + resetTokenTimeoutInMs;
-    const res = await ctx.db.mutation.updateUser({
-      where: { email: email },
+
+    await ctx.db.mutation.updateUser({
+      where: { email },
       data: { resetToken, resetTokenExpiry }
     });
 
     // Email reset token
-    return sendTransactionalEmail({
-      to: user.email,
-      from: "no-reply@4-playersofcolorado.org",
-      subject: "Your 4-Players Password Reset",
-      text: `
-        ${user.firstName},
-
-        Your password reset token for user "${user.username}" is here!
-
-        Visit this URL to reset your password:
-        ${process.env.FRONTEND_URL}/forgot-password?token=${resetToken}
-      `,
-      html: `
-        Your password reset token for user "${user.username}" is here!
-        <a href="${
-          process.env.FRONTEND_URL
-        }/forgot-password?token=${resetToken}">Click here to reset your password</a>
-      `
-    })
+    return sendTransactionalEmail(
+      getUserResetTokenEmail({
+        email: email.toLowerCase(),
+        firstName: user.firstName,
+        lastName: user.lastName,
+        username: user.username,
+        resetToken
+      })
+    )
       .then(() => ({ message: "Password reset is en route" }))
       .catch(err => {
         //Extract error msg
@@ -586,18 +458,11 @@ const Mutations = {
             role: args.role,
             membershipLog: {
               create: [
-                {
-                  time: new Date(),
-                  message: `Role changed to "${args.role}" by ${
-                    ctx.req.user.firstName
-                  } ${ctx.req.user.lastName}`,
-                  messageCode: "ACCOUNT_CHANGED",
-                  logger: {
-                    connect: {
-                      id: ctx.req.userId
-                    }
-                  }
-                }
+                membershipLog.accountChanged({
+                  stateName: "Role",
+                  newState: args.role,
+                  userId: ctx.req.userId
+                })
               ]
             }
           },
@@ -625,18 +490,11 @@ const Mutations = {
 
     // Changing account type to 'FULL', add membership log
     const logs = [
-      {
-        time: new Date(),
-        message: `Account type changed to "${args.accountType}" by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "ACCOUNT_CHANGED",
-        logger: {
-          connect: {
-            id: ctx.req.userId
-          }
-        }
-      }
+      membershipLog.accountChanged({
+        stateName: "Account type",
+        newState: args.accountType,
+        userId: ctx.req.userId
+      })
     ];
 
     // Update account type
@@ -677,18 +535,11 @@ const Mutations = {
 
     // Add membership log
     const logs = [
-      {
-        time: new Date(),
-        message: `Account status changed to "${args.accountStatus}" by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "ACCOUNT_CHANGED",
-        logger: {
-          connect: {
-            id: ctx.req.userId
-          }
-        }
-      }
+      membershipLog.accountChanged({
+        stateName: "Account status",
+        newState: args.accountStatus,
+        userId: ctx.req.userId
+      })
     ];
 
     // Account unlocked
@@ -696,18 +547,11 @@ const Mutations = {
       currentUser.accountStatus === "LOCKED" &&
       args.data.accountStatus !== "LOCKED"
     ) {
-      logs.push({
-        time: new Date(),
-        message: `Account unlocked by ${ctx.req.user.firstName} ${
-          ctx.req.user.lastName
-        }`,
-        messageCode: "ACCOUNT_UNLOCKED",
-        logger: {
-          connect: {
-            id: ctx.req.userId
-          }
-        }
-      });
+      logs.push(
+        membershipLog.accountUnlocked({
+          userId: ctx.req.userId
+        })
+      );
     }
 
     // Update status
@@ -747,57 +591,43 @@ const Mutations = {
       throw new Error("Cannot change office to the same office");
     }
 
-    const defaultLog = {
-      time: new Date(),
-      logger: {
-        connect: {
-          id: ctx.req.userId
-        }
-      }
-    };
-
-    const logs = [];
+    const membershipLogs = [];
 
     // Add new value
     if (existingOffice === null && typeof args.office === "string") {
-      logs.push({
-        message: `"${args.office}" office added by ${ctx.req.user.firstName} ${
-          ctx.req.user.lastName
-        }`,
-        messageCode: "OFFICE_ADDED"
-      });
+      membershipLogs.push(
+        membershipLog.officeChanged({
+          office: args.office,
+          userId: ctx.req.userId,
+          add: true
+        })
+      );
     }
     // Removing old value
     else if (typeof existingOffice === "string" && args.office === null) {
-      logs.push({
-        message: `"${existingOffice}" office removed by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "OFFICE_REMOVED"
-      });
+      membershipLogs.push(
+        membershipLog.officeChanged({
+          office: existingOffice,
+          userId: ctx.req.userId,
+          add: false
+        })
+      );
     }
     // Replacing old value
     else if (existingOffice !== args.office) {
-      logs.push(
-        {
-          message: `"${existingOffice}" office removed by ${
-            ctx.req.user.firstName
-          } ${ctx.req.user.lastName}`,
-          messageCode: "OFFICE_REMOVED"
-        },
-        {
-          message: `"${args.office}" office added by ${
-            ctx.req.user.firstName
-          } ${ctx.req.user.lastName}`,
-          messageCode: "OFFICE_ADDED"
-        }
+      membershipLogs.push(
+        membershipLog.officeChanged({
+          office: existingOffice,
+          userId: ctx.req.userId,
+          add: false
+        }),
+        membershipLog.officeChanged({
+          office: args.office,
+          userId: ctx.req.userId,
+          add: true
+        })
       );
     }
-
-    const messageLogs = logs.map(log => ({
-      ...log,
-      ...defaultLog
-    }));
 
     // Update office
     return ctx.db.mutation.updateUser(
@@ -805,7 +635,7 @@ const Mutations = {
         data: {
           office: args.office === "NONE" ? null : args.office,
           membershipLog: {
-            create: messageLogs
+            create: membershipLogs
           }
         },
         where: {
@@ -836,58 +666,43 @@ const Mutations = {
       throw new Error("Cannot change title to the same title");
     }
 
-    const defaultLog = {
-      time: new Date(),
-      logger: {
-        connect: {
-          id: ctx.req.userId
-        }
-      }
-    };
-
-    const logs = [];
+    const membershipLogs = [];
 
     // Add new value
     if (existingTitle === null && typeof args.title === "string") {
-      logs.push({
-        message: `"${args.title}" title added by ${ctx.req.user.firstName} ${
-          ctx.req.user.lastName
-        }`,
-        messageCode: "TITLE_ADDED"
-      });
+      membershipLogs.push(
+        membershipLog.titleChanged({
+          office: args.title,
+          userId: ctx.req.userId,
+          add: true
+        })
+      );
     }
     // Removing old value
     else if (typeof existingTitle === "string" && args.title === null) {
-      logs.push({
-        message: `"${existingTitle}" title removed by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "TITLE_REMOVED"
-      });
+      membershipLogs.push(
+        membershipLog.titleChanged({
+          office: existingTitle,
+          userId: ctx.req.userId,
+          added: false
+        })
+      );
     }
     // Replacing old value
     else if (existingTitle !== args.title) {
-      logs.push(
-        {
-          message: `"${existingTitle}" title removed by ${
-            ctx.req.user.firstName
-          } ${ctx.req.user.lastName}`,
-          messageCode: "TITLE_REMOVED"
-        },
-        {
-          message: `"${args.title}" title added by ${ctx.req.user.firstName} ${
-            ctx.req.user.lastName
-          }`,
-          messageCode: "TITLE_ADDED"
-        }
+      membershipLogs.push(
+        membershipLog.titleChanged({
+          office: existingTitle,
+          userId: ctx.req.userId,
+          added: false
+        }),
+        membershipLog.titleChanged({
+          office: args.title,
+          userId: ctx.req.userId,
+          added: true
+        })
       );
     }
-
-    const messageLogs = logs.map(log => ({
-      ...log,
-      ...defaultLog,
-      time: new Date()
-    }));
 
     // Update title
     return ctx.db.mutation.updateUser(
@@ -895,7 +710,7 @@ const Mutations = {
         data: {
           title: args.title,
           membershipLog: {
-            create: messageLogs
+            create: membershipLogs
           }
         },
         where: {
@@ -1325,7 +1140,8 @@ const Mutations = {
         "{ accountType, accountStatus, role, joined }"
       );
 
-      const logs = [];
+      const membershipLogs = [];
+      const activityLogs = [];
 
       // Became a full member
       if (
@@ -1333,16 +1149,35 @@ const Mutations = {
         typeof args.data.joined === "string" &&
         currentUser.joined === null
       ) {
-        logs.push({
-          time: new Date(),
-          message: "Became a Full Member",
-          messageCode: "MEMBERSHIP_GRANTED",
-          logger: {
-            connect: {
-              id: ctx.req.userId
-            }
-          }
+        membershipLogs.push(
+          membershipLog.membershipGranted({
+            userId: ctx.req.userId,
+            type: "FULL"
+          })
+        );
+        activityLog.joined({
+          username: ctx.req.user.username,
+          userId: ctx.req.userId
         });
+      }
+
+      if (
+        currentUser.accountType === "ASSOCIATE" &&
+        typeof args.data.joined === "string" &&
+        currentUser.joined === null
+      ) {
+        membershipLogs.push(
+          membershipLog.membershipGranted({
+            userId: ctx.req.userId,
+            type: "ASSOCIATE"
+          })
+        );
+        activityLogs.push(
+          activityLog.joined({
+            username: ctx.req.user.username,
+            userId: ctx.req.userId
+          })
+        );
       }
 
       // Account unlocked
@@ -1350,22 +1185,18 @@ const Mutations = {
         currentUser.accountStatus === "LOCKED" &&
         args.data.accountStatus !== "LOCKED"
       ) {
-        logs.push({
-          time: new Date(),
-          message: `Account unlocked by ${ctx.req.user.firstName} ${
-            ctx.req.user.lastName
-          }`,
-          messageCode: "ACCOUNT_UNLOCKED",
-          logger: {
-            connect: {
-              id: ctx.req.userId
-            }
-          }
-        });
+        membershipLogs.push(membershipLog.membershipUnlocked(ctx.req.userId));
       }
 
       // Account rejected
-      // TODO
+      if (
+        currentUser.accountStatus === "REJECTED" &&
+        args.data.accountStatus !== "REJECTED"
+      ) {
+        membershipLogs.push(
+          membershipLog.membershipRejected(ctx.req.userId, "why") // TODO note
+        );
+      }
 
       // Update user
       const obj = {
@@ -1409,7 +1240,7 @@ const Mutations = {
             }
           },
           membershipLog: {
-            create: logs
+            create: membershipLogs
           }
         },
         where: { id: args.id }
@@ -1451,34 +1282,24 @@ const Mutations = {
       "{ id, accountType, accountStatus, role, office, title }"
     );
 
-    // Logs
-    const defaultLog = {
-      time: new Date(),
-      logger: {
-        connect: {
-          id: ctx.req.userId
-        }
-      }
-    };
-
-    const logs = [];
+    const membershipLogs = [];
 
     // Add new title
     if (currentUser.title === null && typeof data.title === "string") {
-      logs.push({
-        message: `"${data.title}" title added by ${ctx.req.user.firstName} ${
-          ctx.req.user.lastName
-        }`,
-        messageCode: "TITLE_ADDED"
-      });
+      membershipLogs.push(
+        membershipLog.titleChanged({
+          titleName: data.title,
+          userId: ctx.req.userId,
+          add: true
+        })
+      );
     }
     // Removing old title
     else if (typeof currentUser.title === "string" && data.title === null) {
-      logs.push({
-        message: `"${currentUser.title}" title removed by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "TITLE_REMOVED"
+      membershipLog.titleChanged({
+        titleName: currentUser.title,
+        userId: ctx.req.userId,
+        add: false
       });
     }
     // Replace title
@@ -1487,39 +1308,39 @@ const Mutations = {
       typeof data.title === "string" &&
       currentUser.title !== data.title
     ) {
-      logs.push(
-        {
-          message: `"${currentUser.title}" title removed by ${
-            ctx.req.user.firstName
-          } ${ctx.req.user.lastName}`,
-          messageCode: "TITLE_REMOVED"
-        },
-        {
-          message: `"${data.title}" title added by ${ctx.req.user.firstName} ${
-            ctx.req.user.lastName
-          }`,
-          messageCode: "TITLE_ADDED"
-        }
+      membershipLogs.push(
+        membershipLog.titleChanged({
+          titleName: currentUser.title,
+          userId: ctx.req.userId,
+          add: false
+        }),
+        membershipLog.titleChanged({
+          titleName: data.title,
+          userId: ctx.req.userId,
+          add: true
+        })
       );
     }
 
     // Add new office
     if (currentUser.office === null && typeof data.office === "string") {
-      logs.push({
-        message: `"${data.office}" office added by ${ctx.req.user.firstName} ${
-          ctx.req.user.lastName
-        }`,
-        messageCode: "OFFICE_ADDED"
-      });
+      membershipLogs.push(
+        membershipLog.officeChanged({
+          titleName: data.office,
+          userId: ctx.req.userId,
+          add: true
+        })
+      );
     }
     // Removing old office
     else if (typeof currentUser.office === "string" && data.office === null) {
-      logs.push({
-        message: `"${currentUser.office}" office removed by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "OFFICE_REMOVED"
-      });
+      membershipLogs.push(
+        membershipLog.officeChanged({
+          titleName: currentUser.office,
+          userId: ctx.req.userId,
+          add: false
+        })
+      );
     }
     // Replace office
     else if (
@@ -1527,53 +1348,49 @@ const Mutations = {
       typeof data.office === "string" &&
       currentUser.office !== data.office
     ) {
-      logs.push(
-        {
-          message: `"${currentUser.office}" office removed by ${
-            ctx.req.user.firstName
-          } ${ctx.req.user.lastName}`,
-          messageCode: "OFFICE_REMOVED"
-        },
-        {
-          message: `"${data.office}" office added by ${
-            ctx.req.user.firstName
-          } ${ctx.req.user.lastName}`,
-          messageCode: "OFFICE_ADDED"
-        }
+      membershipLogs.push(
+        membershipLog.officeChanged({
+          titleName: currentUser.office,
+          userId: ctx.req.userId,
+          add: false
+        }),
+        membershipLog.officeChanged({
+          titleName: data.office,
+          userId: ctx.req.userId,
+          add: true
+        })
       );
     }
 
     if (currentUser.role !== data.role) {
-      logs.push({
-        message: `Role changed to "${data.role}" by ${ctx.req.user.firstName} ${
-          ctx.req.user.lastName
-        }`,
-        messageCode: "ACCOUNT_CHANGED"
-      });
+      membershipLogs.push(
+        membershipLog.accountChanged({
+          stateName: "Role",
+          newState: data.role,
+          userId: ctx.req.userId
+        })
+      );
     }
 
     if (currentUser.accountStatus !== data.accountStatus) {
-      logs.push({
-        message: `Account status changed to "${data.accountStatus}" by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "ACCOUNT_CHANGED"
-      });
+      membershipLogs.push(
+        membershipLog.accountChanged({
+          stateName: "Account status",
+          newState: data.accountStatus,
+          userId: ctx.req.userId
+        })
+      );
     }
 
     if (currentUser.accountType !== data.accountType) {
-      logs.push({
-        message: `Account type changed to "${data.accountType}" by ${
-          ctx.req.user.firstName
-        } ${ctx.req.user.lastName}`,
-        messageCode: "ACCOUNT_CHANGED"
-      });
+      membershipLogs.push(
+        membershipLog.accountChanged({
+          stateName: "Account type",
+          newState: data.accountType,
+          userId: ctx.req.userId
+        })
+      );
     }
-
-    const messageLogs = logs.map(log => ({
-      ...log,
-      ...defaultLog
-    }));
 
     // Update user
     await ctx.db.mutation.updateUser(
@@ -1583,7 +1400,7 @@ const Mutations = {
           ...(messageLogs.length > 0
             ? {
                 membershipLog: {
-                  create: messageLogs
+                  create: membershipLogs
                 }
               }
             : {})
@@ -1652,17 +1469,10 @@ const Mutations = {
     const results = await ctx.db.mutation.updateUser(obj, info);
 
     await ctx.db.mutation.createActivityLogItem({
-      data: {
-        time: new Date(),
-        message: `Added a new profile photo`,
-        messageCode: "PROFILE_PHOTO_SUBMITTED",
-        link: `/profile/${ctx.req.user.username}`,
-        user: {
-          connect: {
-            id: ctx.req.userId
-          }
-        }
-      }
+      data: activityLog.newProfilePhoto({
+        username: ctx.req.user.username,
+        userId: ctx.req.user.id
+      })
     });
 
     // TODO error handling
@@ -1770,17 +1580,10 @@ const Mutations = {
     const results = await ctx.db.mutation.updateUser(obj, info);
 
     await ctx.db.mutation.createActivityLogItem({
-      data: {
-        time: new Date(),
-        message: `Added a new rigbook photo`,
-        messageCode: "RIGBOOK_PHOTO_SUBMITTED",
-        link: `/profile/${ctx.req.user.username}`,
-        user: {
-          connect: {
-            id: ctx.req.userId
-          }
-        }
-      }
+      data: activityLog.newRigbookPhoto({
+        username: ctx.req.user.username,
+        userId: ctx.req.user.id
+      })
     });
 
     // TODO error handling

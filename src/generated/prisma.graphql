@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Tue May 12 2020 10:28:33 GMT-0600 (Mountain Daylight Time)
+# timestamp: Sat May 23 2020 12:28:57 GMT-0600 (Mountain Daylight Time)
 
 enum AccountStatus {
   ACTIVE
@@ -7,6 +7,7 @@ enum AccountStatus {
   DELINQUENT
   REMOVED
   RESIGNED
+  REJECTED
   INACTIVE
   LIMITED
   LOCKED
