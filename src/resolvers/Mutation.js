@@ -92,7 +92,7 @@ const Mutations = {
     switch (source) {
       case "website": // User initiated
         emailDetails = getUserWebsiteRegistrationEmail({
-          user: lowercaseEmail,
+          email: lowercaseEmail,
           firstName,
           lastName,
           resetToken
@@ -101,7 +101,7 @@ const Mutations = {
       case "run": // User attended run
       case "meeting": // User attended meeting
         emailDetails = getUserEventRegistrationEmail({
-          user: lowercaseEmail,
+          email: lowercaseEmail,
           firstName,
           lastName,
           resetToken
@@ -110,7 +110,7 @@ const Mutations = {
       case "admin": // Admin invited user directly
       default:
         emailDetails = getUserAdminRegistrationEmail({
-          user: lowercaseEmail,
+          email: lowercaseEmail,
           firstName,
           lastName,
           resetToken,
@@ -141,6 +141,8 @@ const Mutations = {
     // TODO Confirm all fields valid
 
     // TODO Lock out if under 18
+    // STATUS: REJECTED
+    // membershipLog.membershipRejected(ctx.req.userId, "Under 18") // TODO note
 
     // Hash the password
     const password = await getHash(args.password);
@@ -220,9 +222,20 @@ const Mutations = {
       throw new Error(error);
     }
   },
-  async unlockNewAccount() {
+  async unlockNewAccount(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    // Requesting user has proper role?
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);
+
+    // Requesting user has proper account status?
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
+
     // Add membership log
-    const logs = [accountUnlocked(ctx.req.userId)];
+    const logs = [membershipLog.accountUnlocked(ctx.req.userId)];
 
     // Update status
     await ctx.db.mutation.updateUser(
@@ -448,7 +461,7 @@ const Mutations = {
     hasRole(currentUser, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // Update role
     try {
@@ -486,7 +499,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // Changing account type to 'FULL', add membership log
     const logs = [
@@ -523,7 +536,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // Query the current user
     const currentUser = await ctx.db.query.user(
@@ -545,13 +558,9 @@ const Mutations = {
     // Account unlocked
     if (
       currentUser.accountStatus === "LOCKED" &&
-      args.data.accountStatus !== "LOCKED"
+      args.accountStatus !== "LOCKED"
     ) {
-      logs.push(
-        membershipLog.accountUnlocked({
-          userId: ctx.req.userId
-        })
-      );
+      logs.push(membershipLog.accountUnlocked(ctx.req.userId));
     }
 
     // Update status
@@ -580,7 +589,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { office: existingOffice } = await ctx.db.query.user(
       { where: { id: args.userId } },
@@ -655,7 +664,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { title: existingTitle } = await ctx.db.query.user(
       { where: { id: args.userId } },
@@ -730,7 +739,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { event } = args;
 
@@ -792,7 +801,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { event, id: eventId } = args;
 
@@ -808,6 +817,7 @@ const Mutations = {
 
     const data = {
       title: event.title,
+      type: event.type,
       description: event.description || "",
       startTime: new Date(event.startTime),
       endTime: new Date(event.endTime),
@@ -885,7 +895,7 @@ const Mutations = {
     const { rsvp } = args;
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // Requesting user has proper role?
     if (ctx.req.userId !== rsvp.userId) {
@@ -895,11 +905,51 @@ const Mutations = {
     // Query the current user
     const currentUser = await ctx.db.query.user(
       { where: { id: rsvp.userId } },
-      "{ id, eventsRSVPd { id, status, event { id } } }"
+      "{ id, accountStatus, accountType, eventsRSVPd { id, status, event { id } } }"
     );
 
     if (!currentUser) {
       throw new Error("User does not have permission");
+    }
+
+    if (
+      currentUser.accountStatus !== "ACTIVE" &&
+      currentUser.accountStatus !== "PAST_DUE"
+    ) {
+      throw new Error("User does not have permission");
+    }
+
+    if (currentUser.accountType === "GUEST") {
+      const rsvps = await ctx.db.query.rSVPs(
+        {
+          where: {
+            AND: [
+              {
+                member: {
+                  id: rsvp.userId
+                }
+              },
+              {
+                event: {
+                  type: "RUN"
+                }
+              },
+              {
+                status: "GOING"
+              }
+            ]
+          }
+        },
+        "{ id }"
+      );
+
+      console.log("rsvps.length", rsvps.length);
+
+      if (rsvps.length >= 3 && rsvp.status === "GOING") {
+        throw new Error(
+          "Guests can only attend 3 runs. Please become a member to attend more."
+        );
+      }
     }
 
     // Has this user already RSVPd?
@@ -1143,59 +1193,61 @@ const Mutations = {
       const membershipLogs = [];
       const activityLogs = [];
 
-      // Became a full member
-      if (
-        currentUser.accountType === "FULL" &&
-        typeof args.data.joined === "string" &&
-        currentUser.joined === null
-      ) {
-        membershipLogs.push(
-          membershipLog.membershipGranted({
-            userId: ctx.req.userId,
-            type: "FULL"
-          })
-        );
-        activityLog.joined({
-          username: ctx.req.user.username,
-          userId: ctx.req.userId
-        });
-      }
-
-      if (
-        currentUser.accountType === "ASSOCIATE" &&
-        typeof args.data.joined === "string" &&
-        currentUser.joined === null
-      ) {
-        membershipLogs.push(
-          membershipLog.membershipGranted({
-            userId: ctx.req.userId,
-            type: "ASSOCIATE"
-          })
-        );
-        activityLogs.push(
+      if (hasRole(ctx.req.user, ["ADMIN", "OFFICER"], false)) {
+        // Became a full member
+        if (
+          currentUser.accountType === "FULL" &&
+          typeof args.data.joined === "string" &&
+          currentUser.joined === null
+        ) {
+          membershipLogs.push(
+            membershipLog.membershipGranted({
+              userId: ctx.req.userId,
+              type: "FULL"
+            })
+          );
           activityLog.joined({
             username: ctx.req.user.username,
             userId: ctx.req.userId
-          })
-        );
-      }
+          });
+        }
 
-      // Account unlocked
-      if (
-        currentUser.accountStatus === "LOCKED" &&
-        args.data.accountStatus !== "LOCKED"
-      ) {
-        membershipLogs.push(membershipLog.membershipUnlocked(ctx.req.userId));
-      }
+        if (
+          currentUser.accountType === "ASSOCIATE" &&
+          typeof args.data.joined === "string" &&
+          currentUser.joined === null
+        ) {
+          membershipLogs.push(
+            membershipLog.membershipGranted({
+              userId: ctx.req.userId,
+              type: "ASSOCIATE"
+            })
+          );
+          activityLogs.push(
+            activityLog.joined({
+              username: ctx.req.user.username,
+              userId: ctx.req.userId
+            })
+          );
+        }
 
-      // Account rejected
-      if (
-        currentUser.accountStatus === "REJECTED" &&
-        args.data.accountStatus !== "REJECTED"
-      ) {
-        membershipLogs.push(
-          membershipLog.membershipRejected(ctx.req.userId, "why") // TODO note
-        );
+        // Account unlocked
+        if (
+          currentUser.accountStatus === "LOCKED" &&
+          args.data.accountStatus !== "LOCKED"
+        ) {
+          membershipLogs.push(membershipLog.membershipUnlocked(ctx.req.userId));
+        }
+
+        // Account rejected
+        if (
+          currentUser.accountStatus === "REJECTED" &&
+          args.data.accountStatus !== "REJECTED"
+        ) {
+          membershipLogs.push(
+            membershipLog.membershipRejected(ctx.req.userId, "why") // TODO note
+          );
+        }
       }
 
       // Update user
@@ -1225,6 +1277,7 @@ const Mutations = {
               }
             }
           },
+          comfortLevel: args.data.comfortLevel,
           preferences: {
             upsert: {
               create: {
@@ -1241,6 +1294,9 @@ const Mutations = {
           },
           membershipLog: {
             create: membershipLogs
+          },
+          activityLog: {
+            create: activityLogs
           }
         },
         where: { id: args.id }
@@ -1272,7 +1328,7 @@ const Mutations = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { data } = args;
 
@@ -1636,7 +1692,7 @@ const Mutations = {
     }
 
     // Requesting user has proper account status?
-    // hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    // hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { vehicle, id: vehicleId } = args;
     const { outfitLevel, mods, ...restVehicle } = vehicle;
@@ -1684,7 +1740,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { election } = args;
 
@@ -1719,7 +1775,7 @@ const Mutations = {
     hasAccountType(ctx.req.user, ["FULL"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // Have they voted for this ballot before?
     const { vote } = args;
@@ -1774,7 +1830,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { trail } = args;
     const { featuredImage, newFeaturedImage, ...filteredTrail } = trail;
@@ -1804,7 +1860,7 @@ const Mutations = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { trail, id: trailId } = args;
     const { newFeaturedImage, featuredImage, ...filteredTrail } = trail;
@@ -1855,6 +1911,74 @@ const Mutations = {
     );
 
     return { message: "Your trail has been updated" };
+  },
+  async updateTrailImage(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("User must be logged in");
+    }
+
+    // Have proper roles to do this?
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
+
+    // Requesting user has proper account status?
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
+
+    const { id, image } = args;
+
+    // const { newFeaturedImage, featuredImage, ...filteredTrail } = trail;
+
+    // Get current trail for later comparison
+    // const existingTrail = await ctx.db.query.trail(
+    //   {
+    //     where: {
+    //       id: trailId
+    //     }
+    //   },
+    //   info
+    // );
+
+    // let data = {};
+
+    // if (image) {
+    // New featured image submitted
+    // const data = {
+    //   featuredImage: {
+    //     upsert: {
+    //       create: image,
+    //       update: image
+    //     }
+    //   }
+    // };
+    // } else if (
+    //   existingTrail.featuredImage &&
+    //   existingTrail.featuredImage.publicId &&
+    //   !newFeaturedImage
+    // ) {
+    //   // Remove old featured image
+    //   data.featuredImage = {
+    //     delete: true
+    //   };
+    // }
+
+    await ctx.db.mutation.updateTrail(
+      {
+        data: {
+          featuredImage: {
+            upsert: {
+              create: image,
+              update: image
+            }
+          }
+        },
+        where: {
+          id
+        }
+      },
+      info
+    );
+
+    return { message: "Your trail photo has been updated" };
   }
 };
 

@@ -23,6 +23,7 @@ enum AccountType {
   ASSOCIATE
   EMERITUS
   GUEST
+  DECEASED
 }
 
 enum Office {
@@ -105,7 +106,6 @@ enum MembershipMessageCode {
   OFFICE_REMOVED
   TITLE_ADDED
   TITLE_REMOVED
-  MEMBERSHIP_ELIGIBLE
   MEMBERSHIP_GRANTED
   GUEST_RESTRICTED
 }
@@ -163,7 +163,7 @@ type User {
   candidateFor: [Ballot] @relation(name: "CandidateUser")
   votesReceived: [Vote] @relation(name: "VotesRecdUser")
   votedFor: [Vote] @relation(name: "VotedUser")
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   activityLog: [ActivityLogItem] @relation(name: "LogItemActivity")
   membershipLog: [MembershipLogItem] @relation(name: "LogItemMember")
   membershipLogContributions: [MembershipLogItem]

@@ -9,7 +9,6 @@ const config = require("../config");
 
 const Query = {
   myself(parent, args, ctx, info) {
-    console.log("4. MYSELF");
     // Check if there is a current user
     if (!ctx.req.userId) {
       return null;
@@ -31,7 +30,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL", "ASSOCIATE", "EMERITUS"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // If they do, query all the users
     const query = {
@@ -93,40 +92,32 @@ const Query = {
       throw new Error("You must be logged in");
     }
 
-    if (args.username && args.username !== ctx.req.user.username) {
+    const username =
+      !args.username || args.username === "self"
+        ? ctx.req.user.username
+        : args.username;
+
+    if (username !== ctx.req.user.username) {
       // Requesting user has proper account type?
       hasAccountType(ctx.req.user, ["FULL", "ASSOCIATE", "EMERITUS"]);
 
       // Requesting user has proper account status?
-      hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+      hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
     }
 
     // If they do, query the user
-    if (args.username && args.username !== "self") {
-      const user = await ctx.db.query.user(
-        {
-          where: {
-            username: args.username
-          }
-        },
-        info
-      );
-
-      if (user) {
-        return user;
-      } else {
-        throw new Error("User cannot be found");
-      }
-    }
-
-    return ctx.db.query.user(
+    const user = await ctx.db.query.user(
       {
-        where: {
-          id: ctx.req.userId
-        }
+        where: { username }
       },
       info
     );
+
+    if (user) {
+      return user;
+    } else {
+      throw new Error("User cannot be found");
+    }
   },
   async getRegistration(parent, args, ctx, info) {
     const registration = await ctx.db.query.registrations(
@@ -162,7 +153,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const userQuery =
       args.username === "self"
@@ -192,7 +183,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL", "ASSOCIATE", "EMERITUS"]);
 
     // // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // If they do, query the officer
     const results = await ctx.db.query.users(
@@ -215,7 +206,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL", "ASSOCIATE", "EMERITUS"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // If they do, query all the members
     const results = await ctx.db.query.users(
@@ -224,7 +215,10 @@ const Query = {
           AND: [
             { accountStatus: "ACTIVE" },
             { accountType_in: args.accountTypes },
-            { office: null } // No officers
+            { office: null }, // No officers
+            {
+              NOT: [{ rig: null }]
+            }
           ]
         },
         orderBy: "firstName_ASC"
@@ -249,7 +243,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // Return all run leaders
     const results = await ctx.db.query.users(
@@ -312,7 +306,7 @@ const Query = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     let query = {
       where: {
@@ -338,7 +332,7 @@ const Query = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
 
     // Requesting user has proper account type?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const userQuery =
       args.username === "self"
@@ -381,7 +375,7 @@ const Query = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // If they do, query all the users
     return ctx.db.query.events(
@@ -401,7 +395,7 @@ const Query = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const result = await ctx.db.query.event(
       {
@@ -423,7 +417,7 @@ const Query = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     try {
       const results = await ctx.db.query.events(
@@ -447,7 +441,7 @@ const Query = {
   //   }
 
   //   // Requesting user has proper account status?
-  //   hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+  //   hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
   //   try {
   //     // const results = await ctx.db.query.user(
@@ -482,7 +476,7 @@ const Query = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // If they do, query all the users
     return ctx.db.query.trails({}, info);
@@ -495,7 +489,7 @@ const Query = {
 
     // Requesting user has proper account status?
     hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER", "RUN_LEADER"]);
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
     hasAccountType(ctx.req.user, ["FULL"]);
 
     // If they do, query all the users
@@ -518,7 +512,7 @@ const Query = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // If they do, query all the users
     return ctx.db.query.users(
@@ -541,7 +535,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     return ctx.db.query.elections(
       {
@@ -566,7 +560,7 @@ const Query = {
     hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     return ctx.db.query.elections(
       {
@@ -591,7 +585,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     return ctx.db.query.election(
       {
@@ -612,7 +606,7 @@ const Query = {
     hasAccountType(ctx.req.user, ["FULL"]);
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const votes = await ctx.db.query.votes(
       {
@@ -642,7 +636,7 @@ const Query = {
   //   hasAccountType(ctx.req.user, ["FULL"]);
 
   //   // Requesting user has proper account status?
-  //   hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+  //   hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
   //   return ctx.db.query.votes(
   //     {
@@ -728,7 +722,7 @@ const Query = {
   //   hasAccountType(ctx.req.user, ["FULL"]);
 
   //   // Requesting user has proper account status?
-  //   hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+  //   hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
   //   return ctx.db.query.users(
   //     {
@@ -756,7 +750,7 @@ const Query = {
   //   hasAccountType(ctx.req.user, ["FULL"]);
 
   //   // Requesting user has proper account status?
-  //   hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+  //   hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
   //   return ctx.db.query.users(
   //     {
@@ -779,7 +773,7 @@ const Query = {
   //   hasAccountType(ctx.req.user, ["FULL"]);
 
   //   // Requesting user has proper account status?
-  //   hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+  //   hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
   //   return ctx.db.query.users(
   //     {
@@ -802,7 +796,7 @@ const Query = {
   //   hasAccountType(ctx.req.user, ["FULL"]);
 
   //   // Requesting user has proper account status?
-  //   hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+  //   hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
   //   // TODO: Has attended 1 run
   //   // TODO: Has attended 1 meeting
@@ -857,7 +851,7 @@ const Query = {
     }
 
     // Requesting user has proper account status?
-    hasAccountStatus(ctx.req.user, ["ACTIVE"]);
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     // Requesting user has proper role?
     hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);

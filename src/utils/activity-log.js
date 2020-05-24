@@ -1,5 +1,6 @@
-//   EVENT_ATTENDED                     AUTO
-//   RUN_LEAD                           AUTO
+//   EVENT_ATTENDED                     TRANSACTIONAL
+//   RUN_LEAD                           TRANSACTIONAL
+
 //   EVENT_REVIEW_SUBMITTED             TODO
 //   RUN_REPORT_SUBMITTED               TODO
 //   GALLERY_PHOTO_SUBMITTED            TODO

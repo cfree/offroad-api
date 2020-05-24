@@ -64,6 +64,7 @@ type Mutation {
   submitVote(vote: VoteInput): SuccessMessage
   createTrail(trail: TrailInput): SuccessMessage
   updateTrail(trail: TrailInput!, id: ID!): SuccessMessage
+  updateTrailImage(id: String!, image: CloudinaryImageInput!): SuccessMessage
 }
 
 type Query {
@@ -148,7 +149,7 @@ type User {
   rig: RigImage
   # vehicles: [Vehicle]
   vehicle: Vehicle
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   activityLog: [ActivityLogItem]
   membershipLog: [MembershipLogItem]
   eventsRSVPd: [RSVP]
@@ -272,6 +273,7 @@ input UserUpdateInput {
   preferencesId: ID
   emergencyContactName: String!
   emergencyContactPhone: String!
+  comfortLevel: TrailDifficulty
 }
 
 input UserAdminUpdateInput {

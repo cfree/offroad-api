@@ -1,3 +1,7 @@
+const { format } = require("date-fns");
+
+const { datePrintFormat } = require("./index");
+
 const noReplyAddress = "4-Players Webmaster <no-reply@4-playersofcolorado.org>";
 const secretaryAddress =
   "4-Players Secretary <secretary@4-playersofcolorado.org>";
@@ -197,5 +201,57 @@ module.exports.getUserResetTokenEmail = ({
     <a href="${
       process.env.FRONTEND_URL
     }/forgot-password?token=${resetToken}">Click here to reset your password</a></p>
+  `
+});
+
+module.exports.getRunReminderEmail = (
+  email,
+  firstName,
+  lastName,
+  eventDetails
+) => ({
+  to: getUserAddress(firstName, lastName, email),
+  from: noReplyAddress,
+  subject: `[4-Players] Event Reminder: ${eventDetails.title} ${
+    eventDetails.type
+  }`,
+  text: `
+    ${firstName},
+
+    You have an event coming up tomorrow!
+
+    ${eventDetails.title}
+    Start time: ${format(new Date(eventDetails.startTime), datePrintFormat)}
+    Rally time: ${format(new Date(eventDetails.rallyTime), datePrintFormat)}
+    Rally location: ${eventDetails.rallyAddress}
+
+    If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count.
+
+    For more details or to edit your RSVP, please visit:
+    ${process.env.FRONTEND_URL}/event/${eventDetails.id}
+  `,
+  html: `
+    <p>${firstName},</p>
+
+    <p>You have an event coming up tomorrow!</p>
+
+    <p>
+      ${eventDetails.title}<br/>
+      Start time: ${format(
+        new Date(eventDetails.startTime),
+        datePrintFormat
+      )}<br/>
+      Rally time: ${format(
+        new Date(eventDetails.rallyTime),
+        datePrintFormat
+      )}<br/>
+      Rally location: ${eventDetails.rallyAddress}
+    </p>
+
+    <p>If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count</p>
+    
+    <p>For more details or to edit your RSVP, please see <a href="${
+      process.env.FRONTEND_URL
+    }/event/${eventDetails.id}">the event details on the website</a>.</p>
   `
 });

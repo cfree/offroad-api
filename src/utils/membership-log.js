@@ -1,8 +1,7 @@
 const { accountType } = require("../config");
 
-//   DUES_PAID                  TODO
-//   MEMBERSHIP_ELIGIBLE        AUTO
-//   GUEST_RESTRICTED           AUTO
+//   DUES_PAID                  TODO/TRANSACTIONAL
+//   GUEST_RESTRICTED           AUTO/TRANSACTIONAL
 
 module.exports.accountCreated = () => ({
   time: new Date(),
@@ -24,7 +23,7 @@ module.exports.accountUnlocked = userId => ({
 module.exports.accountRejected = (userId, note) => ({
   time: new Date(),
   message: `Account rejected: ${note}`,
-  messageCode: "ACCOUNT_UNLOCKED",
+  messageCode: "ACCOUNT_REJECTED",
   logger: {
     connect: {
       id: userId

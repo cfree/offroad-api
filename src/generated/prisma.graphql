@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Sat May 23 2020 12:28:57 GMT-0600 (Mountain Daylight Time)
+# timestamp: Sun May 24 2020 08:55:05 GMT-0600 (Mountain Daylight Time)
 
 enum AccountStatus {
   ACTIVE
@@ -18,6 +18,7 @@ enum AccountType {
   ASSOCIATE
   EMERITUS
   GUEST
+  DECEASED
 }
 
 type ActivityLogItem implements Node {
@@ -5198,7 +5199,6 @@ enum MembershipMessageCode {
   OFFICE_REMOVED
   TITLE_ADDED
   TITLE_REMOVED
-  MEMBERSHIP_ELIGIBLE
   MEMBERSHIP_GRANTED
   GUEST_RESTRICTED
 }
@@ -9095,7 +9095,7 @@ type User implements Node {
   candidateFor(where: BallotWhereInput, orderBy: BallotOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ballot!]
   votesReceived(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
   votedFor(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote!]
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   activityLog(where: ActivityLogItemWhereInput, orderBy: ActivityLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ActivityLogItem!]
   membershipLog(where: MembershipLogItemWhereInput, orderBy: MembershipLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MembershipLogItem!]
   membershipLogContributions(where: MembershipLogItemWhereInput, orderBy: MembershipLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MembershipLogItem!]
@@ -9136,7 +9136,7 @@ input UserCreateInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9251,7 +9251,7 @@ input UserCreateWithoutActivityLogInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9290,7 +9290,7 @@ input UserCreateWithoutBandaidsInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9329,7 +9329,7 @@ input UserCreateWithoutCandidateForInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9368,7 +9368,7 @@ input UserCreateWithoutContactInfoInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9407,7 +9407,7 @@ input UserCreateWithoutEventsCreatedInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9446,7 +9446,7 @@ input UserCreateWithoutEventsHostedInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9485,7 +9485,7 @@ input UserCreateWithoutEventsRSVPdInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9524,7 +9524,7 @@ input UserCreateWithoutMembershipLogContributionsInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9563,7 +9563,7 @@ input UserCreateWithoutMembershipLogInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9602,7 +9602,7 @@ input UserCreateWithoutPreferencesInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9641,7 +9641,7 @@ input UserCreateWithoutRunReportsLoggedInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9680,7 +9680,7 @@ input UserCreateWithoutTrailsVisitedInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9719,7 +9719,7 @@ input UserCreateWithoutUserMetaInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9758,7 +9758,7 @@ input UserCreateWithoutVotedForInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9797,7 +9797,7 @@ input UserCreateWithoutVotesReceivedInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -10160,7 +10160,7 @@ type UserPreviousValues {
   accountStatus: AccountStatus!
   accountType: AccountType!
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
 }
 
 input UserScalarWhereInput {
@@ -10648,46 +10648,16 @@ input UserScalarWhereInput {
 
   """All values that are not contained in given list."""
   office_not_in: [Office!]
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
 
   """All values that are not equal to given value."""
-  comfortLevel_not: String
+  comfortLevel_not: TrailDifficulty
 
   """All values that are contained in given list."""
-  comfortLevel_in: [String!]
+  comfortLevel_in: [TrailDifficulty!]
 
   """All values that are not contained in given list."""
-  comfortLevel_not_in: [String!]
-
-  """All values less than the given value."""
-  comfortLevel_lt: String
-
-  """All values less than or equal the given value."""
-  comfortLevel_lte: String
-
-  """All values greater than the given value."""
-  comfortLevel_gt: String
-
-  """All values greater than or equal the given value."""
-  comfortLevel_gte: String
-
-  """All values containing the given string."""
-  comfortLevel_contains: String
-
-  """All values not containing the given string."""
-  comfortLevel_not_contains: String
-
-  """All values starting with the given string."""
-  comfortLevel_starts_with: String
-
-  """All values not starting with the given string."""
-  comfortLevel_not_starts_with: String
-
-  """All values ending with the given string."""
-  comfortLevel_ends_with: String
-
-  """All values not ending with the given string."""
-  comfortLevel_not_ends_with: String
+  comfortLevel_not_in: [TrailDifficulty!]
 }
 
 type UserSubscriptionPayload {
@@ -10745,7 +10715,7 @@ input UserUpdateInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10784,7 +10754,7 @@ input UserUpdateManyDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
 }
 
 input UserUpdateManyMutationInput {
@@ -10805,7 +10775,7 @@ input UserUpdateManyMutationInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
 }
 
 input UserUpdateManyWithoutCandidateForInput {
@@ -10960,7 +10930,7 @@ input UserUpdateWithoutActivityLogDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10998,7 +10968,7 @@ input UserUpdateWithoutBandaidsDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11036,7 +11006,7 @@ input UserUpdateWithoutCandidateForDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11074,7 +11044,7 @@ input UserUpdateWithoutContactInfoDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11112,7 +11082,7 @@ input UserUpdateWithoutEventsCreatedDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11150,7 +11120,7 @@ input UserUpdateWithoutEventsHostedDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11188,7 +11158,7 @@ input UserUpdateWithoutEventsRSVPdDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11226,7 +11196,7 @@ input UserUpdateWithoutMembershipLogContributionsDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11264,7 +11234,7 @@ input UserUpdateWithoutMembershipLogDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11302,7 +11272,7 @@ input UserUpdateWithoutPreferencesDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11340,7 +11310,7 @@ input UserUpdateWithoutRunReportsLoggedDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11378,7 +11348,7 @@ input UserUpdateWithoutTrailsVisitedDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11416,7 +11386,7 @@ input UserUpdateWithoutUserMetaDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11454,7 +11424,7 @@ input UserUpdateWithoutVotedForDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11492,7 +11462,7 @@ input UserUpdateWithoutVotesReceivedDataInput {
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -12084,46 +12054,16 @@ input UserWhereInput {
 
   """All values that are not contained in given list."""
   office_not_in: [Office!]
-  comfortLevel: String
+  comfortLevel: TrailDifficulty
 
   """All values that are not equal to given value."""
-  comfortLevel_not: String
+  comfortLevel_not: TrailDifficulty
 
   """All values that are contained in given list."""
-  comfortLevel_in: [String!]
+  comfortLevel_in: [TrailDifficulty!]
 
   """All values that are not contained in given list."""
-  comfortLevel_not_in: [String!]
-
-  """All values less than the given value."""
-  comfortLevel_lt: String
-
-  """All values less than or equal the given value."""
-  comfortLevel_lte: String
-
-  """All values greater than the given value."""
-  comfortLevel_gt: String
-
-  """All values greater than or equal the given value."""
-  comfortLevel_gte: String
-
-  """All values containing the given string."""
-  comfortLevel_contains: String
-
-  """All values not containing the given string."""
-  comfortLevel_not_contains: String
-
-  """All values starting with the given string."""
-  comfortLevel_starts_with: String
-
-  """All values not starting with the given string."""
-  comfortLevel_not_starts_with: String
-
-  """All values ending with the given string."""
-  comfortLevel_ends_with: String
-
-  """All values not ending with the given string."""
-  comfortLevel_not_ends_with: String
+  comfortLevel_not_in: [TrailDifficulty!]
   contactInfo: ContactInfoWhereInput
   preferences: PreferenceWhereInput
   userMeta: UserMetaWhereInput
