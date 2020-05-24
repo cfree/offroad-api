@@ -26,7 +26,7 @@ type Mutation {
     birthdate: DateTime!
     token: String!
   ): SuccessMessage!
-  unlockNewAccount(username: String!): SuccessMessage!
+  unlockNewAccount(userId: ID!): SuccessMessage!
   login(username: String!, password: String!): SuccessMessage!
   logout: SuccessMessage
   requestReset(email: String!): SuccessMessage

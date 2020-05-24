@@ -234,6 +234,13 @@ const Mutations = {
     // Requesting user has proper account status?
     hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
+    const user = await ctx.db.query.user(
+      { where: { id: args.userId } },
+      "{ id, email, firstName, lastName }"
+    );
+
+    const lowercaseEmail = user.email.toLowerCase();
+
     // Add membership log
     const logs = [membershipLog.accountUnlocked(ctx.req.userId)];
 
@@ -241,7 +248,7 @@ const Mutations = {
     await ctx.db.mutation.updateUser(
       {
         data: {
-          accountStatus: args.accountStatus,
+          accountStatus: "ACTIVE",
           membershipLog: {
             create: logs
           }
@@ -254,15 +261,14 @@ const Mutations = {
     );
 
     // Send email to user
-    // TODO Hook up to welcome email template
     return sendTransactionalEmail(
       getUserWelcomeEmail({
-        firstName,
-        lastName,
-        user: lowercaseEmail
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: lowercaseEmail
       })
     )
-      .then(() => ({ message: "Account unlock successful." }))
+      .then(() => ({ message: "Account unlocked" }))
       .catch(err => {
         //Extract error msg
         // const { message, code, response } = err;

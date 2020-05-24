@@ -58,7 +58,7 @@ module.exports.getUserWelcomeEmail = ({ email, firstName, lastName }) => ({
   text: `
     Welcome, ${firstName}!
 
-    Thanks for signing up!
+    Thanks for signing up! Your account has been unlocked. Feel free to sign up for some events.
 
     Visit this URL to log in:
     ${process.env.FRONTEND_URL}/login
@@ -66,7 +66,7 @@ module.exports.getUserWelcomeEmail = ({ email, firstName, lastName }) => ({
   html: `
     <p>Welcome, ${firstName}!</p>
 
-    <p>Thanks for signing up!</p>
+    <p>Thanks for signing up! Thanks for signing up! Your account has been unlocked. Feel free to sign up for some events.</p>
 
     <p><a href="${
       process.env.FRONTEND_URL
