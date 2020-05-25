@@ -2,10 +2,16 @@ const { format } = require("date-fns");
 
 const { datePrintFormat } = require("./index");
 
-const noReplyAddress = "4-Players Webmaster <no-reply@4-playersofcolorado.org>";
-const secretaryAddress =
-  "4-Players Secretary <secretary@4-playersofcolorado.org>";
-const webmasterAddress = "4-Players  <webmaster@4-playersofcolorado.org>";
+const isStaging =
+  process.env.STAGING_ENV && process.env.STAGING_ENV === "staging";
+
+const noReplyAddress =
+  "4-Players of Colorado <no-reply@4-playersofcolorado.org>";
+const webmasterAddress =
+  "4-Players Webmaster <webmaster@4-playersofcolorado.org>";
+const secretaryAddress = isStaging
+  ? webmasterAddress
+  : "4-Players Secretary <secretary@4-playersofcolorado.org>";
 
 const getUserAddress = (firstName, lastName, email) =>
   `${firstName} ${lastName} <${email}>`;

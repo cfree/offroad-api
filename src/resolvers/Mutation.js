@@ -151,7 +151,7 @@ const Mutations = {
 
     // Create user in database
     try {
-      const user = await ctx.db.mutation.createUser(
+      await ctx.db.mutation.createUser(
         {
           data: {
             ...newUser,
