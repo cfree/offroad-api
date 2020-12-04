@@ -201,8 +201,27 @@ type Event {
 
 type RSVP {
   member: User!
+  vehicle: Vehicle
   event: Event!
   status: RSVPStatus!
+  equipment: [String]
+  guestCount: Int
+  isRider: Boolean
+  # chaperone: User
+  # memberGuests: [User]
+  # paid: Boolean
+}
+
+input RSVPInput {
+  userId: ID
+  eventId: ID
+  status: RSVPStatus
+  equipment: [String]
+  guestCount: Int
+  vehicle: ID
+  isRider: Boolean
+  #paid: Boolean
+  #memberGuestUsernames: [String]
 }
 
 type Trail {
@@ -248,12 +267,6 @@ type Bandaid {
   memberInvolved: User
   title: String
   description: String
-}
-
-input RSVPInput {
-  userId: ID
-  eventId: ID
-  status: RSVPStatus
 }
 
 input UserUpdateInput {

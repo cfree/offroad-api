@@ -155,6 +155,7 @@ type User {
   isCharterMember: Boolean @default(value: false)
   rig: RigImage
   vehicle: Vehicle 
+  equipment: [String] @scalarList(strategy: RELATION)
   title: Title
   role: Role! @default(value: USER)
   accountStatus: AccountStatus! @default(value: LOCKED)
@@ -170,6 +171,7 @@ type User {
     @relation(name: "LogItemLogger")
   eventsCreated: [Event] @relation(name: "EventCreator")
   eventsRSVPd: [RSVP] @relation(name: "UserRSVP")
+  eventsRSVPdAsPassenger: [RSVP] @relation(name: "MembersRSVP")
   eventsHosted: [Event] @relation(name: "EventHost")
   trailsVisited: [Trail] @relation(name: "TrailVisitor")
   bandaids: [Bandaid] @relation(name: "BandaidSubject")
@@ -208,7 +210,7 @@ type UserMeta {
   emailVerified: Boolean @default(value: false)
   firstLoginComplete: Boolean @default(value: false)
   accountSetupComplete: Boolean @default(value: false)
-  oldSitemigrationComplete: Boolean @default(value: false)
+  oldSiteMigrationComplete: Boolean @default(value: false)
 }
 
 type Event {
@@ -240,8 +242,15 @@ type RSVP {
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
   member: User! @relation(name: "UserRSVP")
+  vehicle: Vehicle @relation(name: "VehicleRSVP")
   event: Event! @relation(name: "EventRSVP")
   status: RSVPStatus! @default(value: NONE)
+  # memberGuestCount: Int @default(value: 0)
+  # nonMemberGuestCount: Int @default(value: 0)
+  # paid: Boolean
+  guestCount: Int @default(value: 0)
+  equipment: [String] @scalarList(strategy: RELATION)
+  isRider: Boolean @default(value: false)
 }
 
 type Trail {
@@ -343,6 +352,7 @@ type Vehicle {
   image: CloudinaryImage
   outfitLevel: OutfitLevel
   mods: [String] @scalarList(strategy: RELATION)
+  rsvps: [RSVP] @relation(name: "VehicleRSVP")
 }
 
 type ActivityLogItem {

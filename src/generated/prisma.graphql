@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Sun May 24 2020 08:55:05 GMT-0600 (Mountain Daylight Time)
+# timestamp: Sun Nov 15 2020 19:36:18 GMT-0700 (Mountain Standard Time)
 
 enum AccountStatus {
   ACTIVE
@@ -5210,7 +5210,6 @@ type Mutation {
   createPreference(data: PreferenceCreateInput!): Preference!
   createUserMeta(data: UserMetaCreateInput!): UserMeta!
   createEvent(data: EventCreateInput!): Event!
-  createRSVP(data: RSVPCreateInput!): RSVP!
   createTrail(data: TrailCreateInput!): Trail!
   createRunReport(data: RunReportCreateInput!): RunReport!
   createCondition(data: ConditionCreateInput!): Condition!
@@ -5219,6 +5218,7 @@ type Mutation {
   createVote(data: VoteCreateInput!): Vote!
   createActivityLogItem(data: ActivityLogItemCreateInput!): ActivityLogItem!
   createMembershipLogItem(data: MembershipLogItemCreateInput!): MembershipLogItem!
+  createRSVP(data: RSVPCreateInput!): RSVP!
   createVehicle(data: VehicleCreateInput!): Vehicle!
   createRigImage(data: RigImageCreateInput!): RigImage!
   createCloudinaryImage(data: CloudinaryImageCreateInput!): CloudinaryImage!
@@ -5229,7 +5229,6 @@ type Mutation {
   updatePreference(data: PreferenceUpdateInput!, where: PreferenceWhereUniqueInput!): Preference
   updateUserMeta(data: UserMetaUpdateInput!, where: UserMetaWhereUniqueInput!): UserMeta
   updateEvent(data: EventUpdateInput!, where: EventWhereUniqueInput!): Event
-  updateRSVP(data: RSVPUpdateInput!, where: RSVPWhereUniqueInput!): RSVP
   updateTrail(data: TrailUpdateInput!, where: TrailWhereUniqueInput!): Trail
   updateRunReport(data: RunReportUpdateInput!, where: RunReportWhereUniqueInput!): RunReport
   updateCondition(data: ConditionUpdateInput!, where: ConditionWhereUniqueInput!): Condition
@@ -5238,6 +5237,7 @@ type Mutation {
   updateVote(data: VoteUpdateInput!, where: VoteWhereUniqueInput!): Vote
   updateActivityLogItem(data: ActivityLogItemUpdateInput!, where: ActivityLogItemWhereUniqueInput!): ActivityLogItem
   updateMembershipLogItem(data: MembershipLogItemUpdateInput!, where: MembershipLogItemWhereUniqueInput!): MembershipLogItem
+  updateRSVP(data: RSVPUpdateInput!, where: RSVPWhereUniqueInput!): RSVP
   updateVehicle(data: VehicleUpdateInput!, where: VehicleWhereUniqueInput!): Vehicle
   updateRigImage(data: RigImageUpdateInput!, where: RigImageWhereUniqueInput!): RigImage
   updateCloudinaryImage(data: CloudinaryImageUpdateInput!, where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
@@ -5248,7 +5248,6 @@ type Mutation {
   deletePreference(where: PreferenceWhereUniqueInput!): Preference
   deleteUserMeta(where: UserMetaWhereUniqueInput!): UserMeta
   deleteEvent(where: EventWhereUniqueInput!): Event
-  deleteRSVP(where: RSVPWhereUniqueInput!): RSVP
   deleteTrail(where: TrailWhereUniqueInput!): Trail
   deleteRunReport(where: RunReportWhereUniqueInput!): RunReport
   deleteCondition(where: ConditionWhereUniqueInput!): Condition
@@ -5257,6 +5256,7 @@ type Mutation {
   deleteVote(where: VoteWhereUniqueInput!): Vote
   deleteActivityLogItem(where: ActivityLogItemWhereUniqueInput!): ActivityLogItem
   deleteMembershipLogItem(where: MembershipLogItemWhereUniqueInput!): MembershipLogItem
+  deleteRSVP(where: RSVPWhereUniqueInput!): RSVP
   deleteVehicle(where: VehicleWhereUniqueInput!): Vehicle
   deleteRigImage(where: RigImageWhereUniqueInput!): RigImage
   deleteCloudinaryImage(where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
@@ -5267,7 +5267,6 @@ type Mutation {
   upsertPreference(where: PreferenceWhereUniqueInput!, create: PreferenceCreateInput!, update: PreferenceUpdateInput!): Preference!
   upsertUserMeta(where: UserMetaWhereUniqueInput!, create: UserMetaCreateInput!, update: UserMetaUpdateInput!): UserMeta!
   upsertEvent(where: EventWhereUniqueInput!, create: EventCreateInput!, update: EventUpdateInput!): Event!
-  upsertRSVP(where: RSVPWhereUniqueInput!, create: RSVPCreateInput!, update: RSVPUpdateInput!): RSVP!
   upsertTrail(where: TrailWhereUniqueInput!, create: TrailCreateInput!, update: TrailUpdateInput!): Trail!
   upsertRunReport(where: RunReportWhereUniqueInput!, create: RunReportCreateInput!, update: RunReportUpdateInput!): RunReport!
   upsertCondition(where: ConditionWhereUniqueInput!, create: ConditionCreateInput!, update: ConditionUpdateInput!): Condition!
@@ -5276,6 +5275,7 @@ type Mutation {
   upsertVote(where: VoteWhereUniqueInput!, create: VoteCreateInput!, update: VoteUpdateInput!): Vote!
   upsertActivityLogItem(where: ActivityLogItemWhereUniqueInput!, create: ActivityLogItemCreateInput!, update: ActivityLogItemUpdateInput!): ActivityLogItem!
   upsertMembershipLogItem(where: MembershipLogItemWhereUniqueInput!, create: MembershipLogItemCreateInput!, update: MembershipLogItemUpdateInput!): MembershipLogItem!
+  upsertRSVP(where: RSVPWhereUniqueInput!, create: RSVPCreateInput!, update: RSVPUpdateInput!): RSVP!
   upsertVehicle(where: VehicleWhereUniqueInput!, create: VehicleCreateInput!, update: VehicleUpdateInput!): Vehicle!
   upsertRigImage(where: RigImageWhereUniqueInput!, create: RigImageCreateInput!, update: RigImageUpdateInput!): RigImage!
   upsertCloudinaryImage(where: CloudinaryImageWhereUniqueInput!, create: CloudinaryImageCreateInput!, update: CloudinaryImageUpdateInput!): CloudinaryImage!
@@ -5286,7 +5286,6 @@ type Mutation {
   updateManyPreferences(data: PreferenceUpdateManyMutationInput!, where: PreferenceWhereInput): BatchPayload!
   updateManyUserMetas(data: UserMetaUpdateManyMutationInput!, where: UserMetaWhereInput): BatchPayload!
   updateManyEvents(data: EventUpdateManyMutationInput!, where: EventWhereInput): BatchPayload!
-  updateManyRSVPs(data: RSVPUpdateManyMutationInput!, where: RSVPWhereInput): BatchPayload!
   updateManyTrails(data: TrailUpdateManyMutationInput!, where: TrailWhereInput): BatchPayload!
   updateManyRunReports(data: RunReportUpdateManyMutationInput!, where: RunReportWhereInput): BatchPayload!
   updateManyConditions(data: ConditionUpdateManyMutationInput!, where: ConditionWhereInput): BatchPayload!
@@ -5294,6 +5293,7 @@ type Mutation {
   updateManyElections(data: ElectionUpdateManyMutationInput!, where: ElectionWhereInput): BatchPayload!
   updateManyActivityLogItems(data: ActivityLogItemUpdateManyMutationInput!, where: ActivityLogItemWhereInput): BatchPayload!
   updateManyMembershipLogItems(data: MembershipLogItemUpdateManyMutationInput!, where: MembershipLogItemWhereInput): BatchPayload!
+  updateManyRSVPs(data: RSVPUpdateManyMutationInput!, where: RSVPWhereInput): BatchPayload!
   updateManyVehicles(data: VehicleUpdateManyMutationInput!, where: VehicleWhereInput): BatchPayload!
   updateManyCloudinaryImages(data: CloudinaryImageUpdateManyMutationInput!, where: CloudinaryImageWhereInput): BatchPayload!
   updateManyBallots(data: BallotUpdateManyMutationInput!, where: BallotWhereInput): BatchPayload!
@@ -5303,7 +5303,6 @@ type Mutation {
   deleteManyPreferences(where: PreferenceWhereInput): BatchPayload!
   deleteManyUserMetas(where: UserMetaWhereInput): BatchPayload!
   deleteManyEvents(where: EventWhereInput): BatchPayload!
-  deleteManyRSVPs(where: RSVPWhereInput): BatchPayload!
   deleteManyTrails(where: TrailWhereInput): BatchPayload!
   deleteManyRunReports(where: RunReportWhereInput): BatchPayload!
   deleteManyConditions(where: ConditionWhereInput): BatchPayload!
@@ -5312,6 +5311,7 @@ type Mutation {
   deleteManyVotes(where: VoteWhereInput): BatchPayload!
   deleteManyActivityLogItems(where: ActivityLogItemWhereInput): BatchPayload!
   deleteManyMembershipLogItems(where: MembershipLogItemWhereInput): BatchPayload!
+  deleteManyRSVPs(where: RSVPWhereInput): BatchPayload!
   deleteManyVehicles(where: VehicleWhereInput): BatchPayload!
   deleteManyRigImages(where: RigImageWhereInput): BatchPayload!
   deleteManyCloudinaryImages(where: CloudinaryImageWhereInput): BatchPayload!
@@ -5704,7 +5704,6 @@ type Query {
   preferences(where: PreferenceWhereInput, orderBy: PreferenceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Preference]!
   userMetas(where: UserMetaWhereInput, orderBy: UserMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserMeta]!
   events(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event]!
-  rSVPs(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP]!
   trails(where: TrailWhereInput, orderBy: TrailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trail]!
   runReports(where: RunReportWhereInput, orderBy: RunReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RunReport]!
   conditions(where: ConditionWhereInput, orderBy: ConditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Condition]!
@@ -5713,6 +5712,7 @@ type Query {
   votes(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vote]!
   activityLogItems(where: ActivityLogItemWhereInput, orderBy: ActivityLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ActivityLogItem]!
   membershipLogItems(where: MembershipLogItemWhereInput, orderBy: MembershipLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MembershipLogItem]!
+  rSVPs(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP]!
   vehicles(where: VehicleWhereInput, orderBy: VehicleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vehicle]!
   rigImages(where: RigImageWhereInput, orderBy: RigImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RigImage]!
   cloudinaryImages(where: CloudinaryImageWhereInput, orderBy: CloudinaryImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CloudinaryImage]!
@@ -5723,7 +5723,6 @@ type Query {
   preference(where: PreferenceWhereUniqueInput!): Preference
   userMeta(where: UserMetaWhereUniqueInput!): UserMeta
   event(where: EventWhereUniqueInput!): Event
-  rSVP(where: RSVPWhereUniqueInput!): RSVP
   trail(where: TrailWhereUniqueInput!): Trail
   runReport(where: RunReportWhereUniqueInput!): RunReport
   condition(where: ConditionWhereUniqueInput!): Condition
@@ -5732,6 +5731,7 @@ type Query {
   vote(where: VoteWhereUniqueInput!): Vote
   activityLogItem(where: ActivityLogItemWhereUniqueInput!): ActivityLogItem
   membershipLogItem(where: MembershipLogItemWhereUniqueInput!): MembershipLogItem
+  rSVP(where: RSVPWhereUniqueInput!): RSVP
   vehicle(where: VehicleWhereUniqueInput!): Vehicle
   rigImage(where: RigImageWhereUniqueInput!): RigImage
   cloudinaryImage(where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
@@ -5742,7 +5742,6 @@ type Query {
   preferencesConnection(where: PreferenceWhereInput, orderBy: PreferenceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PreferenceConnection!
   userMetasConnection(where: UserMetaWhereInput, orderBy: UserMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserMetaConnection!
   eventsConnection(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EventConnection!
-  rSVPsConnection(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RSVPConnection!
   trailsConnection(where: TrailWhereInput, orderBy: TrailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TrailConnection!
   runReportsConnection(where: RunReportWhereInput, orderBy: RunReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RunReportConnection!
   conditionsConnection(where: ConditionWhereInput, orderBy: ConditionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ConditionConnection!
@@ -5751,6 +5750,7 @@ type Query {
   votesConnection(where: VoteWhereInput, orderBy: VoteOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VoteConnection!
   activityLogItemsConnection(where: ActivityLogItemWhereInput, orderBy: ActivityLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ActivityLogItemConnection!
   membershipLogItemsConnection(where: MembershipLogItemWhereInput, orderBy: MembershipLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): MembershipLogItemConnection!
+  rSVPsConnection(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RSVPConnection!
   vehiclesConnection(where: VehicleWhereInput, orderBy: VehicleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VehicleConnection!
   rigImagesConnection(where: RigImageWhereInput, orderBy: RigImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RigImageConnection!
   cloudinaryImagesConnection(where: CloudinaryImageWhereInput, orderBy: CloudinaryImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CloudinaryImageConnection!
@@ -6385,8 +6385,12 @@ type RSVP implements Node {
   createdAt: DateTime!
   updatedAt: DateTime!
   member: User!
+  vehicle: Vehicle
   event: Event!
   status: RSVPStatus!
+  guestCount: Int
+  equipment: [String!]!
+  isRider: Boolean
 }
 
 """A connection to a list of items."""
@@ -6399,11 +6403,24 @@ type RSVPConnection {
   aggregate: AggregateRSVP!
 }
 
+input RSVPCreateequipmentInput {
+  set: [String!]
+}
+
 input RSVPCreateInput {
   id: ID
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPCreateequipmentInput
   member: UserCreateOneWithoutEventsRSVPdInput!
+  vehicle: VehicleCreateOneWithoutRsvpsInput
   event: EventCreateOneWithoutRsvpsInput!
+}
+
+input RSVPCreateManyInput {
+  create: [RSVPCreateInput!]
+  connect: [RSVPWhereUniqueInput!]
 }
 
 input RSVPCreateManyWithoutEventInput {
@@ -6416,15 +6433,38 @@ input RSVPCreateManyWithoutMemberInput {
   connect: [RSVPWhereUniqueInput!]
 }
 
+input RSVPCreateManyWithoutVehicleInput {
+  create: [RSVPCreateWithoutVehicleInput!]
+  connect: [RSVPWhereUniqueInput!]
+}
+
 input RSVPCreateWithoutEventInput {
   id: ID
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPCreateequipmentInput
   member: UserCreateOneWithoutEventsRSVPdInput!
+  vehicle: VehicleCreateOneWithoutRsvpsInput
 }
 
 input RSVPCreateWithoutMemberInput {
   id: ID
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPCreateequipmentInput
+  vehicle: VehicleCreateOneWithoutRsvpsInput
+  event: EventCreateOneWithoutRsvpsInput!
+}
+
+input RSVPCreateWithoutVehicleInput {
+  id: ID
+  status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPCreateequipmentInput
+  member: UserCreateOneWithoutEventsRSVPdInput!
   event: EventCreateOneWithoutRsvpsInput!
 }
 
@@ -6446,6 +6486,10 @@ enum RSVPOrderByInput {
   updatedAt_DESC
   status_ASC
   status_DESC
+  guestCount_ASC
+  guestCount_DESC
+  isRider_ASC
+  isRider_DESC
 }
 
 type RSVPPreviousValues {
@@ -6453,6 +6497,9 @@ type RSVPPreviousValues {
   createdAt: DateTime!
   updatedAt: DateTime!
   status: RSVPStatus!
+  guestCount: Int
+  equipment: [String!]!
+  isRider: Boolean
 }
 
 input RSVPScalarWhereInput {
@@ -6558,6 +6605,32 @@ input RSVPScalarWhereInput {
 
   """All values that are not contained in given list."""
   status_not_in: [RSVPStatus!]
+  guestCount: Int
+
+  """All values that are not equal to given value."""
+  guestCount_not: Int
+
+  """All values that are contained in given list."""
+  guestCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  guestCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  guestCount_lt: Int
+
+  """All values less than or equal the given value."""
+  guestCount_lte: Int
+
+  """All values greater than the given value."""
+  guestCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  guestCount_gte: Int
+  isRider: Boolean
+
+  """All values that are not equal to given value."""
+  isRider_not: Boolean
 }
 
 enum RSVPStatus {
@@ -6604,18 +6677,54 @@ input RSVPSubscriptionWhereInput {
   node: RSVPWhereInput
 }
 
+input RSVPUpdateDataInput {
+  status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPUpdateequipmentInput
+  member: UserUpdateOneRequiredWithoutEventsRSVPdInput
+  vehicle: VehicleUpdateOneWithoutRsvpsInput
+  event: EventUpdateOneRequiredWithoutRsvpsInput
+}
+
+input RSVPUpdateequipmentInput {
+  set: [String!]
+}
+
 input RSVPUpdateInput {
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPUpdateequipmentInput
   member: UserUpdateOneRequiredWithoutEventsRSVPdInput
+  vehicle: VehicleUpdateOneWithoutRsvpsInput
   event: EventUpdateOneRequiredWithoutRsvpsInput
 }
 
 input RSVPUpdateManyDataInput {
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPUpdateequipmentInput
+}
+
+input RSVPUpdateManyInput {
+  create: [RSVPCreateInput!]
+  connect: [RSVPWhereUniqueInput!]
+  set: [RSVPWhereUniqueInput!]
+  disconnect: [RSVPWhereUniqueInput!]
+  delete: [RSVPWhereUniqueInput!]
+  update: [RSVPUpdateWithWhereUniqueNestedInput!]
+  updateMany: [RSVPUpdateManyWithWhereNestedInput!]
+  deleteMany: [RSVPScalarWhereInput!]
+  upsert: [RSVPUpsertWithWhereUniqueNestedInput!]
 }
 
 input RSVPUpdateManyMutationInput {
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPUpdateequipmentInput
 }
 
 input RSVPUpdateManyWithoutEventInput {
@@ -6642,6 +6751,18 @@ input RSVPUpdateManyWithoutMemberInput {
   upsert: [RSVPUpsertWithWhereUniqueWithoutMemberInput!]
 }
 
+input RSVPUpdateManyWithoutVehicleInput {
+  create: [RSVPCreateWithoutVehicleInput!]
+  connect: [RSVPWhereUniqueInput!]
+  set: [RSVPWhereUniqueInput!]
+  disconnect: [RSVPWhereUniqueInput!]
+  delete: [RSVPWhereUniqueInput!]
+  update: [RSVPUpdateWithWhereUniqueWithoutVehicleInput!]
+  updateMany: [RSVPUpdateManyWithWhereNestedInput!]
+  deleteMany: [RSVPScalarWhereInput!]
+  upsert: [RSVPUpsertWithWhereUniqueWithoutVehicleInput!]
+}
+
 input RSVPUpdateManyWithWhereNestedInput {
   where: RSVPScalarWhereInput!
   data: RSVPUpdateManyDataInput!
@@ -6649,12 +6770,34 @@ input RSVPUpdateManyWithWhereNestedInput {
 
 input RSVPUpdateWithoutEventDataInput {
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPUpdateequipmentInput
   member: UserUpdateOneRequiredWithoutEventsRSVPdInput
+  vehicle: VehicleUpdateOneWithoutRsvpsInput
 }
 
 input RSVPUpdateWithoutMemberDataInput {
   status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPUpdateequipmentInput
+  vehicle: VehicleUpdateOneWithoutRsvpsInput
   event: EventUpdateOneRequiredWithoutRsvpsInput
+}
+
+input RSVPUpdateWithoutVehicleDataInput {
+  status: RSVPStatus
+  guestCount: Int
+  isRider: Boolean
+  equipment: RSVPUpdateequipmentInput
+  member: UserUpdateOneRequiredWithoutEventsRSVPdInput
+  event: EventUpdateOneRequiredWithoutRsvpsInput
+}
+
+input RSVPUpdateWithWhereUniqueNestedInput {
+  where: RSVPWhereUniqueInput!
+  data: RSVPUpdateDataInput!
 }
 
 input RSVPUpdateWithWhereUniqueWithoutEventInput {
@@ -6667,6 +6810,17 @@ input RSVPUpdateWithWhereUniqueWithoutMemberInput {
   data: RSVPUpdateWithoutMemberDataInput!
 }
 
+input RSVPUpdateWithWhereUniqueWithoutVehicleInput {
+  where: RSVPWhereUniqueInput!
+  data: RSVPUpdateWithoutVehicleDataInput!
+}
+
+input RSVPUpsertWithWhereUniqueNestedInput {
+  where: RSVPWhereUniqueInput!
+  update: RSVPUpdateDataInput!
+  create: RSVPCreateInput!
+}
+
 input RSVPUpsertWithWhereUniqueWithoutEventInput {
   where: RSVPWhereUniqueInput!
   update: RSVPUpdateWithoutEventDataInput!
@@ -6677,6 +6831,12 @@ input RSVPUpsertWithWhereUniqueWithoutMemberInput {
   where: RSVPWhereUniqueInput!
   update: RSVPUpdateWithoutMemberDataInput!
   create: RSVPCreateWithoutMemberInput!
+}
+
+input RSVPUpsertWithWhereUniqueWithoutVehicleInput {
+  where: RSVPWhereUniqueInput!
+  update: RSVPUpdateWithoutVehicleDataInput!
+  create: RSVPCreateWithoutVehicleInput!
 }
 
 input RSVPWhereInput {
@@ -6782,7 +6942,34 @@ input RSVPWhereInput {
 
   """All values that are not contained in given list."""
   status_not_in: [RSVPStatus!]
+  guestCount: Int
+
+  """All values that are not equal to given value."""
+  guestCount_not: Int
+
+  """All values that are contained in given list."""
+  guestCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  guestCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  guestCount_lt: Int
+
+  """All values less than or equal the given value."""
+  guestCount_lte: Int
+
+  """All values greater than the given value."""
+  guestCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  guestCount_gte: Int
+  isRider: Boolean
+
+  """All values that are not equal to given value."""
+  isRider_not: Boolean
   member: UserWhereInput
+  vehicle: VehicleWhereInput
   event: EventWhereInput
 }
 
@@ -7843,7 +8030,6 @@ type Subscription {
   preference(where: PreferenceSubscriptionWhereInput): PreferenceSubscriptionPayload
   userMeta(where: UserMetaSubscriptionWhereInput): UserMetaSubscriptionPayload
   event(where: EventSubscriptionWhereInput): EventSubscriptionPayload
-  rSVP(where: RSVPSubscriptionWhereInput): RSVPSubscriptionPayload
   trail(where: TrailSubscriptionWhereInput): TrailSubscriptionPayload
   runReport(where: RunReportSubscriptionWhereInput): RunReportSubscriptionPayload
   condition(where: ConditionSubscriptionWhereInput): ConditionSubscriptionPayload
@@ -7852,6 +8038,7 @@ type Subscription {
   vote(where: VoteSubscriptionWhereInput): VoteSubscriptionPayload
   activityLogItem(where: ActivityLogItemSubscriptionWhereInput): ActivityLogItemSubscriptionPayload
   membershipLogItem(where: MembershipLogItemSubscriptionWhereInput): MembershipLogItemSubscriptionPayload
+  rSVP(where: RSVPSubscriptionWhereInput): RSVPSubscriptionPayload
   vehicle(where: VehicleSubscriptionWhereInput): VehicleSubscriptionPayload
   rigImage(where: RigImageSubscriptionWhereInput): RigImageSubscriptionPayload
   cloudinaryImage(where: CloudinaryImageSubscriptionWhereInput): CloudinaryImageSubscriptionPayload
@@ -9087,6 +9274,7 @@ type User implements Node {
   isCharterMember: Boolean
   rig: RigImage
   vehicle: Vehicle
+  equipment: [String!]!
   title: Title
   role: Role!
   accountStatus: AccountStatus!
@@ -9101,6 +9289,7 @@ type User implements Node {
   membershipLogContributions(where: MembershipLogItemWhereInput, orderBy: MembershipLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MembershipLogItem!]
   eventsCreated(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   eventsRSVPd(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP!]
+  eventsRSVPdAsPassenger(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP!]
   eventsHosted(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   trailsVisited(where: TrailWhereInput, orderBy: TrailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trail!]
   bandaids(where: BandaidWhereInput, orderBy: BandaidOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bandaid!]
@@ -9115,6 +9304,10 @@ type UserConnection {
   """A list of edges."""
   edges: [UserEdge]!
   aggregate: AggregateUser!
+}
+
+input UserCreateequipmentInput {
+  set: [String!]
 }
 
 input UserCreateInput {
@@ -9137,6 +9330,7 @@ input UserCreateInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9151,6 +9345,7 @@ input UserCreateInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9252,6 +9447,7 @@ input UserCreateWithoutActivityLogInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9265,6 +9461,7 @@ input UserCreateWithoutActivityLogInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9291,6 +9488,7 @@ input UserCreateWithoutBandaidsInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9305,6 +9503,7 @@ input UserCreateWithoutBandaidsInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
@@ -9330,6 +9529,7 @@ input UserCreateWithoutCandidateForInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9343,6 +9543,7 @@ input UserCreateWithoutCandidateForInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9369,6 +9570,7 @@ input UserCreateWithoutContactInfoInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9382,6 +9584,7 @@ input UserCreateWithoutContactInfoInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9408,6 +9611,7 @@ input UserCreateWithoutEventsCreatedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9421,6 +9625,7 @@ input UserCreateWithoutEventsCreatedInput {
   membershipLog: MembershipLogItemCreateManyWithoutUserInput
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9447,6 +9652,7 @@ input UserCreateWithoutEventsHostedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9461,6 +9667,7 @@ input UserCreateWithoutEventsHostedInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
@@ -9486,6 +9693,7 @@ input UserCreateWithoutEventsRSVPdInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9499,6 +9707,7 @@ input UserCreateWithoutEventsRSVPdInput {
   membershipLog: MembershipLogItemCreateManyWithoutUserInput
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9525,6 +9734,7 @@ input UserCreateWithoutMembershipLogContributionsInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9538,6 +9748,7 @@ input UserCreateWithoutMembershipLogContributionsInput {
   membershipLog: MembershipLogItemCreateManyWithoutUserInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9564,6 +9775,7 @@ input UserCreateWithoutMembershipLogInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9577,6 +9789,7 @@ input UserCreateWithoutMembershipLogInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9603,6 +9816,7 @@ input UserCreateWithoutPreferencesInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9616,6 +9830,7 @@ input UserCreateWithoutPreferencesInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9642,6 +9857,7 @@ input UserCreateWithoutRunReportsLoggedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9656,6 +9872,7 @@ input UserCreateWithoutRunReportsLoggedInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9681,6 +9898,7 @@ input UserCreateWithoutTrailsVisitedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9695,6 +9913,7 @@ input UserCreateWithoutTrailsVisitedInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
@@ -9720,6 +9939,7 @@ input UserCreateWithoutUserMetaInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9733,6 +9953,7 @@ input UserCreateWithoutUserMetaInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9759,6 +9980,7 @@ input UserCreateWithoutVotedForInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9772,6 +9994,7 @@ input UserCreateWithoutVotedForInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9798,6 +10021,7 @@ input UserCreateWithoutVotesReceivedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserCreateequipmentInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9811,6 +10035,7 @@ input UserCreateWithoutVotesReceivedInput {
   membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
   trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
@@ -9834,7 +10059,7 @@ type UserMeta implements Node {
   emailVerified: Boolean
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
 }
 
 """A connection to a list of items."""
@@ -9852,7 +10077,7 @@ input UserMetaCreateInput {
   emailVerified: Boolean
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
   user: UserCreateOneWithoutUserMetaInput
 }
 
@@ -9866,7 +10091,7 @@ input UserMetaCreateWithoutUserInput {
   emailVerified: Boolean
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
 }
 
 """An edge in a connection."""
@@ -9891,8 +10116,8 @@ enum UserMetaOrderByInput {
   firstLoginComplete_DESC
   accountSetupComplete_ASC
   accountSetupComplete_DESC
-  oldSitemigrationComplete_ASC
-  oldSitemigrationComplete_DESC
+  oldSiteMigrationComplete_ASC
+  oldSiteMigrationComplete_DESC
 }
 
 type UserMetaPreviousValues {
@@ -9902,7 +10127,7 @@ type UserMetaPreviousValues {
   emailVerified: Boolean
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
 }
 
 type UserMetaSubscriptionPayload {
@@ -9946,7 +10171,7 @@ input UserMetaUpdateInput {
   emailVerified: Boolean
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
   user: UserUpdateOneWithoutUserMetaInput
 }
 
@@ -9954,7 +10179,7 @@ input UserMetaUpdateManyMutationInput {
   emailVerified: Boolean
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
 }
 
 input UserMetaUpdateOneWithoutUserInput {
@@ -9970,7 +10195,7 @@ input UserMetaUpdateWithoutUserDataInput {
   emailVerified: Boolean
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
 }
 
 input UserMetaUpsertWithoutUserInput {
@@ -10083,10 +10308,10 @@ input UserMetaWhereInput {
 
   """All values that are not equal to given value."""
   accountSetupComplete_not: Boolean
-  oldSitemigrationComplete: Boolean
+  oldSiteMigrationComplete: Boolean
 
   """All values that are not equal to given value."""
-  oldSitemigrationComplete_not: Boolean
+  oldSiteMigrationComplete_not: Boolean
   user: UserWhereInput
 }
 
@@ -10155,6 +10380,7 @@ type UserPreviousValues {
   resetToken: String
   resetTokenExpiry: Float
   isCharterMember: Boolean
+  equipment: [String!]!
   title: Title
   role: Role!
   accountStatus: AccountStatus!
@@ -10697,6 +10923,10 @@ input UserSubscriptionWhereInput {
   node: UserWhereInput
 }
 
+input UserUpdateequipmentInput {
+  set: [String!]
+}
+
 input UserUpdateInput {
   joined: DateTime
   lastLogin: DateTime
@@ -10716,6 +10946,7 @@ input UserUpdateInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10730,6 +10961,7 @@ input UserUpdateInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -10755,6 +10987,7 @@ input UserUpdateManyDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
 }
 
 input UserUpdateManyMutationInput {
@@ -10776,6 +11009,7 @@ input UserUpdateManyMutationInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
 }
 
 input UserUpdateManyWithoutCandidateForInput {
@@ -10931,6 +11165,7 @@ input UserUpdateWithoutActivityLogDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10944,6 +11179,7 @@ input UserUpdateWithoutActivityLogDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -10969,6 +11205,7 @@ input UserUpdateWithoutBandaidsDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10983,6 +11220,7 @@ input UserUpdateWithoutBandaidsDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
@@ -11007,6 +11245,7 @@ input UserUpdateWithoutCandidateForDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11020,6 +11259,7 @@ input UserUpdateWithoutCandidateForDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11045,6 +11285,7 @@ input UserUpdateWithoutContactInfoDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11058,6 +11299,7 @@ input UserUpdateWithoutContactInfoDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11083,6 +11325,7 @@ input UserUpdateWithoutEventsCreatedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11096,6 +11339,7 @@ input UserUpdateWithoutEventsCreatedDataInput {
   membershipLog: MembershipLogItemUpdateManyWithoutUserInput
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11121,6 +11365,7 @@ input UserUpdateWithoutEventsHostedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11135,6 +11380,7 @@ input UserUpdateWithoutEventsHostedDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
@@ -11159,6 +11405,7 @@ input UserUpdateWithoutEventsRSVPdDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11172,6 +11419,7 @@ input UserUpdateWithoutEventsRSVPdDataInput {
   membershipLog: MembershipLogItemUpdateManyWithoutUserInput
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11197,6 +11445,7 @@ input UserUpdateWithoutMembershipLogContributionsDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11210,6 +11459,7 @@ input UserUpdateWithoutMembershipLogContributionsDataInput {
   membershipLog: MembershipLogItemUpdateManyWithoutUserInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11235,6 +11485,7 @@ input UserUpdateWithoutMembershipLogDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11248,6 +11499,7 @@ input UserUpdateWithoutMembershipLogDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11273,6 +11525,7 @@ input UserUpdateWithoutPreferencesDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11286,6 +11539,7 @@ input UserUpdateWithoutPreferencesDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11311,6 +11565,7 @@ input UserUpdateWithoutRunReportsLoggedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11325,6 +11580,7 @@ input UserUpdateWithoutRunReportsLoggedDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11349,6 +11605,7 @@ input UserUpdateWithoutTrailsVisitedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11363,6 +11620,7 @@ input UserUpdateWithoutTrailsVisitedDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
@@ -11387,6 +11645,7 @@ input UserUpdateWithoutUserMetaDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11400,6 +11659,7 @@ input UserUpdateWithoutUserMetaDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11425,6 +11685,7 @@ input UserUpdateWithoutVotedForDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11438,6 +11699,7 @@ input UserUpdateWithoutVotedForDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -11463,6 +11725,7 @@ input UserUpdateWithoutVotesReceivedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11476,6 +11739,7 @@ input UserUpdateWithoutVotesReceivedDataInput {
   membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
   trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
@@ -12094,6 +12358,9 @@ input UserWhereInput {
   eventsRSVPd_every: RSVPWhereInput
   eventsRSVPd_some: RSVPWhereInput
   eventsRSVPd_none: RSVPWhereInput
+  eventsRSVPdAsPassenger_every: RSVPWhereInput
+  eventsRSVPdAsPassenger_some: RSVPWhereInput
+  eventsRSVPdAsPassenger_none: RSVPWhereInput
   eventsHosted_every: EventWhereInput
   eventsHosted_some: EventWhereInput
   eventsHosted_none: EventWhereInput
@@ -12127,6 +12394,7 @@ type Vehicle implements Node {
   image: CloudinaryImage
   outfitLevel: OutfitLevel
   mods: [String!]!
+  rsvps(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP!]
 }
 
 """A connection to a list of items."""
@@ -12149,6 +12417,7 @@ input VehicleCreateInput {
   outfitLevel: OutfitLevel
   mods: VehicleCreatemodsInput
   image: CloudinaryImageCreateOneInput
+  rsvps: RSVPCreateManyWithoutVehicleInput
 }
 
 input VehicleCreatemodsInput {
@@ -12158,6 +12427,23 @@ input VehicleCreatemodsInput {
 input VehicleCreateOneInput {
   create: VehicleCreateInput
   connect: VehicleWhereUniqueInput
+}
+
+input VehicleCreateOneWithoutRsvpsInput {
+  create: VehicleCreateWithoutRsvpsInput
+  connect: VehicleWhereUniqueInput
+}
+
+input VehicleCreateWithoutRsvpsInput {
+  id: ID
+  year: Int!
+  make: String!
+  model: String!
+  name: String
+  trim: String
+  outfitLevel: OutfitLevel
+  mods: VehicleCreatemodsInput
+  image: CloudinaryImageCreateOneInput
 }
 
 """An edge in a connection."""
@@ -12249,6 +12535,7 @@ input VehicleUpdateDataInput {
   outfitLevel: OutfitLevel
   mods: VehicleUpdatemodsInput
   image: CloudinaryImageUpdateOneInput
+  rsvps: RSVPUpdateManyWithoutVehicleInput
 }
 
 input VehicleUpdateInput {
@@ -12260,6 +12547,7 @@ input VehicleUpdateInput {
   outfitLevel: OutfitLevel
   mods: VehicleUpdatemodsInput
   image: CloudinaryImageUpdateOneInput
+  rsvps: RSVPUpdateManyWithoutVehicleInput
 }
 
 input VehicleUpdateManyMutationInput {
@@ -12285,9 +12573,34 @@ input VehicleUpdateOneInput {
   upsert: VehicleUpsertNestedInput
 }
 
+input VehicleUpdateOneWithoutRsvpsInput {
+  create: VehicleCreateWithoutRsvpsInput
+  connect: VehicleWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: VehicleUpdateWithoutRsvpsDataInput
+  upsert: VehicleUpsertWithoutRsvpsInput
+}
+
+input VehicleUpdateWithoutRsvpsDataInput {
+  year: Int
+  make: String
+  model: String
+  name: String
+  trim: String
+  outfitLevel: OutfitLevel
+  mods: VehicleUpdatemodsInput
+  image: CloudinaryImageUpdateOneInput
+}
+
 input VehicleUpsertNestedInput {
   update: VehicleUpdateDataInput!
   create: VehicleCreateInput!
+}
+
+input VehicleUpsertWithoutRsvpsInput {
+  update: VehicleUpdateWithoutRsvpsDataInput!
+  create: VehicleCreateWithoutRsvpsInput!
 }
 
 input VehicleWhereInput {
@@ -12576,6 +12889,9 @@ input VehicleWhereInput {
   """All values that are not contained in given list."""
   outfitLevel_not_in: [OutfitLevel!]
   image: CloudinaryImageWhereInput
+  rsvps_every: RSVPWhereInput
+  rsvps_some: RSVPWhereInput
+  rsvps_none: RSVPWhereInput
 }
 
 input VehicleWhereUniqueInput {

@@ -911,7 +911,7 @@ const Mutations = {
     // Query the current user
     const currentUser = await ctx.db.query.user(
       { where: { id: rsvp.userId } },
-      "{ id, accountStatus, accountType, eventsRSVPd { id, status, event { id } } }"
+      "{ id, accountStatus, accountType, eventsRSVPd { id, status, event { id }, vehicle { id }, guestCount } }"
     );
 
     if (!currentUser) {
@@ -949,8 +949,6 @@ const Mutations = {
         "{ id }"
       );
 
-      console.log("rsvps.length", rsvps.length);
-
       if (rsvps.length >= 3 && rsvp.status === "GOING") {
         throw new Error(
           "Guests can only attend 3 runs. Please become a member to attend more."
@@ -963,17 +961,86 @@ const Mutations = {
       eventRSVP => eventRSVP.event.id === rsvp.eventId
     );
 
-    // If this RSVP is not different, return gracefully
-    if (userRSVP && userRSVP.status === rsvp.status) {
-      return { message: "Already RSVPd, no change recorded" };
-    }
+    console.log("userRSVP", userRSVP);
 
     // If this RSVP is different, update RSVP
-    if (userRSVP && userRSVP.status !== rsvp.status) {
+    if (userRSVP) {
+      console.log("update rsvp");
+      console.log("rsvp", rsvp);
+
+      // console.log("before passengers", userRSVP.memberPassengers);
+      // console.log("after passengers", rsvp.memberPassengers);
+      // console.log("guests", rsvp.guestCount);
+      // console.log("before", oldMembersSet);
+      // console.log("after", newMembersSet);
+      // console.log(
+      //   "to remove",
+      //   memberPassengersNoLongerAttending,
+      //   [...memberPassengersNoLongerAttending].map(passenger => ({
+      //     id: passenger
+      //   }))
+      // );
+      // console.log(
+      //   "to add",
+      //   memberPassengersNotYetAttending,
+      //   [...memberPassengersNotYetAttending].map(passenger => ({
+      //     id: passenger
+      //   }))
+      // );
+
+      // is there an existing vehicle on this rsvp? do they match?
+      // do nothing
+      // is there no existing vehicle but member is now bringing one?
+      // connect
+      // is there an existing vehicle but member is no longer bringing one?
+      // disconnect
+
+      let vehicle;
+
+      if (!userRSVP.vehicle && rsvp.vehicle) {
+        // no existing vehicle but member is now bringing one
+        vehicle = {
+          vehicle: {
+            connect: {
+              id: rsvp.vehicle
+            }
+          }
+        };
+      } else if (userRSVP.vehicle && !rsvp.vehicle) {
+        // existing vehicle but member is no longer bringing one
+        vehicle = {
+          vehicle: {
+            disconnect: true
+          }
+        };
+      } else {
+        // existing vehicle on this rsvp, no change needed
+        vehicle = {};
+      }
+
+      console.log("vehicle", vehicle);
+
       await ctx.db.mutation.updateRSVP(
         {
           where: { id: userRSVP.id },
-          data: { status: rsvp.status }
+          data: {
+            status: rsvp.status,
+            equipment: rsvp.equipment || null,
+            guestCount: rsvp.guestCount,
+            isRider: !vehicle ? true : rsvp.isRider,
+            ...vehicle
+            // memberGuests: {
+            //   connect: [...memberPassengersNotYetAttending].map(passenger => ({
+            //     id: passenger
+            //   })),
+            //   disconnect: [...memberPassengersNoLongerAttending].map(
+            //     passenger => ({
+            //       id: passenger
+            //     })
+            //   )
+            // },
+            // paid: null,
+          }
         },
         info
       );
@@ -981,11 +1048,63 @@ const Mutations = {
       return { message: "Thank you for updating your RSVP" };
     }
 
+    // console.log("new rsvp", rsvp.memberPassengers);
+
     // If RSVP is missing, record RSVP
+
+    // 1. If rider RSVP:
+    //   cannot have member guests of their own
+    //   cannot have non member guests of their own
+    // 2. If driver RSVP has member guests:
+    //   create yes RSVP for member guests if they dont exist
+    //     add chaperone
+    //   update member guests RSVP to yes if they do exist
+    //     add chaperone
+
+    let vehicle;
+
+    if (userRSVP && !userRSVP.vehicle && rsvp.vehicle) {
+      // no existing vehicle but member is now bringing one
+      vehicle = {
+        vehicle: {
+          connect: {
+            id: rsvp.vehicle
+          }
+        }
+      };
+    } else if (userRSVP && userRSVP.vehicle && !rsvp.vehicle) {
+      // existing vehicle but member is no longer bringing one
+      vehicle = {
+        vehicle: {
+          disconnect: true
+        }
+      };
+    } else {
+      // existing vehicle on this rsvp, no change needed
+      vehicle = {};
+    }
+
+    console.log("vehuicle", vehicle);
+
     await ctx.db.mutation.createRSVP(
       {
         data: {
           status: rsvp.status,
+          // ...(rsvp.memberPassengers.length > 0
+          //   ? {
+          //       memberPassengers: {
+          //         connect: rsvp.memberPassengers
+          //           .map(passenger => ({
+          //             id: passenger
+          //           }))
+          //           .filter(passenger => passenger.id !== null)
+          //       }
+          //     }
+          //   : {}),
+          // paid: null,
+          equipment: rsvp.equipment || null,
+          guestCount: rsvp.guestCount,
+          isRider: rsvp.isRider || false,
           member: {
             connect: {
               id: rsvp.userId
@@ -995,7 +1114,8 @@ const Mutations = {
             connect: {
               id: rsvp.eventId
             }
-          }
+          },
+          ...vehicle
         }
       },
       info
@@ -1707,14 +1827,14 @@ const Mutations = {
       vehicle: {
         upsert: {
           create: {
-            outfitLevel: outfitLevel && outfitLevel != 0 ? outfitLevel : null,
+            outfitLevel: outfitLevel && outfitLevel !== 0 ? outfitLevel : null,
             mods: {
               set: mods || []
             },
             ...restVehicle
           },
           update: {
-            outfitLevel: outfitLevel && outfitLevel != 0 ? outfitLevel : null,
+            outfitLevel: outfitLevel && outfitLevel !== 0 ? outfitLevel : null,
             mods: {
               set: mods || []
             },
