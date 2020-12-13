@@ -38,9 +38,12 @@ const {
   hasAccountStatus,
   hasAccountType,
   isSelf,
-  getUploadLocation
+  getUploadLocation,
+  getDuesAmountIncludingFees,
+  convertToCents
 } = require("../utils");
 const { roles, emailGroups } = require("../config");
+const stripe = require("../utils/stripe");
 
 const getHash = async pw => {
   const salt = await bcrypt.hash(HASH_SECRET, 10);
@@ -2105,6 +2108,86 @@ const Mutations = {
     );
 
     return { message: "Your trail photo has been updated" };
+  },
+  async payMembershipDues(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("User must be logged in");
+    }
+
+    // Have proper roles to do this?
+    if (!hasAccountType(ctx.req.user, ["FULL", "ASSOCIATE"], true)) {
+      throw new Error(
+        `Account type must be FULL or ASSOCIATE to proceed. Please contact the webmaster.`
+      );
+    }
+
+    // Requesting user has proper account status?
+    if (!hasAccountStatus(ctx.req.user, ["PAST_DUE"], false)) {
+      throw new Error(
+        `Account status must be ACTIVE or PAST_DUE to proceed. Contact the board to request reinstatement`
+      );
+    }
+
+    console.log("paying...", args.data);
+
+    const { token } = args.data;
+
+    // Confirm all `payingFor` IDs eligible for payment?
+    // const fullMemberCount = x;
+    // const associateMemberDues = y;
+
+    // Recalculate amount due (confirm)
+    // const duesAmount = getDuesAmountIncludingFees(x, y);
+    const duesAmount = getDuesAmountIncludingFees();
+
+    // if (args.amount !== duesAmount) {
+    //   throw new Error(
+    //     "Amount received does not match expected amount. Contact the webmaster"
+    //   );
+    // }
+
+    // Submit to stripe
+    try {
+      const charge = await stripe.charges.create({
+        amount: convertToCents(duesAmount),
+        currency: "USD",
+        source: token
+      });
+
+      if (charge.status === "succeeded") {
+        // Create membership log entry for payer
+        await ctx.db.mutation.updateUser({
+          data: {
+            accountStatus: "ACTIVE",
+            membershipLog: {
+              create: [
+                membershipLog.accountChanged({
+                  stateName: "Account status",
+                  newState: "ACTIVE",
+                  userId: ctx.req.userId
+                }),
+                membershipLog.duesPaid(duesAmount)
+              ]
+            }
+          },
+          where: {
+            id: ctx.req.userId
+          }
+        });
+
+        // Create membership log entry for other recipients
+        // Send email to payer and recipients
+
+        return {
+          message: "Dues payment was successful."
+        };
+      } else {
+        throw new Error(charge.failure_message || "Error processing charge");
+      }
+    } catch (e) {
+      throw new Error(e);
+    }
   }
 };
 

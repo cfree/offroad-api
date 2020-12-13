@@ -93,3 +93,24 @@ module.exports.getUploadLocation = appendage =>
   process.env.NODE_ENV === "development"
     ? `dev_${appendage}`
     : `prod_${appendage}`;
+
+module.exports.getDuesAmountIncludingFees = (
+  fullMemberCount = 1,
+  associateMemberCount = 0
+) => {
+  // Current: Stripe
+  // 2.9% + $0.30 per transaction
+  const fullMemberDues =
+    parseInt(process.env.FULL_MEMBERSHIP_DUES, 10) * fullMemberCount;
+
+  const associateMemberDues =
+    parseInt(process.env.ASSOCIATE_MEMBERSHIP_DUES, 10) * associateMemberCount;
+
+  const dues = fullMemberDues + associateMemberDues;
+
+  return ((dues + 0.3) / (1 - 0.029)).toFixed(2);
+};
+
+module.exports.convertToCents = dollarAmt => {
+  return dollarAmt * 100;
+};

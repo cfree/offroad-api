@@ -64,6 +64,7 @@ type Mutation {
   submitVote(vote: VoteInput): SuccessMessage
   createTrail(trail: TrailInput): SuccessMessage
   updateTrail(trail: TrailInput!, id: ID!): SuccessMessage
+  payMembershipDues(data: DuesPaymentInput!): SuccessMessage
   updateTrailImage(id: String!, image: CloudinaryImageInput!): SuccessMessage
 }
 
@@ -423,4 +424,10 @@ type AdminStats {
 type MemberCount {
   year: Int
   count: Int
+}
+
+input DuesPaymentInput {
+  token: String!
+  # amount: Float!
+  # payingFor: [ID]
 }

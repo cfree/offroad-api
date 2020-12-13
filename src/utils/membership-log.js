@@ -3,6 +3,39 @@ const { accountType } = require("../config");
 //   DUES_PAID                  TODO/TRANSACTIONAL
 //   GUEST_RESTRICTED           AUTO/TRANSACTIONAL
 
+module.exports.duesPaid = (amt, logger, payerName) => {
+  const wasLoggedByAdmin = !!logger;
+  const didPayForAnother = !!payerName;
+
+  if (didPayForAnother) {
+    // paid by...
+    return {
+      time: new Date(),
+      message: `$${amt} paid for by ${payerName} via website`,
+      messageCode: "DUES_PAID"
+    };
+  }
+
+  if (wasLoggedByAdmin) {
+    return {
+      time: new Date(),
+      message: `Paid $${amt}`,
+      messageCode: "DUES_PAID",
+      logger: {
+        connect: {
+          id: logger.userId
+        }
+      }
+    };
+  }
+
+  return {
+    time: new Date(),
+    message: `Paid $${amt} via website`,
+    messageCode: "DUES_PAID"
+  };
+};
+
 module.exports.accountCreated = () => ({
   time: new Date(),
   message: "Account created",

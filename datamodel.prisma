@@ -390,3 +390,4 @@ type CloudinaryImage {
   url: String
   smallUrl: String
 }
+
