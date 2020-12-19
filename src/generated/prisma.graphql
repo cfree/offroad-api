@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Sun Nov 15 2020 19:36:18 GMT-0700 (Mountain Standard Time)
+# timestamp: Sat Dec 19 2020 12:40:30 GMT-0700 (Mountain Standard Time)
 
 enum AccountStatus {
   ACTIVE
@@ -5200,12 +5200,12 @@ enum MembershipMessageCode {
   TITLE_ADDED
   TITLE_REMOVED
   MEMBERSHIP_GRANTED
+  MEMBERSHIP_ELIGIBLE
   GUEST_RESTRICTED
 }
 
 type Mutation {
   createRegistration(data: RegistrationCreateInput!): Registration!
-  createUser(data: UserCreateInput!): User!
   createContactInfo(data: ContactInfoCreateInput!): ContactInfo!
   createPreference(data: PreferenceCreateInput!): Preference!
   createUserMeta(data: UserMetaCreateInput!): UserMeta!
@@ -5221,10 +5221,10 @@ type Mutation {
   createRSVP(data: RSVPCreateInput!): RSVP!
   createVehicle(data: VehicleCreateInput!): Vehicle!
   createRigImage(data: RigImageCreateInput!): RigImage!
+  createUser(data: UserCreateInput!): User!
   createCloudinaryImage(data: CloudinaryImageCreateInput!): CloudinaryImage!
   createBallot(data: BallotCreateInput!): Ballot!
   updateRegistration(data: RegistrationUpdateInput!, where: RegistrationWhereUniqueInput!): Registration
-  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateContactInfo(data: ContactInfoUpdateInput!, where: ContactInfoWhereUniqueInput!): ContactInfo
   updatePreference(data: PreferenceUpdateInput!, where: PreferenceWhereUniqueInput!): Preference
   updateUserMeta(data: UserMetaUpdateInput!, where: UserMetaWhereUniqueInput!): UserMeta
@@ -5240,10 +5240,10 @@ type Mutation {
   updateRSVP(data: RSVPUpdateInput!, where: RSVPWhereUniqueInput!): RSVP
   updateVehicle(data: VehicleUpdateInput!, where: VehicleWhereUniqueInput!): Vehicle
   updateRigImage(data: RigImageUpdateInput!, where: RigImageWhereUniqueInput!): RigImage
+  updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateCloudinaryImage(data: CloudinaryImageUpdateInput!, where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
   updateBallot(data: BallotUpdateInput!, where: BallotWhereUniqueInput!): Ballot
   deleteRegistration(where: RegistrationWhereUniqueInput!): Registration
-  deleteUser(where: UserWhereUniqueInput!): User
   deleteContactInfo(where: ContactInfoWhereUniqueInput!): ContactInfo
   deletePreference(where: PreferenceWhereUniqueInput!): Preference
   deleteUserMeta(where: UserMetaWhereUniqueInput!): UserMeta
@@ -5259,10 +5259,10 @@ type Mutation {
   deleteRSVP(where: RSVPWhereUniqueInput!): RSVP
   deleteVehicle(where: VehicleWhereUniqueInput!): Vehicle
   deleteRigImage(where: RigImageWhereUniqueInput!): RigImage
+  deleteUser(where: UserWhereUniqueInput!): User
   deleteCloudinaryImage(where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
   deleteBallot(where: BallotWhereUniqueInput!): Ballot
   upsertRegistration(where: RegistrationWhereUniqueInput!, create: RegistrationCreateInput!, update: RegistrationUpdateInput!): Registration!
-  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertContactInfo(where: ContactInfoWhereUniqueInput!, create: ContactInfoCreateInput!, update: ContactInfoUpdateInput!): ContactInfo!
   upsertPreference(where: PreferenceWhereUniqueInput!, create: PreferenceCreateInput!, update: PreferenceUpdateInput!): Preference!
   upsertUserMeta(where: UserMetaWhereUniqueInput!, create: UserMetaCreateInput!, update: UserMetaUpdateInput!): UserMeta!
@@ -5278,10 +5278,10 @@ type Mutation {
   upsertRSVP(where: RSVPWhereUniqueInput!, create: RSVPCreateInput!, update: RSVPUpdateInput!): RSVP!
   upsertVehicle(where: VehicleWhereUniqueInput!, create: VehicleCreateInput!, update: VehicleUpdateInput!): Vehicle!
   upsertRigImage(where: RigImageWhereUniqueInput!, create: RigImageCreateInput!, update: RigImageUpdateInput!): RigImage!
+  upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertCloudinaryImage(where: CloudinaryImageWhereUniqueInput!, create: CloudinaryImageCreateInput!, update: CloudinaryImageUpdateInput!): CloudinaryImage!
   upsertBallot(where: BallotWhereUniqueInput!, create: BallotCreateInput!, update: BallotUpdateInput!): Ballot!
   updateManyRegistrations(data: RegistrationUpdateManyMutationInput!, where: RegistrationWhereInput): BatchPayload!
-  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyContactInfoes(data: ContactInfoUpdateManyMutationInput!, where: ContactInfoWhereInput): BatchPayload!
   updateManyPreferences(data: PreferenceUpdateManyMutationInput!, where: PreferenceWhereInput): BatchPayload!
   updateManyUserMetas(data: UserMetaUpdateManyMutationInput!, where: UserMetaWhereInput): BatchPayload!
@@ -5295,10 +5295,10 @@ type Mutation {
   updateManyMembershipLogItems(data: MembershipLogItemUpdateManyMutationInput!, where: MembershipLogItemWhereInput): BatchPayload!
   updateManyRSVPs(data: RSVPUpdateManyMutationInput!, where: RSVPWhereInput): BatchPayload!
   updateManyVehicles(data: VehicleUpdateManyMutationInput!, where: VehicleWhereInput): BatchPayload!
+  updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyCloudinaryImages(data: CloudinaryImageUpdateManyMutationInput!, where: CloudinaryImageWhereInput): BatchPayload!
   updateManyBallots(data: BallotUpdateManyMutationInput!, where: BallotWhereInput): BatchPayload!
   deleteManyRegistrations(where: RegistrationWhereInput): BatchPayload!
-  deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyContactInfoes(where: ContactInfoWhereInput): BatchPayload!
   deleteManyPreferences(where: PreferenceWhereInput): BatchPayload!
   deleteManyUserMetas(where: UserMetaWhereInput): BatchPayload!
@@ -5314,6 +5314,7 @@ type Mutation {
   deleteManyRSVPs(where: RSVPWhereInput): BatchPayload!
   deleteManyVehicles(where: VehicleWhereInput): BatchPayload!
   deleteManyRigImages(where: RigImageWhereInput): BatchPayload!
+  deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyCloudinaryImages(where: CloudinaryImageWhereInput): BatchPayload!
   deleteManyBallots(where: BallotWhereInput): BatchPayload!
 }
@@ -5699,7 +5700,6 @@ input PreferenceWhereUniqueInput {
 
 type Query {
   registrations(where: RegistrationWhereInput, orderBy: RegistrationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Registration]!
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   contactInfoes(where: ContactInfoWhereInput, orderBy: ContactInfoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ContactInfo]!
   preferences(where: PreferenceWhereInput, orderBy: PreferenceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Preference]!
   userMetas(where: UserMetaWhereInput, orderBy: UserMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserMeta]!
@@ -5715,10 +5715,10 @@ type Query {
   rSVPs(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP]!
   vehicles(where: VehicleWhereInput, orderBy: VehicleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Vehicle]!
   rigImages(where: RigImageWhereInput, orderBy: RigImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RigImage]!
+  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   cloudinaryImages(where: CloudinaryImageWhereInput, orderBy: CloudinaryImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [CloudinaryImage]!
   ballots(where: BallotWhereInput, orderBy: BallotOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Ballot]!
   registration(where: RegistrationWhereUniqueInput!): Registration
-  user(where: UserWhereUniqueInput!): User
   contactInfo(where: ContactInfoWhereUniqueInput!): ContactInfo
   preference(where: PreferenceWhereUniqueInput!): Preference
   userMeta(where: UserMetaWhereUniqueInput!): UserMeta
@@ -5734,10 +5734,10 @@ type Query {
   rSVP(where: RSVPWhereUniqueInput!): RSVP
   vehicle(where: VehicleWhereUniqueInput!): Vehicle
   rigImage(where: RigImageWhereUniqueInput!): RigImage
+  user(where: UserWhereUniqueInput!): User
   cloudinaryImage(where: CloudinaryImageWhereUniqueInput!): CloudinaryImage
   ballot(where: BallotWhereUniqueInput!): Ballot
   registrationsConnection(where: RegistrationWhereInput, orderBy: RegistrationOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RegistrationConnection!
-  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   contactInfoesConnection(where: ContactInfoWhereInput, orderBy: ContactInfoOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ContactInfoConnection!
   preferencesConnection(where: PreferenceWhereInput, orderBy: PreferenceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PreferenceConnection!
   userMetasConnection(where: UserMetaWhereInput, orderBy: UserMetaOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserMetaConnection!
@@ -5753,6 +5753,7 @@ type Query {
   rSVPsConnection(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RSVPConnection!
   vehiclesConnection(where: VehicleWhereInput, orderBy: VehicleOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): VehicleConnection!
   rigImagesConnection(where: RigImageWhereInput, orderBy: RigImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RigImageConnection!
+  usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   cloudinaryImagesConnection(where: CloudinaryImageWhereInput, orderBy: CloudinaryImageOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CloudinaryImageConnection!
   ballotsConnection(where: BallotWhereInput, orderBy: BallotOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): BallotConnection!
 
@@ -8025,7 +8026,6 @@ input RunReportWhereUniqueInput {
 
 type Subscription {
   registration(where: RegistrationSubscriptionWhereInput): RegistrationSubscriptionPayload
-  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   contactInfo(where: ContactInfoSubscriptionWhereInput): ContactInfoSubscriptionPayload
   preference(where: PreferenceSubscriptionWhereInput): PreferenceSubscriptionPayload
   userMeta(where: UserMetaSubscriptionWhereInput): UserMetaSubscriptionPayload
@@ -8041,13 +8041,13 @@ type Subscription {
   rSVP(where: RSVPSubscriptionWhereInput): RSVPSubscriptionPayload
   vehicle(where: VehicleSubscriptionWhereInput): VehicleSubscriptionPayload
   rigImage(where: RigImageSubscriptionWhereInput): RigImageSubscriptionPayload
+  user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   cloudinaryImage(where: CloudinaryImageSubscriptionWhereInput): CloudinaryImageSubscriptionPayload
   ballot(where: BallotSubscriptionWhereInput): BallotSubscriptionPayload
 }
 
 enum Title {
   WEBMASTER
-  CHARTER_MEMBER
   HISTORIAN
 }
 
@@ -8102,13 +8102,8 @@ input TrailCreateInput {
   favoriteCount: Int
   featuredImage: CloudinaryImageCreateOneInput
   pastEvents: EventCreateManyWithoutTrailInput
-  visitors: UserCreateManyWithoutTrailsVisitedInput
+  visitors: UserCreateManyInput
   runReports: RunReportCreateManyWithoutTrailInput
-}
-
-input TrailCreateManyWithoutVisitorsInput {
-  create: [TrailCreateWithoutVisitorsInput!]
-  connect: [TrailWhereUniqueInput!]
 }
 
 input TrailCreateOneWithoutPastEventsInput {
@@ -8134,7 +8129,7 @@ input TrailCreateWithoutPastEventsInput {
   conditionsLastReported: DateTime
   favoriteCount: Int
   featuredImage: CloudinaryImageCreateOneInput
-  visitors: UserCreateManyWithoutTrailsVisitedInput
+  visitors: UserCreateManyInput
   runReports: RunReportCreateManyWithoutTrailInput
 }
 
@@ -8152,28 +8147,12 @@ input TrailCreateWithoutRunReportsInput {
   favoriteCount: Int
   featuredImage: CloudinaryImageCreateOneInput
   pastEvents: EventCreateManyWithoutTrailInput
-  visitors: UserCreateManyWithoutTrailsVisitedInput
-}
-
-input TrailCreateWithoutVisitorsInput {
-  id: ID
-  slug: String!
-  name: String
-  description: String
-  trailheadCoords: String
-  address: String
-  avgDifficulty: TrailDifficulty
-  avgRatings: Float
-  currentConditions: String
-  conditionsLastReported: DateTime
-  favoriteCount: Int
-  featuredImage: CloudinaryImageCreateOneInput
-  pastEvents: EventCreateManyWithoutTrailInput
-  runReports: RunReportCreateManyWithoutTrailInput
+  visitors: UserCreateManyInput
 }
 
 enum TrailDifficulty {
   UNKNOWN
+  EASY
   BEGINNER
   INTERMEDIATE
   ADVANCED
@@ -8233,417 +8212,6 @@ type TrailPreviousValues {
   favoriteCount: Int
 }
 
-input TrailScalarWhereInput {
-  """Logical AND on all given filters."""
-  AND: [TrailScalarWhereInput!]
-
-  """Logical OR on all given filters."""
-  OR: [TrailScalarWhereInput!]
-
-  """Logical NOT on all given filters combined by AND."""
-  NOT: [TrailScalarWhereInput!]
-  id: ID
-
-  """All values that are not equal to given value."""
-  id_not: ID
-
-  """All values that are contained in given list."""
-  id_in: [ID!]
-
-  """All values that are not contained in given list."""
-  id_not_in: [ID!]
-
-  """All values less than the given value."""
-  id_lt: ID
-
-  """All values less than or equal the given value."""
-  id_lte: ID
-
-  """All values greater than the given value."""
-  id_gt: ID
-
-  """All values greater than or equal the given value."""
-  id_gte: ID
-
-  """All values containing the given string."""
-  id_contains: ID
-
-  """All values not containing the given string."""
-  id_not_contains: ID
-
-  """All values starting with the given string."""
-  id_starts_with: ID
-
-  """All values not starting with the given string."""
-  id_not_starts_with: ID
-
-  """All values ending with the given string."""
-  id_ends_with: ID
-
-  """All values not ending with the given string."""
-  id_not_ends_with: ID
-  createdAt: DateTime
-
-  """All values that are not equal to given value."""
-  createdAt_not: DateTime
-
-  """All values that are contained in given list."""
-  createdAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  createdAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  createdAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  createdAt_lte: DateTime
-
-  """All values greater than the given value."""
-  createdAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-
-  """All values that are not equal to given value."""
-  updatedAt_not: DateTime
-
-  """All values that are contained in given list."""
-  updatedAt_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  updatedAt_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  updatedAt_lt: DateTime
-
-  """All values less than or equal the given value."""
-  updatedAt_lte: DateTime
-
-  """All values greater than the given value."""
-  updatedAt_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  updatedAt_gte: DateTime
-  slug: String
-
-  """All values that are not equal to given value."""
-  slug_not: String
-
-  """All values that are contained in given list."""
-  slug_in: [String!]
-
-  """All values that are not contained in given list."""
-  slug_not_in: [String!]
-
-  """All values less than the given value."""
-  slug_lt: String
-
-  """All values less than or equal the given value."""
-  slug_lte: String
-
-  """All values greater than the given value."""
-  slug_gt: String
-
-  """All values greater than or equal the given value."""
-  slug_gte: String
-
-  """All values containing the given string."""
-  slug_contains: String
-
-  """All values not containing the given string."""
-  slug_not_contains: String
-
-  """All values starting with the given string."""
-  slug_starts_with: String
-
-  """All values not starting with the given string."""
-  slug_not_starts_with: String
-
-  """All values ending with the given string."""
-  slug_ends_with: String
-
-  """All values not ending with the given string."""
-  slug_not_ends_with: String
-  name: String
-
-  """All values that are not equal to given value."""
-  name_not: String
-
-  """All values that are contained in given list."""
-  name_in: [String!]
-
-  """All values that are not contained in given list."""
-  name_not_in: [String!]
-
-  """All values less than the given value."""
-  name_lt: String
-
-  """All values less than or equal the given value."""
-  name_lte: String
-
-  """All values greater than the given value."""
-  name_gt: String
-
-  """All values greater than or equal the given value."""
-  name_gte: String
-
-  """All values containing the given string."""
-  name_contains: String
-
-  """All values not containing the given string."""
-  name_not_contains: String
-
-  """All values starting with the given string."""
-  name_starts_with: String
-
-  """All values not starting with the given string."""
-  name_not_starts_with: String
-
-  """All values ending with the given string."""
-  name_ends_with: String
-
-  """All values not ending with the given string."""
-  name_not_ends_with: String
-  description: String
-
-  """All values that are not equal to given value."""
-  description_not: String
-
-  """All values that are contained in given list."""
-  description_in: [String!]
-
-  """All values that are not contained in given list."""
-  description_not_in: [String!]
-
-  """All values less than the given value."""
-  description_lt: String
-
-  """All values less than or equal the given value."""
-  description_lte: String
-
-  """All values greater than the given value."""
-  description_gt: String
-
-  """All values greater than or equal the given value."""
-  description_gte: String
-
-  """All values containing the given string."""
-  description_contains: String
-
-  """All values not containing the given string."""
-  description_not_contains: String
-
-  """All values starting with the given string."""
-  description_starts_with: String
-
-  """All values not starting with the given string."""
-  description_not_starts_with: String
-
-  """All values ending with the given string."""
-  description_ends_with: String
-
-  """All values not ending with the given string."""
-  description_not_ends_with: String
-  trailheadCoords: String
-
-  """All values that are not equal to given value."""
-  trailheadCoords_not: String
-
-  """All values that are contained in given list."""
-  trailheadCoords_in: [String!]
-
-  """All values that are not contained in given list."""
-  trailheadCoords_not_in: [String!]
-
-  """All values less than the given value."""
-  trailheadCoords_lt: String
-
-  """All values less than or equal the given value."""
-  trailheadCoords_lte: String
-
-  """All values greater than the given value."""
-  trailheadCoords_gt: String
-
-  """All values greater than or equal the given value."""
-  trailheadCoords_gte: String
-
-  """All values containing the given string."""
-  trailheadCoords_contains: String
-
-  """All values not containing the given string."""
-  trailheadCoords_not_contains: String
-
-  """All values starting with the given string."""
-  trailheadCoords_starts_with: String
-
-  """All values not starting with the given string."""
-  trailheadCoords_not_starts_with: String
-
-  """All values ending with the given string."""
-  trailheadCoords_ends_with: String
-
-  """All values not ending with the given string."""
-  trailheadCoords_not_ends_with: String
-  address: String
-
-  """All values that are not equal to given value."""
-  address_not: String
-
-  """All values that are contained in given list."""
-  address_in: [String!]
-
-  """All values that are not contained in given list."""
-  address_not_in: [String!]
-
-  """All values less than the given value."""
-  address_lt: String
-
-  """All values less than or equal the given value."""
-  address_lte: String
-
-  """All values greater than the given value."""
-  address_gt: String
-
-  """All values greater than or equal the given value."""
-  address_gte: String
-
-  """All values containing the given string."""
-  address_contains: String
-
-  """All values not containing the given string."""
-  address_not_contains: String
-
-  """All values starting with the given string."""
-  address_starts_with: String
-
-  """All values not starting with the given string."""
-  address_not_starts_with: String
-
-  """All values ending with the given string."""
-  address_ends_with: String
-
-  """All values not ending with the given string."""
-  address_not_ends_with: String
-  avgDifficulty: TrailDifficulty
-
-  """All values that are not equal to given value."""
-  avgDifficulty_not: TrailDifficulty
-
-  """All values that are contained in given list."""
-  avgDifficulty_in: [TrailDifficulty!]
-
-  """All values that are not contained in given list."""
-  avgDifficulty_not_in: [TrailDifficulty!]
-  avgRatings: Float
-
-  """All values that are not equal to given value."""
-  avgRatings_not: Float
-
-  """All values that are contained in given list."""
-  avgRatings_in: [Float!]
-
-  """All values that are not contained in given list."""
-  avgRatings_not_in: [Float!]
-
-  """All values less than the given value."""
-  avgRatings_lt: Float
-
-  """All values less than or equal the given value."""
-  avgRatings_lte: Float
-
-  """All values greater than the given value."""
-  avgRatings_gt: Float
-
-  """All values greater than or equal the given value."""
-  avgRatings_gte: Float
-  currentConditions: String
-
-  """All values that are not equal to given value."""
-  currentConditions_not: String
-
-  """All values that are contained in given list."""
-  currentConditions_in: [String!]
-
-  """All values that are not contained in given list."""
-  currentConditions_not_in: [String!]
-
-  """All values less than the given value."""
-  currentConditions_lt: String
-
-  """All values less than or equal the given value."""
-  currentConditions_lte: String
-
-  """All values greater than the given value."""
-  currentConditions_gt: String
-
-  """All values greater than or equal the given value."""
-  currentConditions_gte: String
-
-  """All values containing the given string."""
-  currentConditions_contains: String
-
-  """All values not containing the given string."""
-  currentConditions_not_contains: String
-
-  """All values starting with the given string."""
-  currentConditions_starts_with: String
-
-  """All values not starting with the given string."""
-  currentConditions_not_starts_with: String
-
-  """All values ending with the given string."""
-  currentConditions_ends_with: String
-
-  """All values not ending with the given string."""
-  currentConditions_not_ends_with: String
-  conditionsLastReported: DateTime
-
-  """All values that are not equal to given value."""
-  conditionsLastReported_not: DateTime
-
-  """All values that are contained in given list."""
-  conditionsLastReported_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  conditionsLastReported_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  conditionsLastReported_lt: DateTime
-
-  """All values less than or equal the given value."""
-  conditionsLastReported_lte: DateTime
-
-  """All values greater than the given value."""
-  conditionsLastReported_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  conditionsLastReported_gte: DateTime
-  favoriteCount: Int
-
-  """All values that are not equal to given value."""
-  favoriteCount_not: Int
-
-  """All values that are contained in given list."""
-  favoriteCount_in: [Int!]
-
-  """All values that are not contained in given list."""
-  favoriteCount_not_in: [Int!]
-
-  """All values less than the given value."""
-  favoriteCount_lt: Int
-
-  """All values less than or equal the given value."""
-  favoriteCount_lte: Int
-
-  """All values greater than the given value."""
-  favoriteCount_gt: Int
-
-  """All values greater than or equal the given value."""
-  favoriteCount_gte: Int
-}
-
 type TrailSubscriptionPayload {
   mutation: MutationType!
   node: Trail
@@ -8694,21 +8262,8 @@ input TrailUpdateInput {
   favoriteCount: Int
   featuredImage: CloudinaryImageUpdateOneInput
   pastEvents: EventUpdateManyWithoutTrailInput
-  visitors: UserUpdateManyWithoutTrailsVisitedInput
+  visitors: UserUpdateManyInput
   runReports: RunReportUpdateManyWithoutTrailInput
-}
-
-input TrailUpdateManyDataInput {
-  slug: String
-  name: String
-  description: String
-  trailheadCoords: String
-  address: String
-  avgDifficulty: TrailDifficulty
-  avgRatings: Float
-  currentConditions: String
-  conditionsLastReported: DateTime
-  favoriteCount: Int
 }
 
 input TrailUpdateManyMutationInput {
@@ -8722,23 +8277,6 @@ input TrailUpdateManyMutationInput {
   currentConditions: String
   conditionsLastReported: DateTime
   favoriteCount: Int
-}
-
-input TrailUpdateManyWithoutVisitorsInput {
-  create: [TrailCreateWithoutVisitorsInput!]
-  connect: [TrailWhereUniqueInput!]
-  set: [TrailWhereUniqueInput!]
-  disconnect: [TrailWhereUniqueInput!]
-  delete: [TrailWhereUniqueInput!]
-  update: [TrailUpdateWithWhereUniqueWithoutVisitorsInput!]
-  updateMany: [TrailUpdateManyWithWhereNestedInput!]
-  deleteMany: [TrailScalarWhereInput!]
-  upsert: [TrailUpsertWithWhereUniqueWithoutVisitorsInput!]
-}
-
-input TrailUpdateManyWithWhereNestedInput {
-  where: TrailScalarWhereInput!
-  data: TrailUpdateManyDataInput!
 }
 
 input TrailUpdateOneRequiredWithoutRunReportsInput {
@@ -8769,7 +8307,7 @@ input TrailUpdateWithoutPastEventsDataInput {
   conditionsLastReported: DateTime
   favoriteCount: Int
   featuredImage: CloudinaryImageUpdateOneInput
-  visitors: UserUpdateManyWithoutTrailsVisitedInput
+  visitors: UserUpdateManyInput
   runReports: RunReportUpdateManyWithoutTrailInput
 }
 
@@ -8786,28 +8324,7 @@ input TrailUpdateWithoutRunReportsDataInput {
   favoriteCount: Int
   featuredImage: CloudinaryImageUpdateOneInput
   pastEvents: EventUpdateManyWithoutTrailInput
-  visitors: UserUpdateManyWithoutTrailsVisitedInput
-}
-
-input TrailUpdateWithoutVisitorsDataInput {
-  slug: String
-  name: String
-  description: String
-  trailheadCoords: String
-  address: String
-  avgDifficulty: TrailDifficulty
-  avgRatings: Float
-  currentConditions: String
-  conditionsLastReported: DateTime
-  favoriteCount: Int
-  featuredImage: CloudinaryImageUpdateOneInput
-  pastEvents: EventUpdateManyWithoutTrailInput
-  runReports: RunReportUpdateManyWithoutTrailInput
-}
-
-input TrailUpdateWithWhereUniqueWithoutVisitorsInput {
-  where: TrailWhereUniqueInput!
-  data: TrailUpdateWithoutVisitorsDataInput!
+  visitors: UserUpdateManyInput
 }
 
 input TrailUpsertWithoutPastEventsInput {
@@ -8818,12 +8335,6 @@ input TrailUpsertWithoutPastEventsInput {
 input TrailUpsertWithoutRunReportsInput {
   update: TrailUpdateWithoutRunReportsDataInput!
   create: TrailCreateWithoutRunReportsInput!
-}
-
-input TrailUpsertWithWhereUniqueWithoutVisitorsInput {
-  where: TrailWhereUniqueInput!
-  update: TrailUpdateWithoutVisitorsDataInput!
-  create: TrailCreateWithoutVisitorsInput!
 }
 
 input TrailWhereInput {
@@ -9291,7 +8802,6 @@ type User implements Node {
   eventsRSVPd(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP!]
   eventsRSVPdAsPassenger(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP!]
   eventsHosted(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
-  trailsVisited(where: TrailWhereInput, orderBy: TrailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Trail!]
   bandaids(where: BandaidWhereInput, orderBy: BandaidOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bandaid!]
   runReportsLogged(where: RunReportWhereInput, orderBy: RunReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RunReport!]
 }
@@ -9347,18 +8857,17 @@ input UserCreateInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
 
-input UserCreateManyWithoutCandidateForInput {
-  create: [UserCreateWithoutCandidateForInput!]
+input UserCreateManyInput {
+  create: [UserCreateInput!]
   connect: [UserWhereUniqueInput!]
 }
 
-input UserCreateManyWithoutTrailsVisitedInput {
-  create: [UserCreateWithoutTrailsVisitedInput!]
+input UserCreateManyWithoutCandidateForInput {
+  create: [UserCreateWithoutCandidateForInput!]
   connect: [UserWhereUniqueInput!]
 }
 
@@ -9463,7 +8972,6 @@ input UserCreateWithoutActivityLogInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9505,7 +9013,6 @@ input UserCreateWithoutBandaidsInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
 
@@ -9545,7 +9052,6 @@ input UserCreateWithoutCandidateForInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9586,7 +9092,6 @@ input UserCreateWithoutContactInfoInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9627,7 +9132,6 @@ input UserCreateWithoutEventsCreatedInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9668,7 +9172,6 @@ input UserCreateWithoutEventsHostedInput {
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9709,7 +9212,6 @@ input UserCreateWithoutEventsRSVPdInput {
   eventsCreated: EventCreateManyWithoutCreatorInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9750,7 +9252,6 @@ input UserCreateWithoutMembershipLogContributionsInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9791,7 +9292,6 @@ input UserCreateWithoutMembershipLogInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9832,7 +9332,6 @@ input UserCreateWithoutPreferencesInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9874,49 +9373,7 @@ input UserCreateWithoutRunReportsLoggedInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
-}
-
-input UserCreateWithoutTrailsVisitedInput {
-  id: ID
-  joined: DateTime
-  lastLogin: DateTime
-  firstName: String!
-  lastName: String!
-  email: String!
-  gender: Gender
-  birthdate: DateTime
-  username: String!
-  password: String!
-  resetToken: String
-  resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
-  role: Role
-  accountStatus: AccountStatus
-  accountType: AccountType
-  office: Office
-  comfortLevel: TrailDifficulty
-  equipment: UserCreateequipmentInput
-  contactInfo: ContactInfoCreateOneWithoutUserInput
-  preferences: PreferenceCreateOneWithoutUserInput
-  userMeta: UserMetaCreateOneWithoutUserInput
-  avatar: CloudinaryImageCreateOneInput
-  rig: RigImageCreateOneInput
-  vehicle: VehicleCreateOneInput
-  candidateFor: BallotCreateManyWithoutCandidatesInput
-  votesReceived: VoteCreateManyWithoutCandidateInput
-  votedFor: VoteCreateManyWithoutVoterInput
-  activityLog: ActivityLogItemCreateManyWithoutUserInput
-  membershipLog: MembershipLogItemCreateManyWithoutUserInput
-  membershipLogContributions: MembershipLogItemCreateManyWithoutLoggerInput
-  eventsCreated: EventCreateManyWithoutCreatorInput
-  eventsRSVPd: RSVPCreateManyWithoutMemberInput
-  eventsRSVPdAsPassenger: RSVPCreateManyInput
-  eventsHosted: EventCreateManyWithoutHostInput
-  bandaids: BandaidCreateManyWithoutMemberInvolvedInput
-  runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
 
 input UserCreateWithoutUserMetaInput {
@@ -9955,7 +9412,6 @@ input UserCreateWithoutUserMetaInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -9996,7 +9452,6 @@ input UserCreateWithoutVotedForInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -10037,7 +9492,6 @@ input UserCreateWithoutVotesReceivedInput {
   eventsRSVPd: RSVPCreateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPCreateManyInput
   eventsHosted: EventCreateManyWithoutHostInput
-  trailsVisited: TrailCreateManyWithoutVisitorsInput
   bandaids: BandaidCreateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportCreateManyWithoutReporterInput
 }
@@ -10923,6 +10377,46 @@ input UserSubscriptionWhereInput {
   node: UserWhereInput
 }
 
+input UserUpdateDataInput {
+  joined: DateTime
+  lastLogin: DateTime
+  firstName: String
+  lastName: String
+  email: String
+  gender: Gender
+  birthdate: DateTime
+  username: String
+  password: String
+  resetToken: String
+  resetTokenExpiry: Float
+  isCharterMember: Boolean
+  title: Title
+  role: Role
+  accountStatus: AccountStatus
+  accountType: AccountType
+  office: Office
+  comfortLevel: TrailDifficulty
+  equipment: UserUpdateequipmentInput
+  contactInfo: ContactInfoUpdateOneWithoutUserInput
+  preferences: PreferenceUpdateOneWithoutUserInput
+  userMeta: UserMetaUpdateOneWithoutUserInput
+  avatar: CloudinaryImageUpdateOneInput
+  rig: RigImageUpdateOneInput
+  vehicle: VehicleUpdateOneInput
+  candidateFor: BallotUpdateManyWithoutCandidatesInput
+  votesReceived: VoteUpdateManyWithoutCandidateInput
+  votedFor: VoteUpdateManyWithoutVoterInput
+  activityLog: ActivityLogItemUpdateManyWithoutUserInput
+  membershipLog: MembershipLogItemUpdateManyWithoutUserInput
+  membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
+  eventsCreated: EventUpdateManyWithoutCreatorInput
+  eventsRSVPd: RSVPUpdateManyWithoutMemberInput
+  eventsRSVPdAsPassenger: RSVPUpdateManyInput
+  eventsHosted: EventUpdateManyWithoutHostInput
+  bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
+  runReportsLogged: RunReportUpdateManyWithoutReporterInput
+}
+
 input UserUpdateequipmentInput {
   set: [String!]
 }
@@ -10963,7 +10457,6 @@ input UserUpdateInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -10988,6 +10481,18 @@ input UserUpdateManyDataInput {
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+}
+
+input UserUpdateManyInput {
+  create: [UserCreateInput!]
+  connect: [UserWhereUniqueInput!]
+  set: [UserWhereUniqueInput!]
+  disconnect: [UserWhereUniqueInput!]
+  delete: [UserWhereUniqueInput!]
+  update: [UserUpdateWithWhereUniqueNestedInput!]
+  updateMany: [UserUpdateManyWithWhereNestedInput!]
+  deleteMany: [UserScalarWhereInput!]
+  upsert: [UserUpsertWithWhereUniqueNestedInput!]
 }
 
 input UserUpdateManyMutationInput {
@@ -11022,18 +10527,6 @@ input UserUpdateManyWithoutCandidateForInput {
   updateMany: [UserUpdateManyWithWhereNestedInput!]
   deleteMany: [UserScalarWhereInput!]
   upsert: [UserUpsertWithWhereUniqueWithoutCandidateForInput!]
-}
-
-input UserUpdateManyWithoutTrailsVisitedInput {
-  create: [UserCreateWithoutTrailsVisitedInput!]
-  connect: [UserWhereUniqueInput!]
-  set: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  delete: [UserWhereUniqueInput!]
-  update: [UserUpdateWithWhereUniqueWithoutTrailsVisitedInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-  deleteMany: [UserScalarWhereInput!]
-  upsert: [UserUpsertWithWhereUniqueWithoutTrailsVisitedInput!]
 }
 
 input UserUpdateManyWithWhereNestedInput {
@@ -11181,7 +10674,6 @@ input UserUpdateWithoutActivityLogDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11222,7 +10714,6 @@ input UserUpdateWithoutBandaidsDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
 
@@ -11261,7 +10752,6 @@ input UserUpdateWithoutCandidateForDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11301,7 +10791,6 @@ input UserUpdateWithoutContactInfoDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11341,7 +10830,6 @@ input UserUpdateWithoutEventsCreatedDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11381,7 +10869,6 @@ input UserUpdateWithoutEventsHostedDataInput {
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11421,7 +10908,6 @@ input UserUpdateWithoutEventsRSVPdDataInput {
   eventsCreated: EventUpdateManyWithoutCreatorInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11461,7 +10947,6 @@ input UserUpdateWithoutMembershipLogContributionsDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11501,7 +10986,6 @@ input UserUpdateWithoutMembershipLogDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11541,7 +11025,6 @@ input UserUpdateWithoutPreferencesDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11582,48 +11065,7 @@ input UserUpdateWithoutRunReportsLoggedDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
-}
-
-input UserUpdateWithoutTrailsVisitedDataInput {
-  joined: DateTime
-  lastLogin: DateTime
-  firstName: String
-  lastName: String
-  email: String
-  gender: Gender
-  birthdate: DateTime
-  username: String
-  password: String
-  resetToken: String
-  resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
-  role: Role
-  accountStatus: AccountStatus
-  accountType: AccountType
-  office: Office
-  comfortLevel: TrailDifficulty
-  equipment: UserUpdateequipmentInput
-  contactInfo: ContactInfoUpdateOneWithoutUserInput
-  preferences: PreferenceUpdateOneWithoutUserInput
-  userMeta: UserMetaUpdateOneWithoutUserInput
-  avatar: CloudinaryImageUpdateOneInput
-  rig: RigImageUpdateOneInput
-  vehicle: VehicleUpdateOneInput
-  candidateFor: BallotUpdateManyWithoutCandidatesInput
-  votesReceived: VoteUpdateManyWithoutCandidateInput
-  votedFor: VoteUpdateManyWithoutVoterInput
-  activityLog: ActivityLogItemUpdateManyWithoutUserInput
-  membershipLog: MembershipLogItemUpdateManyWithoutUserInput
-  membershipLogContributions: MembershipLogItemUpdateManyWithoutLoggerInput
-  eventsCreated: EventUpdateManyWithoutCreatorInput
-  eventsRSVPd: RSVPUpdateManyWithoutMemberInput
-  eventsRSVPdAsPassenger: RSVPUpdateManyInput
-  eventsHosted: EventUpdateManyWithoutHostInput
-  bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
-  runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
 
 input UserUpdateWithoutUserMetaDataInput {
@@ -11661,7 +11103,6 @@ input UserUpdateWithoutUserMetaDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11701,7 +11142,6 @@ input UserUpdateWithoutVotedForDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
 }
@@ -11741,19 +11181,18 @@ input UserUpdateWithoutVotesReceivedDataInput {
   eventsRSVPd: RSVPUpdateManyWithoutMemberInput
   eventsRSVPdAsPassenger: RSVPUpdateManyInput
   eventsHosted: EventUpdateManyWithoutHostInput
-  trailsVisited: TrailUpdateManyWithoutVisitorsInput
   bandaids: BandaidUpdateManyWithoutMemberInvolvedInput
   runReportsLogged: RunReportUpdateManyWithoutReporterInput
+}
+
+input UserUpdateWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  data: UserUpdateDataInput!
 }
 
 input UserUpdateWithWhereUniqueWithoutCandidateForInput {
   where: UserWhereUniqueInput!
   data: UserUpdateWithoutCandidateForDataInput!
-}
-
-input UserUpdateWithWhereUniqueWithoutTrailsVisitedInput {
-  where: UserWhereUniqueInput!
-  data: UserUpdateWithoutTrailsVisitedDataInput!
 }
 
 input UserUpsertWithoutActivityLogInput {
@@ -11821,16 +11260,16 @@ input UserUpsertWithoutVotesReceivedInput {
   create: UserCreateWithoutVotesReceivedInput!
 }
 
+input UserUpsertWithWhereUniqueNestedInput {
+  where: UserWhereUniqueInput!
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
+}
+
 input UserUpsertWithWhereUniqueWithoutCandidateForInput {
   where: UserWhereUniqueInput!
   update: UserUpdateWithoutCandidateForDataInput!
   create: UserCreateWithoutCandidateForInput!
-}
-
-input UserUpsertWithWhereUniqueWithoutTrailsVisitedInput {
-  where: UserWhereUniqueInput!
-  update: UserUpdateWithoutTrailsVisitedDataInput!
-  create: UserCreateWithoutTrailsVisitedInput!
 }
 
 input UserWhereInput {
@@ -12364,9 +11803,6 @@ input UserWhereInput {
   eventsHosted_every: EventWhereInput
   eventsHosted_some: EventWhereInput
   eventsHosted_none: EventWhereInput
-  trailsVisited_every: TrailWhereInput
-  trailsVisited_some: TrailWhereInput
-  trailsVisited_none: TrailWhereInput
   bandaids_every: BandaidWhereInput
   bandaids_some: BandaidWhereInput
   bandaids_none: BandaidWhereInput

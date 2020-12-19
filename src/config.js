@@ -42,8 +42,7 @@ module.exports = {
     WEBMASTER: "Webmaster", // unique
     RUN_MASTER: "Run Master", // unique
     RUN_LEADER: "Run Leader",
-    EMERITUS_MEMBER: "Emeritus Member",
-    CHARTER_MEMBER: "Charter Member"
+    EMERITUS_MEMBER: "Emeritus Member"
   },
   emailGroups: [
     "officers",

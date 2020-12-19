@@ -35,7 +35,6 @@ enum Office {
 
 enum Title {
   WEBMASTER
-  CHARTER_MEMBER
   HISTORIAN
 }
 
@@ -46,7 +45,8 @@ enum Poll {
 
 enum TrailDifficulty {
   UNKNOWN
-  BEGINNER
+  EASY
+  BEGINNER #DEPRECATED
   INTERMEDIATE
   ADVANCED
 }
@@ -107,6 +107,7 @@ enum MembershipMessageCode {
   TITLE_ADDED
   TITLE_REMOVED
   MEMBERSHIP_GRANTED
+  MEMBERSHIP_ELIGIBLE
   GUEST_RESTRICTED
 }
 
@@ -173,7 +174,6 @@ type User {
   eventsRSVPd: [RSVP] @relation(name: "UserRSVP")
   eventsRSVPdAsPassenger: [RSVP] @relation(name: "MembersRSVP")
   eventsHosted: [Event] @relation(name: "EventHost")
-  trailsVisited: [Trail] @relation(name: "TrailVisitor")
   bandaids: [Bandaid] @relation(name: "BandaidSubject")
   runReportsLogged: [RunReport] @relation(name: "RunReporter")
   #trailsFavorited: [Trail] 
@@ -264,7 +264,7 @@ type Trail {
   trailheadCoords: String
   address: String
   avgDifficulty: TrailDifficulty #computed
-  avgRatings: Float #computed
+  avgRatings: Float #TO DO computed
   currentConditions: String #computed
   conditionsLastReported: DateTime #computed
   favoriteCount: Int #computed

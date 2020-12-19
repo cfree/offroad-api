@@ -66,6 +66,12 @@ type Mutation {
   updateTrail(trail: TrailInput!, id: ID!): SuccessMessage
   payMembershipDues(data: DuesPaymentInput!): SuccessMessage
   updateTrailImage(id: String!, image: CloudinaryImageInput!): SuccessMessage
+  logMembershipEvent(
+    date: DateTime!
+    code: String!
+    message: String!
+    userId: ID!
+  ): SuccessMessage
 }
 
 type Query {
@@ -155,7 +161,6 @@ type User {
   membershipLog: [MembershipLogItem]
   eventsRSVPd: [RSVP]
   eventsLead: [Event]
-  trailsVisited: [Trail]
   bandaids: [Bandaid]
   runReportsLogged: [RunReport]
 }

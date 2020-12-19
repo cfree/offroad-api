@@ -15,7 +15,7 @@ const Trail = {
     // Convert to array
     const scale = {
       UNKNOWN: 0,
-      BEGINNER: 1,
+      EASY: 1,
       INTERMEDIATE: 2,
       ADVANCED: 3
     };

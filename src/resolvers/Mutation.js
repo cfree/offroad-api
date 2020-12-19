@@ -1582,7 +1582,7 @@ const Mutations = {
       {
         data: {
           ...data,
-          ...(messageLogs.length > 0
+          ...(membershipLogs.length > 0
             ? {
                 membershipLog: {
                   create: membershipLogs
@@ -2129,8 +2129,6 @@ const Mutations = {
       );
     }
 
-    console.log("paying...", args.data);
-
     const { token } = args.data;
 
     // Confirm all `payingFor` IDs eligible for payment?
@@ -2188,6 +2186,44 @@ const Mutations = {
     } catch (e) {
       throw new Error(e);
     }
+  },
+  async logMembershipEvent(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("User must be logged in");
+    }
+
+    // Have proper roles to do this?
+    if (!hasRole(ctx.req.user, ["ADMIN", "OFFICER"], false)) {
+      throw new Error(
+        "User profile can only be updated by an admin or an officer"
+      );
+    }
+
+    // Requesting user has proper account status?
+    if (!hasAccountStatus(ctx.req.user, ["ACTIVE"], false)) {
+      throw new Error(`Account status must be ACTIVE to proceed.`);
+    }
+
+    await ctx.db.mutation.createMembershipLogItem({
+      data: {
+        time: args.date, // Browser time
+        message: args.message,
+        messageCode: args.code,
+        user: {
+          connect: {
+            id: args.userId
+          }
+        },
+        logger: {
+          connect: {
+            id: ctx.req.user.id
+          }
+        }
+      }
+    });
+
+    return { message: "Item successfully logged" };
   }
 };
 
