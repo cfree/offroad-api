@@ -23,6 +23,9 @@ const User = {
             },
             {
               endTime_lte: new Date().toISOString()
+            },
+            {
+              type: "RUN"
             }
           ]
         }
