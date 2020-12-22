@@ -319,8 +319,47 @@ const Query = {
       query.first = args.count;
     }
 
+    // const membersOnlyRes = await ctx.db.query.events(
+    //   query,
+    //   "{ id, membersOnly }"
+    // );
+    // const membersOnlyEvents = membersOnlyRes
+    //   .filter(event => event.membersOnly === true)
+    //   .map(event => event.id);
+
+    // console.log(membersOnlyRes, membersOnlyEvents);
+
     // If they do, query all the users
-    return ctx.db.query.events(query, info);
+    const results = await ctx.db.query.events(query, info);
+
+    // Are any of these member's only?
+    // if (ctx.req.user.accountType === "GUEST" && membersOnlyEvents.length > 0) {
+    //   console.log("all", results);
+    //   console.log("safety guard");
+    //   const lockedOutEvents = results
+    //     .filter(result => {
+    //       console.log(
+    //         "filter",
+    //         result.id,
+    //         membersOnlyEvents.includes(result.id)
+    //       );
+    //       return membersOnlyEvents.includes(result.id);
+    //     })
+    //     .map(result => ({
+    //       ...result,
+    //       startTime: new Date(0),
+    //       endTime: new Date(0),
+    //       address: "",
+    //       rallyAddress: "",
+    //       description: ""
+    //     }));
+
+    //   console.log("members only", lockedOutEvents);
+
+    //   return [...results, ...lockedOutEvents];
+    // }
+
+    return results;
   },
   async getUserEvents(parent, args, ctx, info) {
     // Logged in?
@@ -397,6 +436,17 @@ const Query = {
     // Requesting user has proper account status?
     hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
+    // Get current event for later comparison
+    const user = await ctx.db.query.user(
+      {
+        data: {},
+        where: {
+          id: ctx.req.userId
+        }
+      },
+      "{ id, accountType }"
+    );
+
     const result = await ctx.db.query.event(
       {
         where: { id: args.eventId }
@@ -406,6 +456,11 @@ const Query = {
 
     if (!result) {
       throw new Error("Event cannot be found");
+    }
+
+    if (result.membersOnly && ctx.req.user.accountType === "GUEST") {
+      throw new Error("You cheeky bastard! Nice try.");
+      // Email webmaster
     }
 
     return result;
@@ -422,7 +477,9 @@ const Query = {
     try {
       const results = await ctx.db.query.events(
         {
-          where: { startTime_gte: new Date().toISOString() },
+          where: {
+            startTime_gte: new Date().toISOString()
+          },
           orderBy: "startTime_ASC",
           first: 1
         },

@@ -14,6 +14,7 @@ const Query = require("./resolvers/Query");
 const Election = require("./resolvers/Election");
 const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
+const User = require("./resolvers/User");
 
 const corsOptions = {
   credentials: true,
@@ -66,7 +67,8 @@ const schema = makeExecutableSchema({
     Query,
     Trail,
     Election,
-    Ballot
+    Ballot,
+    User
   },
   resolverValidationOptions: { requireResolversForResolveType: false }
 });

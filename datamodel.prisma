@@ -36,6 +36,9 @@ enum Office {
 enum Title {
   WEBMASTER
   HISTORIAN
+  RUN_LEADER
+  RUN_MASTER
+  CHARTER_MEMBER
 }
 
 enum Poll {
@@ -153,11 +156,10 @@ type User {
   preferences: Preference @relation(name: "UserPreferences")
   userMeta: UserMeta @relation(name: "UserMeta")
   avatar: CloudinaryImage
-  isCharterMember: Boolean @default(value: false)
   rig: RigImage
   vehicle: Vehicle 
   equipment: [String] @scalarList(strategy: RELATION)
-  title: Title
+  titles: [Title] @scalarList(strategy: RELATION)
   role: Role! @default(value: USER)
   accountStatus: AccountStatus! @default(value: LOCKED)
   accountType: AccountType! @default(value: GUEST)
@@ -172,6 +174,7 @@ type User {
     @relation(name: "LogItemLogger")
   eventsCreated: [Event] @relation(name: "EventCreator")
   eventsRSVPd: [RSVP] @relation(name: "UserRSVP")
+  runsAttendedCount: Int
   eventsRSVPdAsPassenger: [RSVP] @relation(name: "MembersRSVP")
   eventsHosted: [Event] @relation(name: "EventHost")
   bandaids: [Bandaid] @relation(name: "BandaidSubject")
@@ -188,7 +191,7 @@ type ContactInfo {
   city: String
   state: String
   zip: String
-  phone: String!
+  phone: String
 }
 
 type Preference {
@@ -200,6 +203,7 @@ type Preference {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
 }
 
 type UserMeta {
@@ -230,11 +234,12 @@ type Event {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   trail: Trail @relation(name: "EventTrail")
   bandaids: [Bandaid] @relation(name: "EventBandaid")
   runReports: [RunReport] @relation(name: "EventRunReport")
   membersOnly: Boolean
+  maxAttendees: Int @default(value: -1)
+  maxRigs: Int @default(value: -1)
 }
 
 type RSVP {

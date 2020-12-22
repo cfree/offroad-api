@@ -1,3 +1,7 @@
+const isEqual = require("lodash/isEqual");
+
+const membershipLog = require("../utils/membership-log");
+
 module.exports.hasRole = function hasRole(
   user,
   rolesNeeded,
@@ -113,4 +117,99 @@ module.exports.getDuesAmountIncludingFees = (
 
 module.exports.convertToCents = dollarAmt => {
   return dollarAmt * 100;
+};
+
+module.exports.determineTitleChanges = (
+  existingTitles,
+  newTitles,
+  userId,
+  shouldThrow = false
+) => {
+  const safeExistingTitles = existingTitles ? existingTitles : [];
+  const safeNewTitles = newTitles ? newTitles : [];
+
+  console.log("safeExistingTitles", safeExistingTitles);
+  console.log("safeNewTitles", safeNewTitles);
+
+  // oldList that aren't in newList
+  const toRemove = safeExistingTitles.filter(
+    item => !safeNewTitles.includes(item)
+  );
+
+  // newList that aren't in oldList
+  const toAdd = safeNewTitles.filter(
+    item => !safeExistingTitles.includes(item)
+  );
+
+  console.log("toRemove", toRemove);
+  console.log("toAdd", toAdd);
+
+  if (toRemove.length === 0 && toAdd.length === 0 && shouldThrow) {
+    throw new Error("No titles to change");
+  }
+
+  if (toRemove.length > 0 && isEqual(toRemove, toAdd) && shouldThrow) {
+    throw new Error("Cannot change titles to the same titles");
+  }
+
+  const toLog = [
+    ...toRemove.map(title =>
+      membershipLog.titleChanged({
+        titleName: title,
+        userId,
+        add: false
+      })
+    ),
+    ...toAdd.map(title =>
+      membershipLog.titleChanged({
+        titleName: title,
+        userId,
+        add: true
+      })
+    )
+  ];
+
+  return [toRemove, toAdd, toLog];
+};
+
+module.exports.determineOfficeChanges = (
+  existingOffice,
+  newOffice,
+  userId,
+  shouldThrow = false
+) => {
+  const toRemove = existingOffice === null ? "" : existingOffice;
+  const toAdd = newOffice === null ? "" : newOffice;
+
+  if (!toRemove && !toAdd && shouldThrow) {
+    throw new Error("No office to change");
+  }
+
+  if (toRemove !== "" && toRemove === toAdd && shouldThrow) {
+    throw new Error("Cannot change office to the same office");
+  }
+
+  const toLog = [];
+
+  if (toRemove && toRemove !== toAdd) {
+    toLog.push(
+      membershipLog.officeChanged({
+        officeName: toRemove,
+        userId,
+        add: false
+      })
+    );
+  }
+
+  if (toAdd && toRemove !== toAdd) {
+    toLog.push(
+      membershipLog.officeChanged({
+        officeName: toAdd,
+        userId,
+        add: true
+      })
+    );
+  }
+
+  return [toRemove, toAdd, toLog];
 };

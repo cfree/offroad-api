@@ -40,7 +40,9 @@ const {
   isSelf,
   getUploadLocation,
   getDuesAmountIncludingFees,
-  convertToCents
+  convertToCents,
+  determineTitleChanges,
+  determineOfficeChanges
 } = require("../utils");
 const { roles, emailGroups } = require("../config");
 const stripe = require("../utils/stripe");
@@ -605,53 +607,37 @@ const Mutations = {
       "{ office }"
     );
 
-    if (existingOffice === args.office) {
-      throw new Error("Cannot change office to the same office");
+    if (args.office !== null) {
+      const existingOfficer = await ctx.db.query.user(
+        { where: { office: args.office } },
+        "{ firstName, lastName }"
+      );
+
+      if (existingOfficer) {
+        throw new Error(
+          `Officer already assigned to ${existingOfficer.firstName} ${
+            existingOfficer.lastName
+          }. Unassign first, then try again.`
+        );
+      }
     }
 
-    const membershipLogs = [];
+    let membershipLogs = [];
 
-    // Add new value
-    if (existingOffice === null && typeof args.office === "string") {
-      membershipLogs.push(
-        membershipLog.officeChanged({
-          office: args.office,
-          userId: ctx.req.userId,
-          add: true
-        })
-      );
-    }
-    // Removing old value
-    else if (typeof existingOffice === "string" && args.office === null) {
-      membershipLogs.push(
-        membershipLog.officeChanged({
-          office: existingOffice,
-          userId: ctx.req.userId,
-          add: false
-        })
-      );
-    }
-    // Replacing old value
-    else if (existingOffice !== args.office) {
-      membershipLogs.push(
-        membershipLog.officeChanged({
-          office: existingOffice,
-          userId: ctx.req.userId,
-          add: false
-        }),
-        membershipLog.officeChanged({
-          office: args.office,
-          userId: ctx.req.userId,
-          add: true
-        })
-      );
-    }
+    const [officeToRemove, officeToAdd, officeToLog] = determineOfficeChanges(
+      existingOffice === "NONE" ? null : existingOffice,
+      args.office,
+      ctx.req.userId,
+      true
+    );
+
+    membershipLogs = membershipLogs.concat(officeToLog);
 
     // Update office
     return ctx.db.mutation.updateUser(
       {
         data: {
-          office: args.office === "NONE" ? null : args.office,
+          office: officeToAdd === "" ? null : officeToAdd,
           membershipLog: {
             create: membershipLogs
           }
@@ -663,7 +649,7 @@ const Mutations = {
       info
     );
   },
-  async updateTitle(parent, args, ctx, info) {
+  async updateTitles(parent, args, ctx, info) {
     // Logged in?
     if (!ctx.req.userId) {
       throw new Error("User must be logged in");
@@ -675,58 +661,27 @@ const Mutations = {
     // Requesting user has proper account status?
     hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
-    const { title: existingTitle } = await ctx.db.query.user(
+    const { titles: existingTitles } = await ctx.db.query.user(
       { where: { id: args.userId } },
-      "{ title }"
+      "{ titles }"
     );
 
-    if (existingTitle === args.title) {
-      throw new Error("Cannot change title to the same title");
-    }
+    let membershipLogs = [];
 
-    const membershipLogs = [];
+    const [titlesToRemove, titlesToAdd, titleLogs] = determineTitleChanges(
+      existingTitles,
+      args.titles,
+      ctx.req.userId,
+      true
+    );
 
-    // Add new value
-    if (existingTitle === null && typeof args.title === "string") {
-      membershipLogs.push(
-        membershipLog.titleChanged({
-          office: args.title,
-          userId: ctx.req.userId,
-          add: true
-        })
-      );
-    }
-    // Removing old value
-    else if (typeof existingTitle === "string" && args.title === null) {
-      membershipLogs.push(
-        membershipLog.titleChanged({
-          office: existingTitle,
-          userId: ctx.req.userId,
-          added: false
-        })
-      );
-    }
-    // Replacing old value
-    else if (existingTitle !== args.title) {
-      membershipLogs.push(
-        membershipLog.titleChanged({
-          office: existingTitle,
-          userId: ctx.req.userId,
-          added: false
-        }),
-        membershipLog.titleChanged({
-          office: args.title,
-          userId: ctx.req.userId,
-          added: true
-        })
-      );
-    }
+    membershipLogs = membershipLogs.concat(titleLogs);
 
     // Update title
     return ctx.db.mutation.updateUser(
       {
         data: {
-          title: args.title,
+          titles: titles.length === 0 ? null : titlesToAdd,
           membershipLog: {
             create: membershipLogs
           }
@@ -773,8 +728,7 @@ const Mutations = {
       trailDifficulty: event.trailDifficulty || "",
       // trailNotes: event.trailNotes,
       rallyAddress: event.rallyAddress || "",
-      rallyTime: event.rallyTime || "",
-      membersOnly: false, // TODO
+      membersOnly: event.membersOnly,
       creator: {
         connect: { id: ctx.req.userId }
       },
@@ -834,8 +788,9 @@ const Mutations = {
       trailDifficulty: event.trailDifficulty || "",
       // trailNotes: event.trailNotes,
       rallyAddress: event.rallyAddress || "",
-      rallyTime: event.rallyTime || "",
-      membersOnly: false, // TODO
+      membersOnly: event.membersOnly,
+      maxAttendees: event.maxAttendees,
+      maxRigs: event.maxRigs,
       creator: {
         connect: { id: ctx.req.userId }
       },
@@ -1235,7 +1190,7 @@ const Mutations = {
             case "runmaster":
               return { role: "RUN_MASTER" };
             case "webmaster":
-              return { title: "WEBMASTER" };
+              return { title_in: "WEBMASTER" };
             case "run_leaders":
               return { role: "RUN_LEADER" };
             case "full_membership":
@@ -1459,129 +1414,78 @@ const Mutations = {
     // Requesting user has proper account status?
     hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
-    const { data } = args;
+    const {
+      data: { titles, ...restData }
+    } = args;
 
     // Query the current user
     const currentUser = await ctx.db.query.user(
       { where: { id: args.id } },
-      "{ id, accountType, accountStatus, role, office, title }"
+      "{ id, accountType, accountStatus, role, office, titles }"
     );
 
-    const membershipLogs = [];
+    let membershipLogs = [];
 
-    // Add new title
-    if (currentUser.title === null && typeof data.title === "string") {
-      membershipLogs.push(
-        membershipLog.titleChanged({
-          titleName: data.title,
-          userId: ctx.req.userId,
-          add: true
-        })
-      );
-    }
-    // Removing old title
-    else if (typeof currentUser.title === "string" && data.title === null) {
-      membershipLog.titleChanged({
-        titleName: currentUser.title,
-        userId: ctx.req.userId,
-        add: false
-      });
-    }
-    // Replace title
-    else if (
-      typeof currentUser.title === "string" &&
-      typeof data.title === "string" &&
-      currentUser.title !== data.title
-    ) {
-      membershipLogs.push(
-        membershipLog.titleChanged({
-          titleName: currentUser.title,
-          userId: ctx.req.userId,
-          add: false
-        }),
-        membershipLog.titleChanged({
-          titleName: data.title,
-          userId: ctx.req.userId,
-          add: true
-        })
-      );
-    }
+    const [titlesToRemove, titlesToAdd, titlesToLog] = determineTitleChanges(
+      currentUser.titles,
+      titles,
+      ctx.req.userId
+    );
 
-    // Add new office
-    if (currentUser.office === null && typeof data.office === "string") {
-      membershipLogs.push(
-        membershipLog.officeChanged({
-          titleName: data.office,
-          userId: ctx.req.userId,
-          add: true
-        })
-      );
-    }
-    // Removing old office
-    else if (typeof currentUser.office === "string" && data.office === null) {
-      membershipLogs.push(
-        membershipLog.officeChanged({
-          titleName: currentUser.office,
-          userId: ctx.req.userId,
-          add: false
-        })
-      );
-    }
-    // Replace office
-    else if (
-      typeof currentUser.office === "string" &&
-      typeof data.office === "string" &&
-      currentUser.office !== data.office
-    ) {
-      membershipLogs.push(
-        membershipLog.officeChanged({
-          titleName: currentUser.office,
-          userId: ctx.req.userId,
-          add: false
-        }),
-        membershipLog.officeChanged({
-          titleName: data.office,
-          userId: ctx.req.userId,
-          add: true
-        })
-      );
-    }
+    membershipLogs = [...membershipLogs, ...titlesToLog];
 
-    if (currentUser.role !== data.role) {
+    const [officeToRemove, officeToAdd, officeToLog] = determineOfficeChanges(
+      currentUser.office,
+      restData.office,
+      ctx.req.userId
+    );
+
+    membershipLogs = [...membershipLogs, ...officeToLog];
+
+    if (currentUser.role !== restData.role) {
       membershipLogs.push(
         membershipLog.accountChanged({
           stateName: "Role",
-          newState: data.role,
+          newState: restData.role,
           userId: ctx.req.userId
         })
       );
     }
 
-    if (currentUser.accountStatus !== data.accountStatus) {
+    if (currentUser.accountStatus !== restData.accountStatus) {
       membershipLogs.push(
         membershipLog.accountChanged({
           stateName: "Account status",
-          newState: data.accountStatus,
+          newState: restData.accountStatus,
           userId: ctx.req.userId
         })
       );
     }
 
-    if (currentUser.accountType !== data.accountType) {
+    if (currentUser.accountType !== restData.accountType) {
       membershipLogs.push(
         membershipLog.accountChanged({
           stateName: "Account type",
-          newState: data.accountType,
+          newState: restData.accountType,
           userId: ctx.req.userId
         })
       );
     }
+
+    console.log("logs", membershipLogs);
 
     // Update user
     await ctx.db.mutation.updateUser(
       {
         data: {
-          ...data,
+          ...restData,
+          ...(titlesToAdd
+            ? {
+                titles: {
+                  set: titlesToAdd
+                }
+              }
+            : {}),
           ...(membershipLogs.length > 0
             ? {
                 membershipLog: {

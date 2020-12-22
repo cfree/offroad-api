@@ -41,7 +41,7 @@ type Mutation {
   updateAccountType(accountType: AccountType, userId: ID!): User
   updateAccountStatus(accountStatus: AccountStatus, userId: ID!): User
   updateOffice(office: Office, userId: ID!): User
-  updateTitle(title: Title, userId: ID!): User
+  updateTitles(titles: [Title], userId: ID!): User
   createEvent(event: UpsertEventInput!): SuccessMessage
   updateEvent(id: ID!, event: UpsertEventInput!): SuccessMessage
   setRSVP(rsvp: RSVPInput): SuccessMessage
@@ -80,7 +80,7 @@ type Query {
     role: [Role]
     accountStatus: [AccountStatus]
     accountType: [AccountType]
-    title: [Title]
+    titles: [Title]
     office: [Office]
     orderBy: [String]
   ): [User]!
@@ -147,8 +147,7 @@ type User {
   userMeta: UserMeta
   contactInfo: ContactInfo
   avatar: CloudinaryImage
-  isCharterMember: Boolean!
-  title: Title
+  titles: [Title]
   role: Role!
   accountStatus: AccountStatus
   accountType: AccountType
@@ -160,6 +159,7 @@ type User {
   activityLog: [ActivityLogItem]
   membershipLog: [MembershipLogItem]
   eventsRSVPd: [RSVP]
+  runsAttendedCount: Int
   eventsLead: [Event]
   bandaids: [Bandaid]
   runReportsLogged: [RunReport]
@@ -198,11 +198,12 @@ type Event {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
   trail: Trail
   bandaids: [Bandaid]
   runReports: [RunReport]
+  maxAttendees: Int
+  maxRigs: Int
 }
 
 type RSVP {
@@ -297,8 +298,7 @@ input UserUpdateInput {
 
 input UserAdminUpdateInput {
   id: String
-  title: String
-  isCharterMember: Boolean!
+  titles: [Title]
   office: String
   role: String!
   accountStatus: String!
@@ -315,12 +315,13 @@ input UpsertEventInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
   host: String!
   trail: String
   featuredImage: String
   newFeaturedImage: CloudinaryImageInput
+  maxAttendees: Int
+  maxRigs: Int
 }
 
 input ElectionInput {

@@ -43,13 +43,13 @@ const eventReminders = new Promise(async (resolve, reject) => {
           ]
         }
       },
-      "{ id, type, title, startTime, rallyTime, rallyAddress, rsvps { id, status, member { id, email, firstName, lastName } } }"
+      "{ id, type, title, startTime, rallyAddress, rsvps { id, status, member { id, email, firstName, lastName } } }"
     );
 
     let emailCount = 0;
 
     for (let event of events) {
-      const { id, title, type, startTime, rallyTime, rallyAddress } = event;
+      const { id, title, type, startTime, rallyAddress } = event;
 
       console.log("Composing emails for ", event.title);
 
@@ -66,7 +66,6 @@ const eventReminders = new Promise(async (resolve, reject) => {
               title,
               type,
               startTime,
-              rallyTime,
               rallyAddress
             })
           );

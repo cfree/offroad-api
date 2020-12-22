@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Sat Dec 19 2020 12:40:30 GMT-0700 (Mountain Standard Time)
+# timestamp: Mon Dec 21 2020 00:13:21 GMT-0700 (Mountain Standard Time)
 
 enum AccountStatus {
   ACTIVE
@@ -3257,11 +3257,12 @@ type Event implements Node {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   trail: Trail
   bandaids(where: BandaidWhereInput, orderBy: BandaidOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bandaid!]
   runReports(where: RunReportWhereInput, orderBy: RunReportOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RunReport!]
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
 }
 
 """A connection to a list of items."""
@@ -3285,8 +3286,9 @@ input EventCreateInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3337,8 +3339,9 @@ input EventCreateWithoutBandaidsInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3358,8 +3361,9 @@ input EventCreateWithoutCreatorInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
   rsvps: RSVPCreateManyWithoutEventInput
@@ -3379,8 +3383,9 @@ input EventCreateWithoutHostInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   rsvps: RSVPCreateManyWithoutEventInput
@@ -3400,8 +3405,9 @@ input EventCreateWithoutRsvpsInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3421,8 +3427,9 @@ input EventCreateWithoutRunReportsInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3442,8 +3449,9 @@ input EventCreateWithoutTrailInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3486,10 +3494,12 @@ enum EventOrderByInput {
   trailNotes_DESC
   rallyAddress_ASC
   rallyAddress_DESC
-  rallyTime_ASC
-  rallyTime_DESC
   membersOnly_ASC
   membersOnly_DESC
+  maxAttendees_ASC
+  maxAttendees_DESC
+  maxRigs_ASC
+  maxRigs_DESC
 }
 
 type EventPreviousValues {
@@ -3505,8 +3515,9 @@ type EventPreviousValues {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
 }
 
 input EventScalarWhereInput {
@@ -3866,32 +3877,54 @@ input EventScalarWhereInput {
 
   """All values not ending with the given string."""
   rallyAddress_not_ends_with: String
-  rallyTime: DateTime
-
-  """All values that are not equal to given value."""
-  rallyTime_not: DateTime
-
-  """All values that are contained in given list."""
-  rallyTime_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  rallyTime_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  rallyTime_lt: DateTime
-
-  """All values less than or equal the given value."""
-  rallyTime_lte: DateTime
-
-  """All values greater than the given value."""
-  rallyTime_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  rallyTime_gte: DateTime
   membersOnly: Boolean
 
   """All values that are not equal to given value."""
   membersOnly_not: Boolean
+  maxAttendees: Int
+
+  """All values that are not equal to given value."""
+  maxAttendees_not: Int
+
+  """All values that are contained in given list."""
+  maxAttendees_in: [Int!]
+
+  """All values that are not contained in given list."""
+  maxAttendees_not_in: [Int!]
+
+  """All values less than the given value."""
+  maxAttendees_lt: Int
+
+  """All values less than or equal the given value."""
+  maxAttendees_lte: Int
+
+  """All values greater than the given value."""
+  maxAttendees_gt: Int
+
+  """All values greater than or equal the given value."""
+  maxAttendees_gte: Int
+  maxRigs: Int
+
+  """All values that are not equal to given value."""
+  maxRigs_not: Int
+
+  """All values that are contained in given list."""
+  maxRigs_in: [Int!]
+
+  """All values that are not contained in given list."""
+  maxRigs_not_in: [Int!]
+
+  """All values less than the given value."""
+  maxRigs_lt: Int
+
+  """All values less than or equal the given value."""
+  maxRigs_lte: Int
+
+  """All values greater than the given value."""
+  maxRigs_gt: Int
+
+  """All values greater than or equal the given value."""
+  maxRigs_gte: Int
 }
 
 type EventSubscriptionPayload {
@@ -3950,8 +3983,9 @@ input EventUpdateInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -3971,8 +4005,9 @@ input EventUpdateManyDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
 }
 
 input EventUpdateManyMutationInput {
@@ -3985,8 +4020,9 @@ input EventUpdateManyMutationInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
 }
 
 input EventUpdateManyWithoutCreatorInput {
@@ -4065,8 +4101,9 @@ input EventUpdateWithoutBandaidsDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4085,8 +4122,9 @@ input EventUpdateWithoutCreatorDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
   rsvps: RSVPUpdateManyWithoutEventInput
@@ -4105,8 +4143,9 @@ input EventUpdateWithoutHostDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   rsvps: RSVPUpdateManyWithoutEventInput
@@ -4125,8 +4164,9 @@ input EventUpdateWithoutRsvpsDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4145,8 +4185,9 @@ input EventUpdateWithoutRunReportsDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4165,8 +4206,9 @@ input EventUpdateWithoutTrailDataInput {
   trailDifficulty: TrailDifficulty
   trailNotes: String
   rallyAddress: String
-  rallyTime: DateTime
   membersOnly: Boolean
+  maxAttendees: Int
+  maxRigs: Int
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4580,32 +4622,54 @@ input EventWhereInput {
 
   """All values not ending with the given string."""
   rallyAddress_not_ends_with: String
-  rallyTime: DateTime
-
-  """All values that are not equal to given value."""
-  rallyTime_not: DateTime
-
-  """All values that are contained in given list."""
-  rallyTime_in: [DateTime!]
-
-  """All values that are not contained in given list."""
-  rallyTime_not_in: [DateTime!]
-
-  """All values less than the given value."""
-  rallyTime_lt: DateTime
-
-  """All values less than or equal the given value."""
-  rallyTime_lte: DateTime
-
-  """All values greater than the given value."""
-  rallyTime_gt: DateTime
-
-  """All values greater than or equal the given value."""
-  rallyTime_gte: DateTime
   membersOnly: Boolean
 
   """All values that are not equal to given value."""
   membersOnly_not: Boolean
+  maxAttendees: Int
+
+  """All values that are not equal to given value."""
+  maxAttendees_not: Int
+
+  """All values that are contained in given list."""
+  maxAttendees_in: [Int!]
+
+  """All values that are not contained in given list."""
+  maxAttendees_not_in: [Int!]
+
+  """All values less than the given value."""
+  maxAttendees_lt: Int
+
+  """All values less than or equal the given value."""
+  maxAttendees_lte: Int
+
+  """All values greater than the given value."""
+  maxAttendees_gt: Int
+
+  """All values greater than or equal the given value."""
+  maxAttendees_gte: Int
+  maxRigs: Int
+
+  """All values that are not equal to given value."""
+  maxRigs_not: Int
+
+  """All values that are contained in given list."""
+  maxRigs_in: [Int!]
+
+  """All values that are not contained in given list."""
+  maxRigs_not_in: [Int!]
+
+  """All values less than the given value."""
+  maxRigs_lt: Int
+
+  """All values less than or equal the given value."""
+  maxRigs_lte: Int
+
+  """All values greater than the given value."""
+  maxRigs_gt: Int
+
+  """All values greater than or equal the given value."""
+  maxRigs_gte: Int
   creator: UserWhereInput
   featuredImage: CloudinaryImageWhereInput
   host: UserWhereInput
@@ -8049,6 +8113,9 @@ type Subscription {
 enum Title {
   WEBMASTER
   HISTORIAN
+  RUN_LEADER
+  RUN_MASTER
+  CHARTER_MEMBER
 }
 
 type Trail implements Node {
@@ -8782,11 +8849,10 @@ type User implements Node {
   preferences: Preference
   userMeta: UserMeta
   avatar: CloudinaryImage
-  isCharterMember: Boolean
   rig: RigImage
   vehicle: Vehicle
   equipment: [String!]!
-  title: Title
+  titles: [Title!]!
   role: Role!
   accountStatus: AccountStatus!
   accountType: AccountType!
@@ -8833,14 +8899,13 @@ input UserCreateInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -8936,6 +9001,10 @@ input UserCreateOneWithoutVotesReceivedInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreatetitlesInput {
+  set: [Title!]
+}
+
 input UserCreateWithoutActivityLogInput {
   id: ID
   joined: DateTime
@@ -8949,14 +9018,13 @@ input UserCreateWithoutActivityLogInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -8989,14 +9057,13 @@ input UserCreateWithoutBandaidsInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9029,14 +9096,13 @@ input UserCreateWithoutCandidateForInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9069,14 +9135,13 @@ input UserCreateWithoutContactInfoInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9109,14 +9174,13 @@ input UserCreateWithoutEventsCreatedInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9149,14 +9213,13 @@ input UserCreateWithoutEventsHostedInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9189,14 +9252,13 @@ input UserCreateWithoutEventsRSVPdInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9229,14 +9291,13 @@ input UserCreateWithoutMembershipLogContributionsInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9269,14 +9330,13 @@ input UserCreateWithoutMembershipLogInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9309,14 +9369,13 @@ input UserCreateWithoutPreferencesInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9349,14 +9408,13 @@ input UserCreateWithoutRunReportsLoggedInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9389,14 +9447,13 @@ input UserCreateWithoutUserMetaInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   avatar: CloudinaryImageCreateOneInput
@@ -9429,14 +9486,13 @@ input UserCreateWithoutVotedForInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9469,14 +9525,13 @@ input UserCreateWithoutVotesReceivedInput {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserCreateequipmentInput
+  titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
   preferences: PreferenceCreateOneWithoutUserInput
   userMeta: UserMetaCreateOneWithoutUserInput
@@ -9802,10 +9857,6 @@ enum UserOrderByInput {
   resetToken_DESC
   resetTokenExpiry_ASC
   resetTokenExpiry_DESC
-  isCharterMember_ASC
-  isCharterMember_DESC
-  title_ASC
-  title_DESC
   role_ASC
   role_DESC
   accountStatus_ASC
@@ -9833,9 +9884,8 @@ type UserPreviousValues {
   password: String!
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
   equipment: [String!]!
-  title: Title
+  titles: [Title!]!
   role: Role!
   accountStatus: AccountStatus!
   accountType: AccountType!
@@ -10274,20 +10324,6 @@ input UserScalarWhereInput {
 
   """All values greater than or equal the given value."""
   resetTokenExpiry_gte: Float
-  isCharterMember: Boolean
-
-  """All values that are not equal to given value."""
-  isCharterMember_not: Boolean
-  title: Title
-
-  """All values that are not equal to given value."""
-  title_not: Title
-
-  """All values that are contained in given list."""
-  title_in: [Title!]
-
-  """All values that are not contained in given list."""
-  title_not_in: [Title!]
   role: Role
 
   """All values that are not equal to given value."""
@@ -10389,14 +10425,13 @@ input UserUpdateDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10433,14 +10468,13 @@ input UserUpdateInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10473,14 +10507,13 @@ input UserUpdateManyDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
 }
 
 input UserUpdateManyInput {
@@ -10507,14 +10540,13 @@ input UserUpdateManyMutationInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
 }
 
 input UserUpdateManyWithoutCandidateForInput {
@@ -10639,6 +10671,10 @@ input UserUpdateOneWithoutVotesReceivedInput {
   upsert: UserUpsertWithoutVotesReceivedInput
 }
 
+input UserUpdatetitlesInput {
+  set: [Title!]
+}
+
 input UserUpdateWithoutActivityLogDataInput {
   joined: DateTime
   lastLogin: DateTime
@@ -10651,14 +10687,13 @@ input UserUpdateWithoutActivityLogDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10690,14 +10725,13 @@ input UserUpdateWithoutBandaidsDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10729,14 +10763,13 @@ input UserUpdateWithoutCandidateForDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10768,14 +10801,13 @@ input UserUpdateWithoutContactInfoDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -10807,14 +10839,13 @@ input UserUpdateWithoutEventsCreatedDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10846,14 +10877,13 @@ input UserUpdateWithoutEventsHostedDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10885,14 +10915,13 @@ input UserUpdateWithoutEventsRSVPdDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10924,14 +10953,13 @@ input UserUpdateWithoutMembershipLogContributionsDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -10963,14 +10991,13 @@ input UserUpdateWithoutMembershipLogDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11002,14 +11029,13 @@ input UserUpdateWithoutPreferencesDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11041,14 +11067,13 @@ input UserUpdateWithoutRunReportsLoggedDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11080,14 +11105,13 @@ input UserUpdateWithoutUserMetaDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   avatar: CloudinaryImageUpdateOneInput
@@ -11119,14 +11143,13 @@ input UserUpdateWithoutVotedForDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11158,14 +11181,13 @@ input UserUpdateWithoutVotesReceivedDataInput {
   password: String
   resetToken: String
   resetTokenExpiry: Float
-  isCharterMember: Boolean
-  title: Title
   role: Role
   accountStatus: AccountStatus
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
   equipment: UserUpdateequipmentInput
+  titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
   preferences: PreferenceUpdateOneWithoutUserInput
   userMeta: UserMetaUpdateOneWithoutUserInput
@@ -11703,20 +11725,6 @@ input UserWhereInput {
 
   """All values greater than or equal the given value."""
   resetTokenExpiry_gte: Float
-  isCharterMember: Boolean
-
-  """All values that are not equal to given value."""
-  isCharterMember_not: Boolean
-  title: Title
-
-  """All values that are not equal to given value."""
-  title_not: Title
-
-  """All values that are contained in given list."""
-  title_in: [Title!]
-
-  """All values that are not contained in given list."""
-  title_not_in: [Title!]
   role: Role
 
   """All values that are not equal to given value."""

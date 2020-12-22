@@ -30,6 +30,7 @@ module.exports = {
     "FULL",
     "ASSOCIATE", // No voting rights, no member's only events/discussion
     "EMERITUS", // Same as Associate
+    "DECEASED",
     "GUEST" // DEFAULT - confirmed user. No roster, no voting rights, no member's only events/discussion
   ],
   offices: {
@@ -39,10 +40,11 @@ module.exports = {
     TREASURER: "Treasurer" // unique
   },
   titles: {
-    WEBMASTER: "Webmaster", // unique
-    RUN_MASTER: "Run Master", // unique
+    WEBMASTER: "Webmaster",
+    RUN_MASTER: "Run Master",
     RUN_LEADER: "Run Leader",
-    EMERITUS_MEMBER: "Emeritus Member"
+    HISTORIAN: "Historian",
+    CHARTER_MEMBER: "Charter Member"
   },
   emailGroups: [
     "officers",

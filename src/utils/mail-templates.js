@@ -228,7 +228,6 @@ module.exports.getRunReminderEmail = (
 
     ${eventDetails.title}
     Start time: ${format(new Date(eventDetails.startTime), datePrintFormat)}
-    Rally time: ${format(new Date(eventDetails.rallyTime), datePrintFormat)}
     Rally location: ${eventDetails.rallyAddress}
 
     If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count.
@@ -245,10 +244,6 @@ module.exports.getRunReminderEmail = (
       ${eventDetails.title}<br/>
       Start time: ${format(
         new Date(eventDetails.startTime),
-        datePrintFormat
-      )}<br/>
-      Rally time: ${format(
-        new Date(eventDetails.rallyTime),
         datePrintFormat
       )}<br/>
       Rally location: ${eventDetails.rallyAddress}

@@ -75,7 +75,7 @@ module.exports.accountChanged = ({ stateName, newState, userId }) => ({
   }
 });
 
-module.exports.officeChanged = ({ officeName, userId, added = true }) => {
+module.exports.officeChanged = ({ officeName, userId, add = true }) => {
   const defaultLog = {
     time: new Date(),
     logger: {
@@ -85,16 +85,16 @@ module.exports.officeChanged = ({ officeName, userId, added = true }) => {
     }
   };
 
-  if (added) {
+  if (add) {
     return {
-      message: `"${officeName}" office added`,
+      message: `${officeName} office added`,
       messageCode: "OFFICE_ADDED",
       ...defaultLog
     };
   }
 
   return {
-    message: `"${officeName}" office removed`,
+    message: `${officeName} office removed`,
     messageCode: "OFFICE_REMOVED",
     ...defaultLog
   };
@@ -112,14 +112,14 @@ module.exports.titleChanged = ({ titleName, userId, add = true }) => {
 
   if (add) {
     return {
-      message: `"${titleName}" title added`,
+      message: `${titleName} title added`,
       messageCode: "TITLE_ADDED",
       ...defaultLog
     };
   }
 
   return {
-    message: `"${titleName}" title removed`,
+    message: `${titleName} title removed`,
     messageCode: "TITLE_REMOVED",
     ...defaultLog
   };
