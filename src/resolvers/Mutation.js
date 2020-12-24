@@ -46,6 +46,9 @@ const {
 } = require("../utils");
 const { roles, emailGroups } = require("../config");
 const stripe = require("../utils/stripe");
+// const { getDocs } = require("../");
+
+// const docs = require("./partials/docs");
 
 const getHash = async pw => {
   const salt = await bcrypt.hash(HASH_SECRET, 10);
@@ -1472,8 +1475,6 @@ const Mutations = {
       );
     }
 
-    console.log("logs", membershipLogs);
-
     // Update user
     await ctx.db.mutation.updateUser(
       {
@@ -1482,7 +1483,7 @@ const Mutations = {
           ...(titlesToAdd
             ? {
                 titles: {
-                  set: titlesToAdd
+                  set: titles
                 }
               }
             : {}),
@@ -2027,7 +2028,7 @@ const Mutations = {
     }
 
     // Requesting user has proper account status?
-    if (!hasAccountStatus(ctx.req.user, ["PAST_DUE"], false)) {
+    if (!hasAccountStatus(ctx.req.user, ["PAST_DUE", "ACTIVE"], false)) {
       throw new Error(
         `Account status must be ACTIVE or PAST_DUE to proceed. Contact the board to request reinstatement`
       );

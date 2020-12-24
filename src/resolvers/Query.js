@@ -6,6 +6,7 @@ const {
   resetTokenTimeoutInMs
 } = require("../utils");
 const config = require("../config");
+const docs = require("./partials/docs");
 
 const Query = {
   myself(parent, args, ctx, info) {
@@ -929,7 +930,8 @@ const Query = {
       },
       info
     );
-  }
+  },
+  ...docs.queries
 };
 
 module.exports = Query;

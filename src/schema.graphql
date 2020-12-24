@@ -113,6 +113,7 @@ type Query {
     username: String!
     messageCode: MembershipMessageCode!
   ): [MembershipLogItem]!
+  getDocs: Docs!
   # adminStats: AdminStats
   # activeMembersPerYear: MemberCount
   # guestsWithLockedAccounts: [User]!
@@ -436,4 +437,27 @@ input DuesPaymentInput {
   token: String!
   # amount: Float!
   # payingFor: [ID]
+}
+
+type Document {
+  name: String!
+  link: String!
+  date: DateTime! # last modifed?
+}
+
+type YearlyArchive {
+  year: String!
+  monthlyArchives: [MonthlyArchive]!
+}
+
+type MonthlyArchive {
+  month: String!
+  meetingMinutes: Document
+  newsletter: Document
+}
+
+type Docs {
+  bylaws: Document!
+  sors: Document!
+  archives: [YearlyArchive]!
 }

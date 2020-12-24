@@ -16,6 +16,8 @@ const Ballot = require("./resolvers/Ballot");
 const Trail = require("./resolvers/Trail");
 const User = require("./resolvers/User");
 
+const backblaze = require("./routes/backblaze");
+
 const corsOptions = {
   credentials: true,
   origin: process.env.FRONTEND_URL
@@ -29,6 +31,15 @@ const corsOptions = {
 // - Email all confirmed members a reminder email to submit a review/photos
 
 const app = express();
+
+if (process.env.NODE_ENC !== "production") {
+  app.get("/backblaze", backblaze.getDocs);
+}
+
+// TODO
+// app.get("/calendar", () => {});
+// app.get("/calendar/?year={year}", () => {});
+// app.get("/calendar/?filter={remaining}", () => {});
 
 app.use(cors(corsOptions));
 app.use(cookieParser());

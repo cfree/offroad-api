@@ -128,9 +128,6 @@ module.exports.determineTitleChanges = (
   const safeExistingTitles = existingTitles ? existingTitles : [];
   const safeNewTitles = newTitles ? newTitles : [];
 
-  console.log("safeExistingTitles", safeExistingTitles);
-  console.log("safeNewTitles", safeNewTitles);
-
   // oldList that aren't in newList
   const toRemove = safeExistingTitles.filter(
     item => !safeNewTitles.includes(item)
@@ -140,9 +137,6 @@ module.exports.determineTitleChanges = (
   const toAdd = safeNewTitles.filter(
     item => !safeExistingTitles.includes(item)
   );
-
-  console.log("toRemove", toRemove);
-  console.log("toAdd", toAdd);
 
   if (toRemove.length === 0 && toAdd.length === 0 && shouldThrow) {
     throw new Error("No titles to change");

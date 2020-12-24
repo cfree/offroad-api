@@ -55,7 +55,8 @@ module.exports = {
     "all_active", // Events, general announcements
     "guests",
     "all_users" // EVERYONE EVER
-  ]
+  ],
+  timezoneOffsetInMs: 25200000
 };
 
 /**
