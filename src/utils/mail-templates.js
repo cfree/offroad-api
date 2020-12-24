@@ -25,8 +25,9 @@ module.exports.getSecretaryNewUserEmail = username => ({
     ${process.env.FRONTEND_URL}/profile/${username}
   `,
   html: `
-    <p>A new guest account has been created:
-    ${process.env.FRONTEND_URL}/profile/${username}</p>
+    <p>A new guest account has been created: <a href="${
+      process.env.FRONTEND_URL
+    }/profile/${username}">${username}</a></p>
   `
 });
 
@@ -80,6 +81,35 @@ module.exports.getUserWelcomeEmail = ({ email, firstName, lastName }) => ({
   `
 });
 
+module.exports.getUserRejectionEmail = ({
+  email,
+  firstName,
+  lastName,
+  reason
+}) => ({
+  to: getUserAddress(firstName, lastName, email),
+  from: secretaryAddress,
+  subject: "[4-Players] Account Rejection",
+  text: `
+    Hello, ${firstName}
+
+    Thanks for signing up, but unfortunately your account has been rejected. 
+    
+    Reason: ${reason}
+    
+    If you feel this rejection was made in error, please reply to this email so we can make the necessary corrections.
+  `,
+  html: `
+    <p>Hello, ${firstName}</p>
+
+    <p>Thanks for signing up, but unfortunately your account has been rejected.</p>
+
+    <p>Reason: ${reason}</p>
+
+    If you feel this rejection was made in error, please reply to this email so we can make the necessary corrections.
+  `
+});
+
 module.exports.getUserWebsiteRegistrationEmail = ({
   email,
   firstName,
@@ -104,8 +134,9 @@ module.exports.getUserWebsiteRegistrationEmail = ({
 
     <p>Thanks for opting in!</p>
 
-    <p>Visit this URL to create your profile:
-    ${process.env.FRONTEND_URL}/signup?token=${resetToken}</p>
+    <p>Please <a href="${
+      process.env.FRONTEND_URL
+    }/signup?token=${resetToken}">create your profile</a>.</p>
 
     <p>If you have any questions, please contact the <a href="mailto:webmaster@4-playersofcolorado.org">webmaster</a></p>
   `

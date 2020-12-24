@@ -27,6 +27,7 @@ type Mutation {
     token: String!
   ): SuccessMessage!
   unlockNewAccount(userId: ID!): SuccessMessage!
+  rejectNewAccount(userId: ID!, reason: String!): SuccessMessage!
   login(username: String!, password: String!): SuccessMessage!
   logout: SuccessMessage
   requestReset(email: String!): SuccessMessage

@@ -12,7 +12,8 @@ const {
   getUserWelcomeEmail,
   getUserWebsiteRegistrationEmail,
   getUserEventRegistrationEmail,
-  getUserResetTokenEmail
+  getUserResetTokenEmail,
+  getUserRejectionEmail
 } = require("../utils/mail-templates");
 const activityLog = require("../utils/activity-log");
 const membershipLog = require("../utils/membership-log");
@@ -277,6 +278,64 @@ const Mutations = {
       })
     )
       .then(() => ({ message: "Account unlocked" }))
+      .catch(err => {
+        //Extract error msg
+        // const { message, code, response } = err;
+
+        //Extract response msg
+        // const { headers, body } = response;
+
+        throw new Error(err);
+      });
+  },
+  async rejectNewAccount(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    // Requesting user has proper role?
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER"]);
+
+    // Requesting user has proper account status?
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
+
+    const user = await ctx.db.query.user(
+      { where: { id: args.userId } },
+      "{ id, email, firstName, lastName }"
+    );
+
+    const lowercaseEmail = user.email.toLowerCase();
+
+    // Add membership log
+    const logs = [membershipLog.accountRejected(ctx.req.userId, args.reason)];
+
+    // Update status
+    await ctx.db.mutation.updateUser(
+      {
+        data: {
+          accountStatus: "REJECTED",
+          membershipLog: {
+            create: logs
+          }
+        },
+        where: {
+          id: args.userId
+        }
+      },
+      info
+    );
+
+    // Send email to user
+    return sendTransactionalEmail(
+      getUserRejectionEmail({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: lowercaseEmail,
+        reason: args.reason
+      })
+    )
+      .then(() => ({ message: "Account rejected" }))
       .catch(err => {
         //Extract error msg
         // const { message, code, response } = err;
