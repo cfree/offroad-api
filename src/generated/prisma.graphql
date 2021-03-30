@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Mon Mar 08 2021 20:40:19 GMT-0700 (Mountain Standard Time)
+# timestamp: Tue Mar 30 2021 06:10:38 GMT-0600 (Mountain Daylight Time)
 
 enum AccountStatus {
   ACTIVE
@@ -3966,6 +3966,7 @@ input EventSubscriptionWhereInput {
 
 enum EventType {
   RUN
+  CAMPING
   COLLECTION
   FUNDRAISING
   MEETING

@@ -1356,7 +1356,7 @@ const Mutations = {
             activityLog.joined({
               username: ctx.req.user.username,
               userId: ctx.req.userId
-            });
+            })
           );
         }
 
