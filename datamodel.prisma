@@ -116,6 +116,7 @@ enum MembershipMessageCode {
 
 enum EventType {
   RUN
+  CAMPING
   COLLECTION
   FUNDRAISING
   MEETING
@@ -277,6 +278,15 @@ type Trail {
   visitors: [User] @relation(link: TABLE, name: "TrailVisitor")
   runReports: [RunReport] @relation(link: TABLE, name: "TrailRunReport")
 }
+
+# type Ranger {
+#   id: ID! @unique @id
+#   createdAt: DateTime! @createdAt
+#   updatedAt: DateTime! @updatedAt
+#   office: String
+#   phone: String
+#   address: String
+# }
 
 type RunReport {
   id: ID! @unique @id

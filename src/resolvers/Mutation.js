@@ -1352,10 +1352,12 @@ const Mutations = {
               type: "FULL"
             })
           );
-          activityLog.joined({
-            username: ctx.req.user.username,
-            userId: ctx.req.userId
-          });
+          activityLogs.push(
+            activityLog.joined({
+              username: ctx.req.user.username,
+              userId: ctx.req.userId
+            });
+          );
         }
 
         if (

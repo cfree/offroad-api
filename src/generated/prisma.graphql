@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Mon Dec 21 2020 00:13:21 GMT-0700 (Mountain Standard Time)
+# timestamp: Mon Mar 08 2021 20:40:19 GMT-0700 (Mountain Standard Time)
 
 enum AccountStatus {
   ACTIVE
@@ -2489,7 +2489,7 @@ type ContactInfo implements Node {
   city: String
   state: String
   zip: String
-  phone: String!
+  phone: String
 }
 
 """A connection to a list of items."""
@@ -2508,7 +2508,7 @@ input ContactInfoCreateInput {
   city: String
   state: String
   zip: String
-  phone: String!
+  phone: String
   user: UserCreateOneWithoutContactInfoInput
 }
 
@@ -2523,7 +2523,7 @@ input ContactInfoCreateWithoutUserInput {
   city: String
   state: String
   zip: String
-  phone: String!
+  phone: String
 }
 
 """An edge in a connection."""
@@ -2562,7 +2562,7 @@ type ContactInfoPreviousValues {
   city: String
   state: String
   zip: String
-  phone: String!
+  phone: String
 }
 
 type ContactInfoSubscriptionPayload {
@@ -5431,6 +5431,7 @@ type Preference implements Node {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
 }
 
 """A connection to a list of items."""
@@ -5449,6 +5450,7 @@ input PreferenceCreateInput {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
   user: UserCreateOneWithoutPreferencesInput
 }
 
@@ -5463,6 +5465,7 @@ input PreferenceCreateWithoutUserInput {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
 }
 
 """An edge in a connection."""
@@ -5489,6 +5492,8 @@ enum PreferenceOrderByInput {
   photoPermissions_DESC
   showPhoneNumber_ASC
   showPhoneNumber_DESC
+  tshirtSize_ASC
+  tshirtSize_DESC
 }
 
 type PreferencePreviousValues {
@@ -5499,6 +5504,7 @@ type PreferencePreviousValues {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
 }
 
 type PreferenceSubscriptionPayload {
@@ -5543,6 +5549,7 @@ input PreferenceUpdateInput {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
   user: UserUpdateOneWithoutPreferencesInput
 }
 
@@ -5551,6 +5558,7 @@ input PreferenceUpdateManyMutationInput {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
 }
 
 input PreferenceUpdateOneWithoutUserInput {
@@ -5567,6 +5575,7 @@ input PreferenceUpdateWithoutUserDataInput {
   emergencyContactPhone: String
   photoPermissions: Boolean
   showPhoneNumber: Boolean
+  tshirtSize: String
 }
 
 input PreferenceUpsertWithoutUserInput {
@@ -5755,6 +5764,46 @@ input PreferenceWhereInput {
 
   """All values that are not equal to given value."""
   showPhoneNumber_not: Boolean
+  tshirtSize: String
+
+  """All values that are not equal to given value."""
+  tshirtSize_not: String
+
+  """All values that are contained in given list."""
+  tshirtSize_in: [String!]
+
+  """All values that are not contained in given list."""
+  tshirtSize_not_in: [String!]
+
+  """All values less than the given value."""
+  tshirtSize_lt: String
+
+  """All values less than or equal the given value."""
+  tshirtSize_lte: String
+
+  """All values greater than the given value."""
+  tshirtSize_gt: String
+
+  """All values greater than or equal the given value."""
+  tshirtSize_gte: String
+
+  """All values containing the given string."""
+  tshirtSize_contains: String
+
+  """All values not containing the given string."""
+  tshirtSize_not_contains: String
+
+  """All values starting with the given string."""
+  tshirtSize_starts_with: String
+
+  """All values not starting with the given string."""
+  tshirtSize_not_starts_with: String
+
+  """All values ending with the given string."""
+  tshirtSize_ends_with: String
+
+  """All values not ending with the given string."""
+  tshirtSize_not_ends_with: String
   user: UserWhereInput
 }
 
@@ -8866,6 +8915,7 @@ type User implements Node {
   membershipLogContributions(where: MembershipLogItemWhereInput, orderBy: MembershipLogItemOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [MembershipLogItem!]
   eventsCreated(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   eventsRSVPd(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP!]
+  runsAttendedCount: Int
   eventsRSVPdAsPassenger(where: RSVPWhereInput, orderBy: RSVPOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RSVP!]
   eventsHosted(where: EventWhereInput, orderBy: EventOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Event!]
   bandaids(where: BandaidWhereInput, orderBy: BandaidOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Bandaid!]
@@ -8904,6 +8954,7 @@ input UserCreateInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9023,6 +9074,7 @@ input UserCreateWithoutActivityLogInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9062,6 +9114,7 @@ input UserCreateWithoutBandaidsInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9101,6 +9154,7 @@ input UserCreateWithoutCandidateForInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9140,6 +9194,7 @@ input UserCreateWithoutContactInfoInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   preferences: PreferenceCreateOneWithoutUserInput
@@ -9179,6 +9234,7 @@ input UserCreateWithoutEventsCreatedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9218,6 +9274,7 @@ input UserCreateWithoutEventsHostedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9257,6 +9314,7 @@ input UserCreateWithoutEventsRSVPdInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9296,6 +9354,7 @@ input UserCreateWithoutMembershipLogContributionsInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9335,6 +9394,7 @@ input UserCreateWithoutMembershipLogInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9374,6 +9434,7 @@ input UserCreateWithoutPreferencesInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9413,6 +9474,7 @@ input UserCreateWithoutRunReportsLoggedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9452,6 +9514,7 @@ input UserCreateWithoutUserMetaInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9491,6 +9554,7 @@ input UserCreateWithoutVotedForInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9530,6 +9594,7 @@ input UserCreateWithoutVotesReceivedInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserCreateequipmentInput
   titles: UserCreatetitlesInput
   contactInfo: ContactInfoCreateOneWithoutUserInput
@@ -9867,6 +9932,8 @@ enum UserOrderByInput {
   office_DESC
   comfortLevel_ASC
   comfortLevel_DESC
+  runsAttendedCount_ASC
+  runsAttendedCount_DESC
 }
 
 type UserPreviousValues {
@@ -9891,6 +9958,7 @@ type UserPreviousValues {
   accountType: AccountType!
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
 }
 
 input UserScalarWhereInput {
@@ -10374,6 +10442,28 @@ input UserScalarWhereInput {
 
   """All values that are not contained in given list."""
   comfortLevel_not_in: [TrailDifficulty!]
+  runsAttendedCount: Int
+
+  """All values that are not equal to given value."""
+  runsAttendedCount_not: Int
+
+  """All values that are contained in given list."""
+  runsAttendedCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  runsAttendedCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  runsAttendedCount_lt: Int
+
+  """All values less than or equal the given value."""
+  runsAttendedCount_lte: Int
+
+  """All values greater than the given value."""
+  runsAttendedCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  runsAttendedCount_gte: Int
 }
 
 type UserSubscriptionPayload {
@@ -10430,6 +10520,7 @@ input UserUpdateDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10473,6 +10564,7 @@ input UserUpdateInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10512,6 +10604,7 @@ input UserUpdateManyDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
 }
@@ -10545,6 +10638,7 @@ input UserUpdateManyMutationInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
 }
@@ -10692,6 +10786,7 @@ input UserUpdateWithoutActivityLogDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10730,6 +10825,7 @@ input UserUpdateWithoutBandaidsDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10768,6 +10864,7 @@ input UserUpdateWithoutCandidateForDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10806,6 +10903,7 @@ input UserUpdateWithoutContactInfoDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   preferences: PreferenceUpdateOneWithoutUserInput
@@ -10844,6 +10942,7 @@ input UserUpdateWithoutEventsCreatedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10882,6 +10981,7 @@ input UserUpdateWithoutEventsHostedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10920,6 +11020,7 @@ input UserUpdateWithoutEventsRSVPdDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10958,6 +11059,7 @@ input UserUpdateWithoutMembershipLogContributionsDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -10996,6 +11098,7 @@ input UserUpdateWithoutMembershipLogDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -11034,6 +11137,7 @@ input UserUpdateWithoutPreferencesDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -11072,6 +11176,7 @@ input UserUpdateWithoutRunReportsLoggedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -11110,6 +11215,7 @@ input UserUpdateWithoutUserMetaDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -11148,6 +11254,7 @@ input UserUpdateWithoutVotedForDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -11186,6 +11293,7 @@ input UserUpdateWithoutVotesReceivedDataInput {
   accountType: AccountType
   office: Office
   comfortLevel: TrailDifficulty
+  runsAttendedCount: Int
   equipment: UserUpdateequipmentInput
   titles: UserUpdatetitlesInput
   contactInfo: ContactInfoUpdateOneWithoutUserInput
@@ -11775,6 +11883,28 @@ input UserWhereInput {
 
   """All values that are not contained in given list."""
   comfortLevel_not_in: [TrailDifficulty!]
+  runsAttendedCount: Int
+
+  """All values that are not equal to given value."""
+  runsAttendedCount_not: Int
+
+  """All values that are contained in given list."""
+  runsAttendedCount_in: [Int!]
+
+  """All values that are not contained in given list."""
+  runsAttendedCount_not_in: [Int!]
+
+  """All values less than the given value."""
+  runsAttendedCount_lt: Int
+
+  """All values less than or equal the given value."""
+  runsAttendedCount_lte: Int
+
+  """All values greater than the given value."""
+  runsAttendedCount_gt: Int
+
+  """All values greater than or equal the given value."""
+  runsAttendedCount_gte: Int
   contactInfo: ContactInfoWhereInput
   preferences: PreferenceWhereInput
   userMeta: UserMetaWhereInput
