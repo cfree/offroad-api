@@ -1,0 +1,25 @@
+{
+  "name": "migrate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "migration1.js",
+  "scripts": {
+    "start": "npm run migration:1",
+    "migration:1": "node migration1.js",
+    "migration:2": "node migration2.js",
+    "migration:3": "node migration3.js",
+    "migration:4": "node migration4.js",
+    "migration:5": "node migration5.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cuid": "^2.1.8",
+    "knex": "^0.95.2",
+    "mysql": "^2.18.1",
+    "pg": "^8.5.1",
+    "php-serialize": "^4.0.2",
+    "uuid": "^8.3.2"
+  }
+}
