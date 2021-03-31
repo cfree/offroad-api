@@ -167,6 +167,14 @@ type User {
   runReportsLogged: [RunReport]
 }
 
+type UserMeta {
+  id: ID
+  emailVerified: Boolean
+  firstLoginComplete: Boolean
+  accountSetupComplete: Boolean
+  oldSiteMigrationComplete: Boolean
+}
+
 type ActivityLogItem {
   id: ID!
   time: DateTime!

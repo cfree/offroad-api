@@ -444,7 +444,8 @@ module.exports = {
     return (abbrev.length > 0 && abbrev[0].abbreviation) || defaultState;
   },
   getYear: year => {
-    const trimmedYear = (year || "").trim();
+    console.log("year", year, typeof year);
+    const trimmedYear = (year.toString() || "").trim();
 
     // blank
     if (!year || !trimmedYear || isNaN(year)) {
@@ -452,29 +453,31 @@ module.exports = {
     }
 
     // 1089
-    if (year.charAt(0) === 1 && year.charAt(1) === 0) {
-      return year.replace(0, 9);
+    if (trimmedYear.charAt(0) === 1 && trimmedYear.charAt(1) === 0) {
+      return parseInt(year.replace(0, 9), 10);
     }
 
     // 09 || 02
     if (
-      year.length === 2 &&
-      (year.charAt(0) !== 9 || year.charAt(0) !== 8 || year.charAt(0) !== 7)
+      trimmedYear.length === 2 &&
+      (trimmedYear.charAt(0) !== 9 ||
+        trimmedYear.charAt(0) !== 8 ||
+        trimmedYear.charAt(0) !== 7)
     ) {
-      return `20${year}`;
+      return parseInt(`20${trimmedYear}`, 10);
     }
 
     // 2013
     // 2018 & 2020
     // 2018/2020
-    return year;
+    return parseInt(trimmedYear, 10);
   },
   getMake: make => {
     if (!make) {
       return null;
     }
 
-    switch (make()) {
+    switch (make) {
       case "Jeep":
       case "JEEP":
       case "jeep":

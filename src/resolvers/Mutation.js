@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
+const md5 = require("md5");
 const { promisify } = require("util");
 const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
@@ -348,17 +349,49 @@ const Mutations = {
   },
   async login(parent, { username, password }, ctx, info) {
     // Check if there is a user with that username
-    const user = await ctx.db.query.user({ where: { username } });
+    const user = await ctx.db.query.user(
+      { where: { username } },
+      "{ id, password, userMeta { firstLoginComplete } }"
+    );
+
+    const { userMeta } = user;
 
     if (!user) {
       throw new Error("Username or password incorrect");
     }
 
-    // Check if password is correct
-    const valid = await bcrypt.compare(password, user.password);
+    let updatedUserData = {
+      lastLogin: new Date()
+    };
 
-    if (!valid) {
-      throw new Error("Invalid password"); // fix
+    if (userMeta && !userMeta.firstLoginComplete) {
+      // Check if password is correct
+      if (md5(password) !== password) {
+        throw new Error("Password entered does not match old site password");
+      }
+
+      // Convert old site md5 pw to new site hash
+      const convertedPassword = await getHash(args.password);
+      console.log("converting old pw to new");
+
+      // Update password in user record
+      updatedUserData = {
+        ...updatedUserData,
+        password: convertedPassword,
+        userMeta: {
+          insert: {
+            firstLoginComplete: true
+          }
+        }
+      };
+    }
+    {
+      // Check if password is correct
+      const valid = await bcrypt.compare(password, user.password);
+
+      if (!valid) {
+        throw new Error("Invalid password"); // fix
+      }
     }
 
     // Generate the JWT token
@@ -370,9 +403,7 @@ const Mutations = {
     // Update role
     await ctx.db.mutation.updateUser(
       {
-        data: {
-          lastLogin: new Date()
-        },
+        data: updatedUserData,
         where: {
           id: user.id
         }
