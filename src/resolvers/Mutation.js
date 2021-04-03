@@ -1,7 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
-const md5 = require("md5");
 const { promisify } = require("util");
 const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
@@ -354,8 +353,6 @@ const Mutations = {
       "{ id, password, userMeta { firstLoginComplete } }"
     );
 
-    const { userMeta } = user;
-
     if (!user) {
       throw new Error("Username or password incorrect");
     }
@@ -364,34 +361,11 @@ const Mutations = {
       lastLogin: new Date()
     };
 
-    if (userMeta && !userMeta.firstLoginComplete) {
-      // Check if password is correct
-      if (md5(password) !== password) {
-        throw new Error("Password entered does not match old site password");
-      }
+    // Check if password is correct
+    const valid = await bcrypt.compare(password, user.password);
 
-      // Convert old site md5 pw to new site hash
-      const convertedPassword = await getHash(args.password);
-      console.log("converting old pw to new");
-
-      // Update password in user record
-      updatedUserData = {
-        ...updatedUserData,
-        password: convertedPassword,
-        userMeta: {
-          insert: {
-            firstLoginComplete: true
-          }
-        }
-      };
-    }
-    {
-      // Check if password is correct
-      const valid = await bcrypt.compare(password, user.password);
-
-      if (!valid) {
-        throw new Error("Invalid password"); // fix
-      }
+    if (!valid) {
+      throw new Error("Invalid password"); // fix
     }
 
     // Generate the JWT token

@@ -35,7 +35,6 @@
     "graphql-import": "1.0.2",
     "gulp": "4.0.2",
     "jsonwebtoken": "8.3.0",
-    "md5": "^2.3.0",
     "node-fetch": "^2.6.0",
     "nodemailer": "^4.6.8",
     "nodemon": "1.18.4",
