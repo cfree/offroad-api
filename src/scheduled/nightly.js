@@ -4,11 +4,11 @@
 - https://stackoverflow.com/questions/13345664/using-heroku-scheduler-with-node-js#answer-49524719
 */
 
-const { startOfDay, addDays } = require("date-fns");
+const { startOfDay, endOfDay, addDays, subDays } = require("date-fns");
 
 const db = require("../db");
 const { sendTransactionalEmail } = require("../mail");
-const { getRunReminderEmail } = require("../utils/mail-templates");
+const { getRunReminderEmail, getReportReminderEmail } = require("../utils/mail-templates");
 const activityLog = require("../utils/activity-log");
 const membershipLog = require("../utils/membership-log");
 
@@ -17,9 +17,9 @@ const nightly = async () => {
 
   await Promise.all([
     eventReminders,
-    runReportReminders,
-    guestLockouts,
-    lockedAccountReminders
+    // runReportReminders,
+    // guestLockouts,
+    // lockedAccountReminders
   ]);
 
   console.log("Nightly script completed");
@@ -36,7 +36,7 @@ const eventReminders = new Promise(async (resolve, reject) => {
           AND: [
             { type: "RUN" },
             { startTime_gte: startOfDay(addDays(new Date(), 1)) },
-            { startTime_lt: startOfDay(addDays(new Date(), 2)) },
+            { startTime_lt: endOfDay(addDays(new Date(), 1)) },
             {
               rsvps_some: { status: "GOING" }
             }
@@ -86,20 +86,114 @@ const eventReminders = new Promise(async (resolve, reject) => {
   }
 });
 
-// Post run: Run Report/Bandaid Report to run leader
-//    did an Run event end today?
-//    send run leader a reminder to submit a run report
-const runReportReminders = new Promise((resolve, reject) => resolve());
+// Remind run leader to submit run report
+const runReportReminders = new Promise((resolve, reject) => {
+  try {
+    const events = await db.query.events(
+      {
+        where: {
+          AND: [
+            { 
+              OR: [
+                { type: "RUN" },
+                { type: "CAMPING" }
+              ],
+            },
+            { endTime_gte: startOfDay(new Date()) },
+            { endTime_lt: endOfDay(new Date()) },
+            {
+              rsvps_some: { status: "GOING" }
+            }
+          ]
+        }
+      },
+      "{ id, title, endTime, host { id, email, firstName, lastName }, rsvps { id, status, member { id, email, firstName, lastName } }"
+    );
+
+    await Promise.all(
+      events.map(async event => {
+        const { id, title, endTime, host } = event;
+
+        return sendTransactionalEmail(
+          getReportReminderEmail(host.email, host.firstName, host.lastName, {
+            id,
+            title,
+            endTime
+          })
+        );
+      })
+    );
+
+    // TODO: Remind attendees to... submit photos? Fill out survey?
+
+    return resolve();
+  } catch (e) {
+    console.log("Event report error", e);
+    return resolve();
+  }
+});
 
 // Post run: Guest lockout
-//    how many guests have attended 3 runs at least 5 days ago or longer
-//    and do not have 'LIMITED' status?
-//    GUEST_RESTRICTED
-//    send guest an email
-//    send board an email
-const guestLockouts = new Promise((resolve, reject) => resolve());
+const guestLockouts = new Promise((resolve, reject) => {
+  const users = await db.query.users(
+    {
+      where: {
+        AND: [
+          { accountType: 'GUEST' },
+          { accountStatus_not: 'LIMITED' },
+          { 
+            eventsRSVPd_every: { 
+              status: "GOING", 
+              event: { 
+                AND: [
+                  { endTime_lt: endOfDay(new Date()) },
+                  { isRider: false }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "{ id, firstName, lastName, eventsRSVPd { event { id, email, firstName, lastName } }"
+  );
 
-// Locked accounts reminder to secretary/webmaster
+  // Update records
+  await Promise.all(
+    users.map(async user => {
+      return db.mutation.updateUsers({
+        //   Add GUEST_RESTRICTED log
+      //   Change status to LIMITED
+      });
+    })
+  );
+
+  // Email users
+  await Promise.all(
+    users.map(async user => {
+      return sendTransactionalEmail(
+        // getNotifyUserOfRestrictedStatusEmail(host.email, host.firstName, host.lastName, {
+        //   id,
+        //   title,
+        //   endTime
+        // })
+      );
+    })
+  );
+
+  // Email board
+  await sendTransactionalEmail(
+    // getNotifyBoardOfRestrictedGuestsEmail(host.email, host.firstName, host.lastName, {
+    //   id,
+    //   title,
+    //   endTime
+    // });
+  );
+
+  return resolve();
+});
+
+// @TODO - Locked accounts reminder to secretary/webmaster
 //    has it been 3 days since the user created their account?
 //    send email to board
 const lockedAccountReminders = new Promise((resolve, reject) => resolve());

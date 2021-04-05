@@ -35,7 +35,7 @@ const Query = {
 
     // If they do, query all the users
     const query = {
-      orderBy: "firstName_ASC",
+      orderBy: "lastName_DESC",
       where: {}
     };
 
@@ -84,7 +84,7 @@ const Query = {
     // }
 
     const results = await ctx.db.query.users(query, info);
-    results.sort((a, b) => (a.lastName > b.lastName ? 1 : -1));
+    results.sort((a, b) => (a.firstName > b.firstName ? 1 : -1));
     return results;
   },
   async user(parent, args, ctx, info) {
@@ -309,58 +309,56 @@ const Query = {
     // Requesting user has proper account status?
     hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
-    let query = {
-      where: {
-        startTime_gte: new Date().toISOString()
-      },
-      orderBy: "startTime_ASC"
-    };
+    const { count, page } = args;
 
-    if (args.count) {
-      query.first = args.count;
+    // No page? Show all
+    if (page && page !== null) {
+      const skip = (page - 1) * config.defaultPaginationSize;
+
+      pagination = {
+        ...(skip <= 0 ? {} : { skip }),
+        first: config.defaultPaginationSize
+      };
     }
 
-    // const membersOnlyRes = await ctx.db.query.events(
-    //   query,
-    //   "{ id, membersOnly }"
-    // );
-    // const membersOnlyEvents = membersOnlyRes
-    //   .filter(event => event.membersOnly === true)
-    //   .map(event => event.id);
+    if (count && count !== null) {
+      pagination = {
+        ...pagination,
+        first: count
+      };
+    }
 
-    // console.log(membersOnlyRes, membersOnlyEvents);
+    return ctx.db.query.events(
+      {
+        where: {
+          startTime_gte: new Date().toISOString()
+        },
+        orderBy: "startTime_ASC",
+        ...pagination
+      },
+      info
+    );
+  },
+  async upcomingEventsCount(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
 
-    // If they do, query all the users
-    const results = await ctx.db.query.events(query, info);
+    // Requesting user has proper account status?
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
-    // Are any of these member's only?
-    // if (ctx.req.user.accountType === "GUEST" && membersOnlyEvents.length > 0) {
-    //   console.log("all", results);
-    //   console.log("safety guard");
-    //   const lockedOutEvents = results
-    //     .filter(result => {
-    //       console.log(
-    //         "filter",
-    //         result.id,
-    //         membersOnlyEvents.includes(result.id)
-    //       );
-    //       return membersOnlyEvents.includes(result.id);
-    //     })
-    //     .map(result => ({
-    //       ...result,
-    //       startTime: new Date(0),
-    //       endTime: new Date(0),
-    //       address: "",
-    //       rallyAddress: "",
-    //       description: ""
-    //     }));
+    const results = await ctx.db.query.events(
+      {
+        where: {
+          startTime_gte: new Date().toISOString()
+        },
+        orderBy: "startTime_ASC"
+      },
+      info
+    );
 
-    //   console.log("members only", lockedOutEvents);
-
-    //   return [...results, ...lockedOutEvents];
-    // }
-
-    return results;
+    return { count: results.length };
   },
   async getUserEvents(parent, args, ctx, info) {
     // Logged in?
@@ -417,8 +415,51 @@ const Query = {
     // Requesting user has proper account status?
     hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
-    // If they do, query all the users
+    let pagination = {};
+    const { count, page } = args;
+
+    // No page? Show all
+    if (page && page !== null) {
+      const skip = (page - 1) * config.defaultPaginationSize;
+
+      pagination = {
+        ...(skip <= 0 ? {} : { skip }),
+        first: config.defaultPaginationSize
+      };
+    }
+
+    if (count && count !== null) {
+      pagination = {
+        ...pagination,
+        first: count
+      };
+    }
+
+    const query = {
+      where: {
+        startTime_lte: new Date().toISOString()
+      },
+      orderBy: "startTime_DESC"
+    };
+
     return ctx.db.query.events(
+      {
+        ...query,
+        ...pagination
+      },
+      info
+    );
+  },
+  async pastEventsCount(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    // Requesting user has proper account status?
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
+
+    const results = await ctx.db.query.events(
       {
         where: {
           startTime_lte: new Date().toISOString()
@@ -427,6 +468,8 @@ const Query = {
       },
       info
     );
+
+    return { count: results.length };
   },
   async getEvent(parent, args, ctx, info) {
     // Logged in?

@@ -255,7 +255,7 @@ module.exports.getRunReminderEmail = (
   text: `
     ${firstName},
 
-    You have an event coming up tomorrow!
+    You have an event coming up soon!
 
     ${eventDetails.title}
     Start time: ${format(new Date(eventDetails.startTime), datePrintFormat)}
@@ -285,5 +285,41 @@ module.exports.getRunReminderEmail = (
     <p>For more details or to edit your RSVP, please see <a href="${
       process.env.FRONTEND_URL
     }/event/${eventDetails.id}">the event details on the website</a>.</p>
+  `
+});
+
+module.exports.getReportReminderEmail = (
+  email,
+  firstName,
+  lastName,
+  eventDetails
+) => ({
+  to: getUserAddress(firstName, lastName, email),
+  from: noReplyAddress,
+  subject: `[4-Players] Run Report Reminder: ${eventDetails.title}`,
+  text: `
+    ${firstName},
+
+    How was your run?
+
+    ${eventDetails.title}
+    End time: ${format(new Date(eventDetails.endTime), datePrintFormat)}
+
+    Please submit a run report at your earliest convenience:
+    ${process.env.FRONTEND_URL}/event/${eventDetails.id}/submit-report
+  `,
+  html: `
+    <p>${firstName},</p>
+
+    <p>How was your run?</p>
+
+    <p>
+      ${eventDetails.title}<br/>
+      End time: ${format(new Date(eventDetails.endTime), datePrintFormat)}
+    </p>
+    
+    <p>Please <a href="${process.env.FRONTEND_URL}/event/${
+    eventDetails.id
+  }/submit-report">submit a run report</a> at your earliest convenience.</p>
   `
 });

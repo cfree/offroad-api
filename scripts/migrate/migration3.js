@@ -119,7 +119,7 @@ const fn = async () => {
         reg_limit: parseInt(reg_limit, 10),
         is_active: is_active === "Y",
         event_status: getEventStatus(event_status),
-        member_only: member_only !== "Y",
+        member_only: member_only === "Y",
         category: categoryNames[0] // There can only be one
       };
     });

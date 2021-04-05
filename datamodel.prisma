@@ -232,7 +232,7 @@ type Event {
   host: User @relation(name: "EventHost")
   rsvps: [RSVP] @relation(name: "EventRSVP")
   address: String
-  trailDifficulty: TrailDifficulty
+  trailDifficulty: TrailDifficulty @default(value: UNKNOWN)
   trailNotes: String
   rallyAddress: String
   trail: Trail @relation(name: "EventTrail")

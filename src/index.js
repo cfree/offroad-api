@@ -51,6 +51,7 @@ app.use(async (req, res, next) => {
   if (token) {
     const { userId } = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = userId;
+    console.log("userId", userId);
   }
 
   next();
@@ -59,6 +60,7 @@ app.use(async (req, res, next) => {
 // See info about the user if logged in
 app.use(async (req, res, next) => {
   if (!req.userId) {
+    console.log("no req.userId");
     return next();
   }
 

@@ -8,6 +8,10 @@ type SuccessTime {
   time: DateTime
 }
 
+type EventCount {
+  count: Int
+}
+
 type Mutation {
   register(
     firstName: String
@@ -92,10 +96,12 @@ type Query {
   getMembers(accountTypes: [AccountType]): [User]!
   getRunLeaders: [User]!
   getMessageRecipients: [User]!
-  getUpcomingEvents(count: Int): [Event]!
+  getUpcomingEvents(count: Int, page: Int): [Event]!
+  upcomingEventsCount(count: Int, page: Int): EventCount!
+  getPastEvents(count: Int, page: Int): [Event]!
+  pastEventsCount: EventCount!
   # getMyUpcomingEvents: [Event]!
   getUserEvents(username: String!, eventType: EventType): [Event]!
-  getPastEvents: [Event]!
   getEvent(eventId: ID!): Event!
   getNextEvent: Event
   # getMyNextEvent: Event

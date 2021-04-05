@@ -1351,12 +1351,6 @@ const Mutations = {
           typeof args.data.joined === "string" &&
           currentUser.joined === null
         ) {
-          membershipLogs.push(
-            membershipLog.membershipGranted({
-              userId: ctx.req.userId,
-              type: "FULL"
-            })
-          );
           activityLogs.push(
             activityLog.joined({
               username: ctx.req.user.username,
@@ -1370,12 +1364,6 @@ const Mutations = {
           typeof args.data.joined === "string" &&
           currentUser.joined === null
         ) {
-          membershipLogs.push(
-            membershipLog.membershipGranted({
-              userId: ctx.req.userId,
-              type: "ASSOCIATE"
-            })
-          );
           activityLogs.push(
             activityLog.joined({
               username: ctx.req.user.username,

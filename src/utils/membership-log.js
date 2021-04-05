@@ -1,6 +1,5 @@
 const { accountType } = require("../config");
 
-//   DUES_PAID                  TODO/TRANSACTIONAL
 //   GUEST_RESTRICTED           AUTO/TRANSACTIONAL
 
 module.exports.duesPaid = (amt, logger, payerName) => {
@@ -122,21 +121,5 @@ module.exports.titleChanged = ({ titleName, userId, add = true }) => {
     message: `${titleName} title removed`,
     messageCode: "TITLE_REMOVED",
     ...defaultLog
-  };
-};
-
-module.exports.membershipGranted = ({ userId, type = full }) => {
-  const accountType =
-    type.charAt(0).toUpperCase() + type.toLowerCase().slice(1);
-
-  return {
-    time: new Date(),
-    message: `Became a ${accountType} Member`,
-    messageCode: "MEMBERSHIP_GRANTED",
-    logger: {
-      connect: {
-        id: userId
-      }
-    }
   };
 };

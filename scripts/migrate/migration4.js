@@ -100,7 +100,7 @@ const fn = async () => {
             updatedAt: new Date().toISOString(),
             type: event.category,
             title: event.event_name,
-            description: event.desc,
+            description: event.event_desc,
             startTime: getTime(event.start_date, event.start_time),
             endTime: getTime(event.end_date, event.end_time),
             address: event.address || null,
@@ -113,7 +113,10 @@ const fn = async () => {
               event.person_id
             ),
             creator: getNewUserId(usersMap, 24),
-            maxAttendees: event.reg_limit === 999999 ? -1 : event.reg_limit
+            maxAttendees:
+              event.reg_limit === 999999 || event.reg_limit === 99999
+                ? -1
+                : event.reg_limit
           },
           ["id"]
         );

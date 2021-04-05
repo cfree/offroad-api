@@ -116,7 +116,10 @@ const fn = async () => {
             lastLogin: getLastLogin(user.last_accessed),
             firstName: user.first_name,
             lastName: user.last_name,
-            email: user.email,
+            email:
+              process.env.NODE_ENV === "staging"
+                ? `craigfreeman+${user.user_name}@gmail.com`
+                : user.email,
             gender: getGender(user.gender),
             birthdate: getBirthdate(user.meta.Birth_Date),
             username: user.user_name.toLowerCase(),

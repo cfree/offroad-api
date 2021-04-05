@@ -56,7 +56,8 @@ module.exports = {
     "guests",
     "all_users" // EVERYONE EVER
   ],
-  timezoneOffsetInMs: 25200000
+  timezoneOffsetInMs: 25200000,
+  defaultPaginationSize: 20
 };
 
 /**
