@@ -12,6 +12,10 @@ type EventCount {
   count: Int
 }
 
+type Sample {
+  meow: Int
+}
+
 type Mutation {
   register(
     firstName: String

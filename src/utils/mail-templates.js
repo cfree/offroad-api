@@ -12,6 +12,9 @@ const webmasterAddress =
 const secretaryAddress = isStaging
   ? webmasterAddress
   : "4-Players Secretary <secretary@4-playersofcolorado.org>";
+const vpAddress = isStaging
+  ? webmasterAddress
+  : "4-Players Vice President <vicepresident@4-playersofcolorado.org>";
 
 const getUserAddress = (firstName, lastName, email) =>
   `${firstName} ${lastName} <${email}>`;
@@ -23,11 +26,15 @@ module.exports.getSecretaryNewUserEmail = username => ({
   text: `
     A new guest account has been created:
     ${process.env.FRONTEND_URL}/profile/${username}
+
+    This email has been automatically generated.
   `,
   html: `
     <p>A new guest account has been created: <a href="${
       process.env.FRONTEND_URL
     }/profile/${username}">${username}</a></p>
+
+    <p>This email has been automatically generated.</p>
   `
 });
 
@@ -118,7 +125,7 @@ module.exports.getUserWebsiteRegistrationEmail = ({
 }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: "Your 4-Players Account Registration",
+  subject: "[4-Players] Your Account Registration",
   text: `
     ${firstName},
 
@@ -149,8 +156,8 @@ module.exports.getUserEventRegistrationEmail = ({
   resetToken
 }) => ({
   to: getUserAddress(firstName, lastName, email),
-  from: "no-reply@4-playersofcolorado.org",
-  subject: "Invitation to register at the 4-Players website",
+  from: noReplyAddress,
+  subject: "[4-Players] Invitation to Register",
   text: `
     Hi ${firstName},
 
@@ -185,8 +192,8 @@ module.exports.getUserAdminRegistrationEmail = ({
   inviter
 }) => ({
   to: getUserAddress(firstName, lastName, email),
-  from: "no-reply@4-playersofcolorado.org",
-  subject: "Invitation to register at the 4-Players website",
+  from: noReplyAddress,
+  subject: "[4-Players] Invitation to Register",
   text: `
     Hi ${firstName},
 
@@ -323,3 +330,128 @@ module.exports.getReportReminderEmail = (
   }/submit-report">submit a run report</a> at your earliest convenience.</p>
   `
 });
+
+module.exports.getNotifyUserOfRestrictedStatusEmail = (
+  email,
+  firstName,
+  lastName,
+  events,
+  max
+) => {
+  const count = events.length;
+  const eventsMapText = events
+    .map(
+      event => `
+    - ${event.title}
+    `
+    )
+    .join("");
+
+  return {
+    to: getUserAddress(firstName, lastName, email),
+    from: vpAddress,
+    subject: `[4-Players] Account Status Change`,
+    text: `
+    ${firstName},
+
+    Our records show that you've driven on ${count} runs:
+    ${eventsMapText}
+    
+    Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. If you'd like to continue, we ask that you 
+    come to a meeting and seek membership.
+
+    If you have any questions, please contact vicepresident@4-playersofcolorado.org
+  `,
+    html: `
+    <p>${firstName},</p>
+
+    <p>
+      Our records show that you've driven on ${count} runs:
+      <ul>
+        ${events
+          .map(
+            event =>
+              `<li>
+              <a href="${process.env.FRONTEND_URL}/event/${event.id}">${
+                event.title
+              }</a>
+            </li>`
+          )
+          .join("")}
+      </ul>
+    </p>
+
+    <p>Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. If you'd like to continue, we ask that you 
+    come to a meeting and seek membership.</p>
+    
+    <p>If you have any membership questions, please contact the <a href="mailto:vicepresident@4-playersofcolorado.org">Vice President</a></p>
+  `
+  };
+};
+
+module.exports.getNotifyBoardOfRestrictedGuestsEmail = (users, max) => {
+  const usersMapText = users.map(user => {
+    const eventsMap = Object.values(user.events)
+      .map(
+        event => `
+        - ${event.title}
+      `
+      )
+      .join("");
+
+    return `
+      - ${user.details.firstName} ${user.details.lastName}
+      ${eventsMap}
+      `;
+  });
+
+  return {
+    to: vpAddress,
+    from: noReplyAddress,
+    subject: `[4-Players] Recent Account Status Change(s)`,
+    text: `
+    The following guests have driven on ${max} or more runs:
+    ${usersMapText}
+    
+    Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. These members have been notified.
+
+    This email has been automatically generated.
+  `,
+    html: `
+    <p>
+      The following guests have driven on ${max} or more runs:
+      <ul>
+        ${users
+          .map(
+            user =>
+              `<li>
+              <a href="mailto:${user.details.email}">${
+                user.details.firstName
+              } ${user.details.lastName}</a>
+              <ul>
+                ${Object.values(user.events)
+                  .map(
+                    event => `<li><a href="${process.env.FRONTEND_URL}/event/${
+                      event.id
+                    }">
+                    ${event.title}
+                  </a></li>`
+                  )
+                  .join("")}
+              </ul>
+            </li>`
+          )
+          .join("")}
+      </ul>
+    </p>
+
+    <p>Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. These members have been notified.</p>
+    
+    <p>This email has been automatically generated.</p>
+  `
+  };
+};

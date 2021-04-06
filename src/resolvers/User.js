@@ -15,18 +15,12 @@ const User = {
                       id: parent.id
                     }
                   },
-                  {
-                    status: "GOING"
-                  }
+                  { status: "GOING" }
                 ]
               }
             },
-            {
-              endTime_lte: new Date().toISOString()
-            },
-            {
-              type: "RUN"
-            }
+            { endTime_lte: new Date().toISOString() },
+            { type: "RUN" }
           ]
         }
       },
