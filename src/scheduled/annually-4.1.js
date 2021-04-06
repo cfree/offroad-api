@@ -1,15 +1,9 @@
-// Automatically change Past Due Full Member status to Delinquent
-//   if no dues received after 3/31 of each year
-//   send email
-//   remove from members list
-//   remove 'past due' tag
 /*
 - https://devcenter.heroku.com/articles/scheduled-jobs-custom-clock-processes
 - http://www.modeo.co/blog/2015/1/8/heroku-scheduler-with-nodejs-tutorial
 - https://stackoverflow.com/questions/13345664/using-heroku-scheduler-with-node-js#answer-49524719
 */
 require("dotenv").config({ path: "variables.env" });
-const { startOfDay, endOfDay, addDays, subDays } = require("date-fns");
 
 const db = require("../db");
 const { sendTransactionalEmail } = require("../mail");
@@ -17,12 +11,15 @@ const {
   getNotifyUserOfDelinquentStatusEmail,
   getNotifyBoardOfDelinquentsEmail
 } = require("../utils/mail-templates");
-// const activityLog = require("../utils/activity-log");
 const membershipLog = require("../utils/membership-log");
 
 const april1 = async () => Promise.all([delinquentize()]);
 
-// Post run: Guest lockout
+// Automatically change Past Due Full Member status to Delinquent
+//   if no dues received after 3/31 of each year
+//   send email
+//   remove from members list
+//   remove 'past due' tag
 const delinquentize = async () =>
   new Promise(async (resolve, reject) => {
     try {
@@ -53,6 +50,8 @@ const delinquentize = async () =>
               }
             });
 
+            // @TODO: Remove from SendGrid members newsletter list
+
             return sendTransactionalEmail(
               getNotifyUserOfDelinquentStatusEmail(
                 user.email,
@@ -81,5 +80,5 @@ const delinquentize = async () =>
 (async () => {
   console.log("Running April 1 script");
   await april1();
-  console.log("Nightly April 1 completed");
+  console.log("April 1 script completed");
 })();

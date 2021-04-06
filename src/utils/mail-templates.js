@@ -554,3 +554,56 @@ module.exports.getNotifyBoardOfDelinquentsEmail = users => {
   `
   };
 };
+
+module.exports.getNotifyBoardOfInactiveMembersEmail = users => {
+  const usersMapText = users
+    .map(user => {
+      return `
+      - ${user.firstName} ${user.lastName}
+      `;
+    })
+    .join("");
+
+  return {
+    to: vpAddress,
+    from: noReplyAddress,
+    subject: `[4-Players] Recent Account Status Change(s)`,
+    text: `
+    The following delinquent members have not paid their dues in over a year and are now inactive:
+    ${usersMapText}
+    
+    Per our bylaws, any member in good standing who has resigned the club, upon request, may be
+    reinstated upon payment of current dues and membership approval, providing an
+    opening exists. The membership must approve the reinstatement by at least a
+    51% (fifty-one percent) of the voting membership present at a regularly
+    scheduled 4-Players of Colorado meeting, providing an opening exists.
+
+    This email has been automatically generated.
+  `,
+    html: `
+    <p>
+      The following delinquent members have not paid their dues in over a year and are now inactive:
+      <ul>
+        ${users
+          .map(
+            user =>
+              `<li>
+              <a href="mailto:${user.email}">${user.firstName} ${
+                user.lastName
+              }</a>
+            </li>`
+          )
+          .join("")}
+      </ul>
+    </p>
+
+    <p>Per our bylaws, any member in good standing who has resigned the club, upon request, may be
+    reinstated upon payment of current dues and membership approval, providing an
+    opening exists. The membership must approve the reinstatement by at least a
+    51% (fifty-one percent) of the voting membership present at a regularly
+    scheduled 4-Players of Colorado meeting, providing an opening exists.</p>
+    
+    <p>This email has been automatically generated.</p>
+  `
+  };
+};
