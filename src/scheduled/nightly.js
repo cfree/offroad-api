@@ -25,7 +25,7 @@ const nightly = async () =>
     // lockedAccountReminders
   ]);
 
-const GUEST_MAX_RUNS = 2;
+const GUEST_MAX_RUNS = 3;
 
 // Send event reminders to attendees if their event is tomorrow
 const eventReminders = async () =>

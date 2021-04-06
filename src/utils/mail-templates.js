@@ -455,3 +455,102 @@ module.exports.getNotifyBoardOfRestrictedGuestsEmail = (users, max) => {
   `
   };
 };
+
+module.exports.getNotifyUserOfDelinquentStatusEmail = (
+  email,
+  firstName,
+  lastName
+) => {
+  return {
+    to: getUserAddress(firstName, lastName, email),
+    from: vpAddress,
+    subject: `[4-Players] Account Status Change`,
+    text: `
+    ${firstName},
+
+    Our records show that you have not paid your dues for ${new Date().getFullYear()} and your account is now restricted.
+    
+    Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
+    not paid by March 31st will be dropped from the rolls of the current
+    membership. 
+
+    Any member whose dues have been delinquent less than 1 (one) year may be
+    reinstated upon payment of dues and approval of the Executive Committee,
+    providing an opening exists.
+
+    If you believe you have received this message in error or if you have any questions, please contact vicepresident@4-playersofcolorado.org
+  `,
+    html: `
+    <p>${firstName},</p>
+
+    <p>Our records show that you have not paid your dues for ${new Date().getFullYear()} and your account is now restricted.</p>
+    
+    <p>Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
+    not paid by March 31st will be dropped from the rolls of the current
+    membership.</p>
+
+    <p>Any member whose dues have been delinquent less than 1 (one) year may be
+    reinstated upon payment of dues and approval of the Executive Committee,
+    providing an opening exists.</p>
+
+    <p>If you believe you have received this message in error or if you have any questions, please contact the <a href="mailto:vicepresident@4-playersofcolorado.org">Vice President</a></p>
+  `
+  };
+};
+
+module.exports.getNotifyBoardOfDelinquentsEmail = users => {
+  const usersMapText = users
+    .map(user => {
+      return `
+      - ${user.firstName} ${user.lastName}
+      `;
+    })
+    .join("");
+
+  return {
+    to: vpAddress,
+    from: noReplyAddress,
+    subject: `[4-Players] Recent Account Status Change(s)`,
+    text: `
+    The following past due members have not paid their dues by 4/1 and are now delinquent:
+    ${usersMapText}
+    
+    Per our bylaws, dues are payable per membership year (January lst to December 31st) and 
+    any member whose dues are not paid by March 31st will be dropped from the rolls of the current
+    membership.
+
+    Any member whose dues have been delinquent less than 1 (one) year may be
+    reinstated upon payment of dues and approval of the Executive Committee,
+    providing an opening exists.
+
+    This email has been automatically generated.
+  `,
+    html: `
+    <p>
+      The following past due members have not paid their dues by 4/1 and are now delinquent:
+      <ul>
+        ${users
+          .map(
+            user =>
+              `<li>
+              <a href="mailto:${user.email}">${user.firstName} ${
+                user.lastName
+              }</a>
+            </li>`
+          )
+          .join("")}
+      </ul>
+    </p>
+
+    <p>Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
+    not paid by March 31st will be dropped from the rolls of the current
+    membership.</p>
+
+    <p>Any member whose dues have been delinquent less than 1 (one) year may be
+    reinstated upon payment of dues and approval of the Executive Committee,
+    providing an opening exists.</p>
+    
+    <p>This email has been automatically generated.</p>
+  `
+  };
+};

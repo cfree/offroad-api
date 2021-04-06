@@ -13,3 +13,5 @@
 //   if no meetings/runs attended in the last year
 //   and send email, tag as 'past due'
 //   remove from members mailing list
+
+// Change LIMITED GUESTS to ACTIVE, notify

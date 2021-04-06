@@ -67,11 +67,15 @@ module.exports.accountChanged = ({ stateName, newState, userId }) => ({
   time: new Date(),
   message: `${stateName} changed to "${newState}"`,
   messageCode: "ACCOUNT_CHANGED",
-  logger: {
-    connect: {
-      id: userId
-    }
-  }
+  ...(userId
+    ? {
+        logger: {
+          connect: {
+            id: userId
+          }
+        }
+      }
+    : {})
 });
 
 module.exports.officeChanged = ({ officeName, userId, add = true }) => {
