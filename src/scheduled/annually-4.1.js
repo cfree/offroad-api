@@ -26,7 +26,10 @@ const delinquentize = async () =>
       const users = await db.query.users(
         {
           where: {
-            accountStatus: "PAST_DUE"
+            AND: [
+              { accountStatus: "PAST_DUE" },
+              { accountType_in: ["FULL", "ASSOCIATE"] }
+            ]
           }
         },
         " { id, firstName, lastName, email } "
@@ -51,6 +54,7 @@ const delinquentize = async () =>
             });
 
             // @TODO: Remove from SendGrid members newsletter list
+            // @TODO: Update tag in SendGrid members newsletter list
 
             return sendTransactionalEmail(
               getNotifyUserOfDelinquentStatusEmail(

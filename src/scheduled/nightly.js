@@ -16,6 +16,7 @@ const {
 } = require("../utils/mail-templates");
 const activityLog = require("../utils/activity-log");
 const membershipLog = require("../utils/membership-log");
+const { guestMaxRuns } = require("../config");
 
 const nightly = async () =>
   Promise.all([
@@ -24,8 +25,6 @@ const nightly = async () =>
     guestLockouts()
     // lockedAccountReminders
   ]);
-
-const GUEST_MAX_RUNS = 3;
 
 // Send event reminders to attendees if their event is tomorrow
 const eventReminders = async () =>
@@ -203,7 +202,7 @@ const guestLockouts = async () =>
 
       const filteredUsers = Object.values(usersToLockOut).reduce(
         (memo, user) => {
-          if (Object.values(user.events).length < GUEST_MAX_RUNS) {
+          if (Object.values(user.events).length < guestMaxRuns) {
             return memo;
           }
 
@@ -234,7 +233,7 @@ const guestLockouts = async () =>
                 user.details.firstName,
                 user.details.lastName,
                 events,
-                GUEST_MAX_RUNS
+                guestMaxRuns
               )
             );
           })
@@ -242,7 +241,7 @@ const guestLockouts = async () =>
 
         // Email board
         await sendTransactionalEmail(
-          getNotifyBoardOfRestrictedGuestsEmail(filteredUsers, GUEST_MAX_RUNS)
+          getNotifyBoardOfRestrictedGuestsEmail(filteredUsers, guestMaxRuns)
         );
       }
 

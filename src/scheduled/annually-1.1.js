@@ -1,14 +1,7 @@
-// Automatically change Active Full Member status to Past Due
-//   if no dues received after 1/1 of each year
-//   and send email, tag as 'past due'
-//   update ACCOUNT_STATUS
-
 // TODO: Automatically change Full Member status to Delinquent
 //   if no meetings/runs attended in the last year
 //   and send email, tag as 'past due'
 //   remove from members mailing list
-
-// Change LIMITED GUESTS to ACTIVE, notify
 
 /*
 - https://devcenter.heroku.com/articles/scheduled-jobs-custom-clock-processes
@@ -17,15 +10,20 @@
 */
 require("dotenv").config({ path: "variables.env" });
 
+const { guestMaxRuns } = require("../config");
+
 const db = require("../db");
 const { sendTransactionalEmail } = require("../mail");
 const {
-  getNotifyUserOfInactiveStatusEmail,
-  getNotifyBoardOfInactiveMembersEmail
+  getNotifyBoardOfInactiveMembersEmail,
+  getNotifyUserOfPastDueStatusEmail,
+  getNotifyUserOfRestrictedResetEmail,
+  getNotifyBoardOfRestrictedResetEmail
 } = require("../utils/mail-templates");
 const membershipLog = require("../utils/membership-log");
 
-const jan1 = async () => Promise.all([deactivate()]);
+const jan1 = async () =>
+  Promise.all([deactivate(), badger(), cleanSlateProtocol()]);
 
 // Automatically change Delinquent Full Member status to Inactive
 //   if no dues received in the last year
@@ -38,7 +36,10 @@ const deactivate = async () =>
       const users = await db.query.users(
         {
           where: {
-            accountStatus: "DELINQUENT"
+            AND: [
+              { accountStatus: "DELINQUENT" },
+              { accountType_in: ["FULL", "ASSOCIATE"] }
+            ]
           }
         },
         " { id, firstName, lastName, email } "
@@ -77,6 +78,124 @@ const deactivate = async () =>
       return resolve();
     } catch (e) {
       console.log("Deactivating report error", e);
+      return resolve();
+    }
+  });
+
+// Automatically change Active Full Member status to Past Due
+//   if no dues received after 1/1 of each year
+//   and send email, tag as 'past due'
+//   update ACCOUNT_STATUS
+const badger = async () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const users = await db.query.users(
+        {
+          where: {
+            accountStatus: "ACTIVE",
+            accountType_in: ["FULL", "ASSOCIATE"]
+          }
+        },
+        " { id, firstName, lastName, email } "
+      );
+
+      if (users && users.length > 0) {
+        await Promise.all(
+          users.map(async user => {
+            await db.mutation.updateUser({
+              data: {
+                accountStatus: "PAST_DUE",
+                membershipLog: {
+                  create: membershipLog.accountChanged({
+                    stateName: "Status",
+                    newState: "PAST_DUE"
+                  })
+                }
+              },
+              where: {
+                id: user.id
+              }
+            });
+
+            // @TODO: Update tag in SendGrid members newsletter list
+
+            return sendTransactionalEmail(
+              getNotifyUserOfPastDueStatusEmail(
+                user.email,
+                user.firstName,
+                user.lastName
+              )
+            );
+          })
+        );
+
+        console.log(`Badgering completed. ${users.length} emails sent.`);
+      } else {
+        console.log("Badgering completed. No results.");
+      }
+
+      return resolve();
+    } catch (e) {
+      console.log("Badgering report error", e);
+      return resolve();
+    }
+  });
+
+// Change LIMITED GUESTS to ACTIVE, notify
+const cleanSlateProtocol = async () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const users = await db.query.users(
+        {
+          where: {
+            AND: [{ accountStatus: "LIMITED" }, { accountType: "GUEST" }]
+          }
+        },
+        " { id, firstName, lastName, email } "
+      );
+
+      if (users && users.length > 0) {
+        await Promise.all(
+          users.map(async user => {
+            await db.mutation.updateUser({
+              data: {
+                accountStatus: "ACTIVE",
+                membershipLog: {
+                  create: membershipLog.accountChanged({
+                    stateName: "Status",
+                    newState: "ACTIVE"
+                  })
+                }
+              },
+              where: {
+                id: user.id
+              }
+            });
+
+            return sendTransactionalEmail(
+              getNotifyUserOfRestrictedResetEmail(
+                user.email,
+                user.firstName,
+                user.lastName,
+                guestMaxRuns
+              )
+            );
+          })
+        );
+
+        // Email board
+        await sendTransactionalEmail(
+          getNotifyBoardOfRestrictedResetEmail(users, guestMaxRuns)
+        );
+
+        console.log(`Clean slate completed. ${users.length} emails sent.`);
+      } else {
+        console.log("Clean slate completed. No results.");
+      }
+
+      return resolve();
+    } catch (e) {
+      console.log("Clean slate report error", e);
       return resolve();
     }
   });

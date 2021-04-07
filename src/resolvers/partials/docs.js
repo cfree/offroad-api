@@ -33,7 +33,7 @@ module.exports = {
       }
 
       // Requesting user has proper account status?
-      if (!hasAccountStatus(ctx.req.user, ["ACTIVE"], false)) {
+      if (!hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"], false)) {
         throw new Error(
           `Account status must be ACTIVE or PAST_DUE to proceed. Contact the board to request reinstatement`
         );

@@ -607,3 +607,143 @@ module.exports.getNotifyBoardOfInactiveMembersEmail = users => {
   `
   };
 };
+
+module.exports.getNotifyUserOfPastDueStatusEmail = (
+  email,
+  firstName,
+  lastName
+) => {
+  return {
+    to: getUserAddress(firstName, lastName, email),
+    from: vpAddress,
+    subject: `[4-Players] Happy New Year!`,
+    text: `
+    Hi ${firstName},
+
+    It's ${new Date().getFullYear()} and your membership dues are due!
+
+    You can log into your website account and pay from there. Alternatively, you can give 
+    cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
+    check to the club: 
+    
+    4-Players of Colorado
+    PO Box 300442
+    Denver, CO 80203
+    
+    Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
+    not paid by March 31st will be dropped from the rolls of the current membership. Please pay soon to 
+    avoid a lapse. 
+
+    If you have any questions, please contact vicepresident@4-playersofcolorado.org
+  `,
+    html: `
+    <p>Hi ${firstName},</p>
+
+    <p>It's ${new Date().getFullYear()} and your membership dues are due!</p>
+
+    <p>You can log into your website account and pay from there. Alternatively, you can give 
+    cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
+    check to the club:</p>
+    
+    <p>
+    4-Players of Colorado<br/>
+    PO Box 300442<br/>
+    Denver, CO 80203<br/>
+    </p>
+    
+    <p>Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
+    not paid by March 31st will be dropped from the rolls of the current membership. Please pay soon to 
+    avoid a lapse.</p>
+
+    <p>If you have any questions, please contact the <a href="mailto:vicepresident@4-playersofcolorado.org">Vice President</a></p>
+  `
+  };
+};
+
+module.exports.getNotifyUserOfRestrictedResetEmail = (
+  email,
+  firstName,
+  lastName,
+  max
+) => {
+  return {
+    to: getUserAddress(firstName, lastName, email),
+    from: vpAddress,
+    subject: `[4-Players] Account Status Change`,
+    text: `
+    ${firstName},
+
+    Happy New Year! Your account has been un-restricted and you are free to attend runs again.
+    
+    Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. If you'd like to continue, we ask that you 
+    come to a meeting and seek membership.
+
+    If you have any questions, please contact vicepresident@4-playersofcolorado.org
+  `,
+    html: `
+    <p>${firstName},</p>
+
+    <p>
+      Happy New Year! Your account has been un-restricted and you are free to attend runs again.
+    </p>
+
+    <p>Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. If you'd like to continue, we ask that you 
+    come to a meeting and seek membership.</p>
+    
+    <p>If you have any membership questions, please contact the <a href="mailto:vicepresident@4-playersofcolorado.org">Vice President</a></p>
+  `
+  };
+};
+
+module.exports.getNotifyBoardOfRestrictedResetEmail = (users, max) => {
+  const usersMapText = users.map(user => {
+    return `
+      - ${user.firstName} ${user.lastName}
+      `;
+  });
+
+  return {
+    to: vpAddress,
+    from: noReplyAddress,
+    subject: `[4-Players] Recent Account Status Change(s)`,
+    text: `
+    The max number of runs a guest can attend per year is ${max}, which gets reset on January 1st.
+
+    The following guests have had their accounts unrestricted:
+    ${usersMapText}
+    
+    Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. These members have been notified.
+
+    This email has been automatically generated.
+  `,
+    html: `
+    <p>
+      The max number of runs a guest can attend per year is ${max}, which gets reset on January 1st.
+    </p>
+
+    <p>
+      The following guests have had their accounts unrestricted:
+      <ul>
+        ${users
+          .map(
+            user =>
+              `<li>
+              <a href="mailto:${user.email}">${user.firstName} ${
+                user.lastName
+              }</a>
+            </li>`
+          )
+          .join("")}
+      </ul>
+    </p>
+
+    <p>Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
+    without applying for membership. These members have been notified.</p>
+    
+    <p>This email has been automatically generated.</p>
+  `
+  };
+};
