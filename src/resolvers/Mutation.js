@@ -72,6 +72,7 @@ const Mutations = {
 
     // VALIDATION
     if (!email) {
+      ``;
       throw new Error("Email is required");
     }
 
@@ -1222,7 +1223,7 @@ const Mutations = {
 
     const emailSettings = {
       from: user.email,
-      subject: `[4-Players] ${subject || `Message from ${user.firstName}`}`,
+      subject: `${subject || `Message from ${user.firstName}`}`,
       // text,
       html: htmlText
     };

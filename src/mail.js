@@ -1,25 +1,42 @@
-const SendGrid = require("@sendgrid/mail");
 const nodemailer = require("nodemailer");
 
-SendGrid.setApiKey(process.env.SENDGRID_API_KEY);
+const { getTransactionalTemplate } = require("./utils/mail-template-chrome");
 
 const sendTransactionalEmail = async emailData => {
-  const mailSettings = {};
-
   if (process.env.NODE_ENV === "production") {
-    // This will send the email in sandbox mode
-    // mailSettings.mail_settings = {
-    //   sandbox_mode: {
-    //     enable: true,
-    //   },
-    // };
+    // create Nodemailer SES transporter
+    let transporter = nodemailer.createTransport({
+      port: 465,
+      host: "email-smtp.us-west-2.amazonaws.com",
+      secure: true,
+      auth: {
+        user: process.env.AWS_SES_SMTP_USER,
+        pass: process.env.AWS_SES_SMTP_PASSWORD
+      },
+      sendingRate: 1 // max 1 messages/second
+    });
 
-    const data = {
+    const mailOptions = {
+      from: "no-reply@4-playersofcolorado.org", // default
       ...emailData,
-      ...mailSettings
+      subject: `[4-Players] ${emailData.subject}`,
+      html: getTransactionalTemplate(
+        emailData.preheader || emailData.subject,
+        emailData.subject,
+        emailData.html
+      )
     };
 
-    return SendGrid.send(data);
+    // send some mail
+    return transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        throw new Error(err);
+      }
+
+      const msg = "Message sent";
+      console.log(`${msg}: ${info.messageId}`);
+      return Promise.resolve(msg);
+    });
   } else {
     const transport = nodemailer.createTransport({
       host: "smtp.mailtrap.io",
@@ -32,7 +49,12 @@ const sendTransactionalEmail = async emailData => {
 
     const mailOptions = {
       from: "no-reply@4-playersofcolorado.org",
-      ...emailData
+      ...emailData,
+      html: getTransactionalTemplate(
+        emailData.preheader || emailData.subject,
+        emailData.subject,
+        emailData.html
+      )
     };
 
     return transport.sendMail(mailOptions, (error, info) => {
@@ -45,20 +67,6 @@ const sendTransactionalEmail = async emailData => {
       return Promise.resolve(msg);
     });
   }
-
-  // {
-  //   to,
-  //   from,
-  //   subject,
-  //   text,
-  //   html,
-  //   // templateId: 'd-f43daeeaef504760851f727007e0b5d0',
-  //   // dynamic_template_data: {
-  //   //   subject: 'Testing Templates',
-  //   //   name: 'Some One',
-  //   //   city: 'Denver',
-  //   // },
-  // },
 };
 
 module.exports.sendTransactionalEmail = sendTransactionalEmail;

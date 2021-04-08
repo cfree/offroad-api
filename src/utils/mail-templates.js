@@ -22,7 +22,8 @@ const getUserAddress = (firstName, lastName, email) =>
 module.exports.getSecretaryNewUserEmail = username => ({
   to: secretaryAddress,
   from: noReplyAddress,
-  subject: "[4-Players] New Account Registration",
+  subject: "New Account Registration",
+  preheader: "A new guest account has been created",
   text: `
     A new guest account has been created:
     ${process.env.FRONTEND_URL}/profile/${username}
@@ -46,7 +47,8 @@ module.exports.getUserNewAccountEmail = ({
 }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: "[4-Players] New Account Registration",
+  subject: "New Account Registration",
+  preheader: "Thanks for registering for a 4-Players account",
   text: `
   Hi ${firstName},
 
@@ -68,11 +70,12 @@ module.exports.getUserNewAccountEmail = ({
 module.exports.getUserWelcomeEmail = ({ email, firstName, lastName }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: secretaryAddress,
-  subject: "[4-Players] Account Approval",
+  subject: "Account Approval",
+  preheader: "Congratulations! Your account has been approved",
   text: `
     Welcome, ${firstName}!
 
-    Thanks for signing up! Your account has been unlocked. Feel free to sign up for some events.
+    Thanks for signing up! Your account has been approved. Feel free to sign up for some events.
 
     Visit this URL to log in:
     ${process.env.FRONTEND_URL}/login
@@ -80,7 +83,7 @@ module.exports.getUserWelcomeEmail = ({ email, firstName, lastName }) => ({
   html: `
     <p>Welcome, ${firstName}!</p>
 
-    <p>Thanks for signing up! Thanks for signing up! Your account has been unlocked. Feel free to sign up for some events.</p>
+    <p>Thanks for signing up! Thanks for signing up! Your account has been approved. Feel free to sign up for some events.</p>
 
     <p><a href="${
       process.env.FRONTEND_URL
@@ -96,7 +99,8 @@ module.exports.getUserRejectionEmail = ({
 }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: secretaryAddress,
-  subject: "[4-Players] Account Rejection",
+  subject: "Account Rejection",
+  preheader: "We have some bad news",
   text: `
     Hello, ${firstName}
 
@@ -125,7 +129,8 @@ module.exports.getUserWebsiteRegistrationEmail = ({
 }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: "[4-Players] Your Account Registration",
+  subject: "Your Account Registration",
+  preheader: "Continue with your profile creation",
   text: `
     ${firstName},
 
@@ -157,7 +162,8 @@ module.exports.getUserEventRegistrationEmail = ({
 }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: "[4-Players] Invitation to Register",
+  subject: "Invitation to Register",
+  preheader: "You've been invited to register for an account",
   text: `
     Hi ${firstName},
 
@@ -193,7 +199,8 @@ module.exports.getUserAdminRegistrationEmail = ({
 }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: "[4-Players] Invitation to Register",
+  subject: "Invitation to Register",
+  preheader: "You've been invited to register for an account",
   text: `
     Hi ${firstName},
 
@@ -229,7 +236,8 @@ module.exports.getUserResetTokenEmail = ({
 }) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: "[4-Players] Your Password Reset",
+  subject: "Your Password Reset",
+  preheader: "Here is your password reset",
   text: `
     ${firstName},
 
@@ -256,9 +264,8 @@ module.exports.getRunReminderEmail = (
 ) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: `[4-Players] Event Reminder: ${eventDetails.title} ${
-    eventDetails.type
-  }`,
+  subject: `Event Reminder: ${eventDetails.title} ${eventDetails.type}`,
+  preheader: "We are expecting you at a run tomorrow",
   text: `
     ${firstName},
 
@@ -268,10 +275,10 @@ module.exports.getRunReminderEmail = (
     Start time: ${format(new Date(eventDetails.startTime), datePrintFormat)}
     Rally location: ${eventDetails.rallyAddress}
 
-    If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count.
-
     For more details or to edit your RSVP, please visit:
     ${process.env.FRONTEND_URL}/event/${eventDetails.id}
+
+    If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count.
   `,
   html: `
     <p>${firstName},</p>
@@ -287,11 +294,11 @@ module.exports.getRunReminderEmail = (
       Rally location: ${eventDetails.rallyAddress}
     </p>
 
-    <p>If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count</p>
-    
     <p>For more details or to edit your RSVP, please see <a href="${
       process.env.FRONTEND_URL
     }/event/${eventDetails.id}">the event details on the website</a>.</p>
+    
+    <p>If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count.</p>
   `
 });
 
@@ -303,7 +310,8 @@ module.exports.getReportReminderEmail = (
 ) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
-  subject: `[4-Players] Run Report Reminder: ${eventDetails.title}`,
+  subject: `Run Report Reminder: ${eventDetails.title}`,
+  preheader: "Please submit a run report",
   text: `
     ${firstName},
 
@@ -350,7 +358,8 @@ module.exports.getNotifyUserOfRestrictedStatusEmail = (
   return {
     to: getUserAddress(firstName, lastName, email),
     from: vpAddress,
-    subject: `[4-Players] Account Status Change`,
+    subject: `Account Status Change`,
+    preheader: "Your account has been restricted",
     text: `
     ${firstName},
 
@@ -358,8 +367,8 @@ module.exports.getNotifyUserOfRestrictedStatusEmail = (
     ${eventsMapText}
     
     Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
-    without applying for membership. If you'd like to continue, we ask that you 
-    come to a meeting and seek membership.
+    without applying for membership. Your account has been restricted until the new year. 
+    If you'd like to continue, we ask that you come to a meeting and seek membership.
 
     If you have any questions, please contact vicepresident@4-playersofcolorado.org
   `,
@@ -410,7 +419,8 @@ module.exports.getNotifyBoardOfRestrictedGuestsEmail = (users, max) => {
   return {
     to: vpAddress,
     from: noReplyAddress,
-    subject: `[4-Players] Recent Account Status Change(s)`,
+    subject: `Recent Account Status Change(s)`,
+    preheader: "Guests have met their max run allotment for the year",
     text: `
     The following guests have driven on ${max} or more runs:
     ${usersMapText}
@@ -464,7 +474,8 @@ module.exports.getNotifyUserOfDelinquentStatusEmail = (
   return {
     to: getUserAddress(firstName, lastName, email),
     from: vpAddress,
-    subject: `[4-Players] Account Status Change`,
+    subject: `Account Status Change`,
+    preheader: "Your account has been restricted",
     text: `
     ${firstName},
 
@@ -510,7 +521,8 @@ module.exports.getNotifyBoardOfDelinquentsEmail = users => {
   return {
     to: vpAddress,
     from: noReplyAddress,
-    subject: `[4-Players] Recent Account Status Change(s)`,
+    subject: `Recent Account Status Change(s)`,
+    preheader: "Past due members have been made delinquent",
     text: `
     The following past due members have not paid their dues by 4/1 and are now delinquent:
     ${usersMapText}
@@ -567,7 +579,8 @@ module.exports.getNotifyBoardOfInactiveMembersEmail = users => {
   return {
     to: vpAddress,
     from: noReplyAddress,
-    subject: `[4-Players] Recent Account Status Change(s)`,
+    subject: `Recent Account Status Change(s)`,
+    preheader: "Delinquent members have been made inactive",
     text: `
     The following delinquent members have not paid their dues in over a year and are now inactive:
     ${usersMapText}
@@ -616,13 +629,17 @@ module.exports.getNotifyUserOfPastDueStatusEmail = (
   return {
     to: getUserAddress(firstName, lastName, email),
     from: vpAddress,
-    subject: `[4-Players] Happy New Year!`,
+    subject: `Happy New Year!`,
+    preheader: "Time to pay your membership dues",
     text: `
     Hi ${firstName},
 
     It's ${new Date().getFullYear()} and your membership dues are due!
 
-    You can log into your website account and pay from there. Alternatively, you can give 
+    You can log into your website account and pay:
+    ${process.env.FRONTEND_URL}/settings/account
+    
+    Alternatively, you can give 
     cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
     check to the club: 
     
@@ -641,7 +658,9 @@ module.exports.getNotifyUserOfPastDueStatusEmail = (
 
     <p>It's ${new Date().getFullYear()} and your membership dues are due!</p>
 
-    <p>You can log into your website account and pay from there. Alternatively, you can give 
+    <p>You can log into <a href="${
+      process.env.FRONTEND_URL
+    }/settings/account">your website account</a> and pay from there. Alternatively, you can give 
     cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
     check to the club:</p>
     
@@ -669,11 +688,12 @@ module.exports.getNotifyUserOfRestrictedResetEmail = (
   return {
     to: getUserAddress(firstName, lastName, email),
     from: vpAddress,
-    subject: `[4-Players] Account Status Change`,
+    subject: `Account Status Change`,
+    preheader: "Your account restrictions have been lifted",
     text: `
     ${firstName},
 
-    Happy New Year! Your account has been un-restricted and you are free to attend runs again.
+    Happy New Year! Your account restrictions have been lifted and you are free to attend runs again.
     
     Per our bylaws, a prospective member may only attend ${max} runs in a calendar year 
     without applying for membership. If you'd like to continue, we ask that you 
@@ -707,7 +727,8 @@ module.exports.getNotifyBoardOfRestrictedResetEmail = (users, max) => {
   return {
     to: vpAddress,
     from: noReplyAddress,
-    subject: `[4-Players] Recent Account Status Change(s)`,
+    subject: `Recent Account Status Change(s)`,
+    preheader: "Restricted guest accounts have been reset",
     text: `
     The max number of runs a guest can attend per year is ${max}, which gets reset on January 1st.
 
