@@ -1,5 +1,5 @@
-# source: https://us1.prisma.sh/four-players-co/four-players-co/dev
-# timestamp: Tue Mar 30 2021 06:10:38 GMT-0600 (Mountain Daylight Time)
+# source: https://fourplayers-staging-0f46ad9926.herokuapp.com
+# timestamp: Sun Apr 25 2021 20:37:24 GMT-0600 (Mountain Daylight Time)
 
 enum AccountStatus {
   ACTIVE
@@ -9635,6 +9635,8 @@ type UserMeta implements Node {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
 }
 
 """A connection to a list of items."""
@@ -9653,6 +9655,8 @@ input UserMetaCreateInput {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
   user: UserCreateOneWithoutUserMetaInput
 }
 
@@ -9667,6 +9671,8 @@ input UserMetaCreateWithoutUserInput {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
 }
 
 """An edge in a connection."""
@@ -9693,6 +9699,10 @@ enum UserMetaOrderByInput {
   accountSetupComplete_DESC
   oldSiteMigrationComplete_ASC
   oldSiteMigrationComplete_DESC
+  emailPublicNotifications_ASC
+  emailPublicNotifications_DESC
+  emailMemberNotifications_ASC
+  emailMemberNotifications_DESC
 }
 
 type UserMetaPreviousValues {
@@ -9703,6 +9713,8 @@ type UserMetaPreviousValues {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
 }
 
 type UserMetaSubscriptionPayload {
@@ -9747,6 +9759,8 @@ input UserMetaUpdateInput {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
   user: UserUpdateOneWithoutUserMetaInput
 }
 
@@ -9755,6 +9769,8 @@ input UserMetaUpdateManyMutationInput {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
 }
 
 input UserMetaUpdateOneWithoutUserInput {
@@ -9771,6 +9787,8 @@ input UserMetaUpdateWithoutUserDataInput {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
 }
 
 input UserMetaUpsertWithoutUserInput {
@@ -9887,6 +9905,14 @@ input UserMetaWhereInput {
 
   """All values that are not equal to given value."""
   oldSiteMigrationComplete_not: Boolean
+  emailPublicNotifications: Boolean
+
+  """All values that are not equal to given value."""
+  emailPublicNotifications_not: Boolean
+  emailMemberNotifications: Boolean
+
+  """All values that are not equal to given value."""
+  emailMemberNotifications_not: Boolean
   user: UserWhereInput
 }
 

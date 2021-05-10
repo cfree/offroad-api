@@ -81,6 +81,7 @@ type Mutation {
     message: String!
     userId: ID!
   ): SuccessMessage
+  notifications(settings: NotificationsSettingsInput): SuccessMessage
 }
 
 type Query {
@@ -130,6 +131,7 @@ type Query {
   # guestsWithLockedAccounts: [User]!
   # guestsAskedToJoin: [User]!
   # guestsEligibleForMembership: [User]!
+  notifications: UserMeta
 }
 
 type Registration {
@@ -183,6 +185,9 @@ type UserMeta {
   firstLoginComplete: Boolean
   accountSetupComplete: Boolean
   oldSiteMigrationComplete: Boolean
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
+  # emailEventAnnouncements: Boolean @default(value: true)
 }
 
 type ActivityLogItem {
@@ -456,6 +461,12 @@ input DuesPaymentInput {
   token: String!
   # amount: Float!
   # payingFor: [ID]
+}
+
+input NotificationsSettingsInput {
+  emailPublicNotifications: Boolean
+  emailMemberNotifications: Boolean
+  # emailEventAnnouncements: Boolean @default(value: true)
 }
 
 type Document {

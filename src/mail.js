@@ -34,7 +34,7 @@ const sendTransactionalEmail = async emailData => {
       }
 
       const msg = "Message sent";
-      console.log(`${msg}: ${info.messageId}`);
+      // console.log(`${msg}: ${info.messageId}`);
       return Promise.resolve(msg);
     });
   } else {
@@ -63,7 +63,7 @@ const sendTransactionalEmail = async emailData => {
       }
 
       const msg = "Message sent";
-      console.log(`${msg}: ${info.messageId}`);
+      // console.log(`${msg}: ${info.messageId}`);
       return Promise.resolve(msg);
     });
   }

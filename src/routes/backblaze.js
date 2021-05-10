@@ -2,7 +2,7 @@ const fetch = require("node-fetch");
 const { Buffer } = require("buffer");
 
 const getDocs = async (req, res) => {
-  console.log("getDocs start");
+  // console.log("getDocs start");
   // Authorize
   const clientIdAndSecret = `${process.env.BACKBLAZE_DOCS_KEY_ID}:${
     process.env.BACKBLAZE_DOCS_APP_KEY
@@ -28,7 +28,7 @@ const getDocs = async (req, res) => {
     };
 
     // res.send(authJson);
-    console.log("list body", body);
+    // console.log("list body", body);
 
     // Get file names in bucket
     const listResp = await fetch(`${apiUrl}/b2api/v2/b2_list_file_names`, {
@@ -45,7 +45,7 @@ const getDocs = async (req, res) => {
 
     const fullDownloadUrl = `${downloadUrl}/b2api/v2/b2_download_file_by_id?fileId=${fileId}`;
 
-    console.log("getDocs end");
+    // console.log("getDocs end");
     // res.send({ name: fileName.replace(prefix, ""), url: fullDownloadUrl });
   } catch (e) {
     console.error(e);

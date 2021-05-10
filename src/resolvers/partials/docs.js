@@ -31,7 +31,7 @@ module.exports = {
       if (!ctx.req.userId) {
         throw new Error("User must be logged in");
       }
-
+      // console.log("status", ctx.req.user.accountStatus);
       // Requesting user has proper account status?
       if (!hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"], false)) {
         throw new Error(

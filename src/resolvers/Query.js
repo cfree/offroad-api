@@ -310,6 +310,7 @@ const Query = {
     hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
 
     const { count, page } = args;
+    let pagination = {};
 
     // No page? Show all
     if (page && page !== null) {
@@ -973,6 +974,32 @@ const Query = {
       },
       info
     );
+  },
+  async notifications(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    const results = await ctx.db.query.user(
+      { where: { id: ctx.req.userId } },
+      "{ id, userMeta { id } }"
+    );
+
+    if (results && results.userMeta) {
+      const { id } = results.userMeta;
+
+      return ctx.db.query.userMeta(
+        {
+          where: {
+            id
+          }
+        },
+        info
+      );
+    }
+
+    return null;
   },
   ...docs.queries
 };

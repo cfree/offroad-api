@@ -768,3 +768,78 @@ module.exports.getNotifyBoardOfRestrictedResetEmail = (users, max) => {
   `
   };
 };
+
+module.exports.getRemindWebmasterToSubscribeEmail = ({
+  email,
+  firstName,
+  lastName,
+  action,
+  newsletter
+}) => ({
+  to: webmasterAddress,
+  from: noReplyAddress,
+  subject: "Update Email Marketing Contacts List",
+  preheader: "Someone has changed their subscription preferences",
+  text: `
+    ${firstName} ${lastName} has requested to ${action} from the ${newsletter} newsletter\n
+    Email: ${email}
+
+    This email has been automatically generated.
+  `,
+  html: `
+    <p>${firstName} ${lastName} has requested to ${action} from the ${newsletter} newsletter<br/>
+    Email: ${email}</p>
+
+    <p>This email has been automatically generated.</p>
+  `
+});
+
+module.exports.getMigrationEmail = ({ email, firstName, resetToken }) => ({
+  to: email,
+  from: webmasterAddress,
+  subject: "New Website Announcement",
+  preheader: "The new website is here!",
+  text: `
+    Hi ${firstName}!
+
+    It's been a longtime coming, but I'm pleased to announce that the new 4-Players website has finally arrived!
+
+    It has a new look, new features that people have been asking for, and regular tasks have been automated.
+
+    Your profile has been migrated over from the old site and in order to access the new site, you'll need to reset your password:
+    ${
+      process.env.FRONTEND_URL
+    }/forgot-password?token=${resetToken}&migration=true
+
+    Feel free to explore! Please keep in mind that the work on this is ongoing and I'll need your help to make it better. In the footer of each page you'll see a "Submit Feedback" link where you can log bugs and submit feature requests.
+
+    If you have any questions, comments, or suggestions, do not hesitate to contact me.
+
+    Best,
+    
+    Craig F
+    President/Webmaster
+  `,
+  html: `
+    <p>Hi ${firstName}!</p>
+    
+    <p>It's been a longtime coming, but I'm pleased to announce that the new 4-Players website has finally arrived!</p>
+
+    <p>It has a new look, new features that people have been asking for, and regular tasks have been automated.</p>
+
+    <p>Your profile has been migrated over from the old site and in order to access the new site, you'll need to <a href="${
+      process.env.FRONTEND_URL
+    }/forgot-password?token=${resetToken}&migration=true">reset your password</a>.</p>
+
+    <p>Feel free to explore! Please keep in mind that the work on this is ongoing and I'll need your help to make it better. In the footer of each page you'll see a "Submit Feedback" link where you can log bugs and submit feature requests.</p>
+
+    <p>If you have any questions, comments, or suggestions, do not hesitate to contact me.</p>
+
+    <p>
+      Best,<br/>
+      <br/>
+      Craig F<br/>
+      President/Webmaster
+    </p>
+  `
+});

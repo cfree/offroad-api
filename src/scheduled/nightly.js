@@ -4,7 +4,13 @@
 - https://stackoverflow.com/questions/13345664/using-heroku-scheduler-with-node-js#answer-49524719
 */
 require("dotenv").config({ path: "variables.env" });
-const { startOfDay, endOfDay, addDays, subDays } = require("date-fns");
+const {
+  startOfDay,
+  endOfDay,
+  addDays,
+  subDays,
+  startOfYear
+} = require("date-fns");
 
 const db = require("../db");
 const { sendTransactionalEmail } = require("../mail");
@@ -146,7 +152,10 @@ const guestLockouts = async () =>
               { status: "GOING" },
               {
                 event: {
-                  endTime_lt: endOfDay(subDays(new Date(), 1))
+                  AND: [
+                    { startTime_gte: startOfYear(new Date()) },
+                    { endTime_lt: endOfDay(subDays(new Date(), 1)) }
+                  ]
                 }
               },
               {

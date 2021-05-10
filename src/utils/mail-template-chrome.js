@@ -149,35 +149,34 @@ const getTransactionalTemplate = (preheader, subject, body) => `
         <p>${preheader}</p>
       </td>
     </tr>
-  </table><table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" role="module" data-type="columns" style="padding:0px 0px 0px 0px;" bgcolor="#FFFFFF" data-distribution="1,3">
-    <tbody>
-      <tr role="module-content">
-        <td height="100%" valign="top"><table width="150" style="width:150px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-0">
-      <tbody>
-        <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="wrapper" role="module" data-type="image" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="4UqFsRLozLcypAAv4CeoFS">
-      <tbody><tr>
-        <td style="font-size:6px; line-height:10px; padding:5px 0px 5px 0px;" valign="top" align="center"><a href="https://4-playersofcolorado.org"><img class="max-width" border="0" style="display:block; color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px; max-width:50% !important; width:50%; height:auto !important;" src="http://cdn.mcauto-images-production.sendgrid.net/9cd152eb5e014511/af5d1283-dbb2-4e39-9375-9bd77a8d8055/800x800.png" alt="4-Players of Colorado logo" width="75" data-responsive="true" data-proportionally-constrained="false"></a></td>
-      </tr>
-    </tbody></table></td>
-        </tr>
-      </tbody>
-    </table><table width="450" style="width:450px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-1">
-      <tbody>
-        <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="9933f5b0-3e32-44bb-a74a-2791ed80ea0c">
+  </table>
+
+  <table class="module" role="module" data-type="spacer" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="aQTmVGoZvs6GLJLWsiastG">
     <tbody>
       <tr>
-        <td style="padding:18px 0px 18px 0px; line-height:40px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit"><span style="font-size: 36px"><strong>4-Players of Colorado</strong></span></div><div></div></div></td>
+        <td style="padding:0px 0px 40px 0px;" role="module-content" bgcolor="">
+        </td>
       </tr>
     </tbody>
-  </table></td>
-        </tr>
-      </tbody>
-    </table></td>
+  </table>
+
+  <table class="wrapper" role="module" data-type="image" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="4UqFsRLozLcypAAv4CeoFS">
+    <tbody>
+      <tr>
+        <td style="font-size:6px; line-height:10px; padding:5px 0px 5px 0px;" valign="top" align="center"><a href="https://4-playersofcolorado.org"><img class="max-width" border="0" style="display:block; color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px; max-width:25% !important; width:25%; height:auto !important;" src="http://cdn.mcauto-images-production.sendgrid.net/9cd152eb5e014511/af5d1283-dbb2-4e39-9375-9bd77a8d8055/800x800.png" alt="4-Players of Colorado logo" width="150" data-responsive="true" data-proportionally-constrained="false"></a></td>
       </tr>
     </tbody>
-  </table><table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="8VquPM2ZMj7RJRhAUE6wmF" data-mc-module-version="2019-10-22">
+  </table>
+  
+  <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="9933f5b0-3e32-44bb-a74a-2791ed80ea0c" data-mc-module-version="2019-10-22">
+    <tbody>
+      <tr>
+        <td style="padding:18px 0px 18px 0px; line-height:40px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 36px"><strong>4-Players of Colorado</strong></span></div><div></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="8VquPM2ZMj7RJRhAUE6wmF" data-mc-module-version="2019-10-22">
       <tbody><tr>
         <td style="background-color:#ffffff; padding:15px 40px 10px 40px; line-height:30px; text-align:inherit;" height="100%" valign="top" bgcolor="#ffffff">
           <div>
@@ -202,27 +201,23 @@ const getTransactionalTemplate = (preheader, subject, body) => `
         </tr>
       </tbody>
     </table>
+
     <table class="module" role="module" data-type="spacer" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="aQTmVGoZvs6GLJLWsiastG">
       <tbody><tr>
         <td style="padding:0px 0px 40px 0px;" role="module-content" bgcolor="">
         </td>
       </tr>
     </tbody></table>
-    <table border="0" cellpadding="0" cellspacing="0" align="center" width="100%" role="module" data-type="columns" style="padding:0px 0px 0px 0px;" bgcolor="" data-distribution="1,1">
-    <tbody>
-      <tr role="module-content">
-        <td height="100%" valign="top"><table width="290" style="width:290px; border-spacing:0; border-collapse:collapse; margin:0px 10px 0px 0px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-0">
+
+    <table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="08e3f4bc-f1bb-4211-995d-b57e2bf9ce45.1">
       <tbody>
         <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="08e3f4bc-f1bb-4211-995d-b57e2bf9ce45.1">
-      <tbody>
-        <tr>
-          <td align="right" bgcolor="" class="outer-td" style="padding:0px 0px 0px 0px;">
+          <td align="center" bgcolor="" class="outer-td" style="padding:10px 0px 10px 0px;">
             <table border="0" cellpadding="0" cellspacing="0" class="wrapper-mobile" style="text-align:center;">
               <tbody>
                 <tr>
-                <td align="center" bgcolor="#CE312C" class="inner-td" style="border-radius:6px; font-size:16px; text-align:right; background-color:inherit;">
-                  <a href="https://4-playersofcolorado.org" style="background-color:#CE312C; border:1px solid #CE312C; border-color:#CE312C; border-radius:0px; border-width:1px; color:#ffffff; display:inline-block; font-size:14px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid;" target="_blank">Visit Public Site</a>
+                <td align="center" bgcolor="#CE312C" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">
+                  <a href="https://4-playersofcolorado.org" style="background-color:#CE312C; border:1px solid #CE312C; border-color:#CE312C; border-radius:0px; border-width:1px; color:#ffffff; display:inline-block; font-size:14px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:6px 9px 6px 9px; text-align:center; text-decoration:none; border-style:solid;" target="_blank">Visit Public Site</a>
                 </td>
                 </tr>
               </tbody>
@@ -230,21 +225,15 @@ const getTransactionalTemplate = (preheader, subject, body) => `
           </td>
         </tr>
       </tbody>
-    </table></td>
-        </tr>
-      </tbody>
-    </table><table width="290" style="width:290px; border-spacing:0; border-collapse:collapse; margin:0px 0px 0px 10px;" cellpadding="0" cellspacing="0" align="left" border="0" bgcolor="" class="column column-1">
+    </table><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="08e3f4bc-f1bb-4211-995d-b57e2bf9ce45.1.1">
       <tbody>
         <tr>
-          <td style="padding:0px;margin:0px;border-spacing:0;"><table border="0" cellpadding="0" cellspacing="0" class="module" data-role="module-button" data-type="button" role="module" style="table-layout:fixed;" width="100%" data-muid="08e3f4bc-f1bb-4211-995d-b57e2bf9ce45">
-      <tbody>
-        <tr>
-          <td align="left" bgcolor="" class="outer-td" style="padding:0px 0px 0px 0px;">
+          <td align="center" bgcolor="" class="outer-td" style="padding:0px 0px 0px 0px;">
             <table border="0" cellpadding="0" cellspacing="0" class="wrapper-mobile" style="text-align:center;">
               <tbody>
                 <tr>
-                <td align="center" bgcolor="#CE312C" class="inner-td" style="border-radius:6px; font-size:16px; text-align:left; background-color:inherit;">
-                  <a href="https://members.4-playersofcolorado.org" style="background-color:#CE312C; border:1px solid #CE312C; border-color:#CE312C; border-radius:0px; border-width:1px; color:#ffffff; display:inline-block; font-size:14px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:12px 18px 12px 18px; text-align:center; text-decoration:none; border-style:solid;" target="_blank">Visit Members Site</a>
+                <td align="center" bgcolor="#CE312C" class="inner-td" style="border-radius:6px; font-size:16px; text-align:center; background-color:inherit;">
+                  <a href="https://members.4-playersofcolorado.org" style="background-color:#CE312C; border:1px solid #CE312C; border-color:#CE312C; border-radius:0px; border-width:1px; color:#ffffff; display:inline-block; font-size:14px; font-weight:normal; letter-spacing:0px; line-height:normal; padding:6px 9px 6px 9px; text-align:center; text-decoration:none; border-style:solid;" target="_blank">Visit Members Site</a>
                 </td>
                 </tr>
               </tbody>
@@ -252,13 +241,8 @@ const getTransactionalTemplate = (preheader, subject, body) => `
           </td>
         </tr>
       </tbody>
-    </table></td>
-        </tr>
-      </tbody>
-    </table></td>
-      </tr>
-    </tbody>
-  </table>
+    </table>
+    
     <table class="module" role="module" data-type="spacer" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="aQTmVGoZvs6GLJLWsiastG">
       <tbody><tr>
         <td style="padding:0px 0px 40px 0px;" role="module-content" bgcolor="">
@@ -286,6 +270,18 @@ const getTransactionalTemplate = (preheader, subject, body) => `
         </td>
       </tr>
     </tbody>
+
+    <table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="c7b92bfc-8015-4512-b2f7-ef2ea124f35d">
+    <tbody>
+      <tr>
+        <td style="padding:18px 0px 18px 0px; line-height:14px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 12px">4-Players of Colorado</span></div>
+        <div style="font-family: inherit; text-align: center"><span style="font-size: 12px">PO Box 300442, Denver, CO 80203</span></div>
+        <div style="font-family: inherit; text-align: center"><br></div>
+        <div style="font-family: inherit; text-align: center"><a href="https://members.4-playersofcolorado.org/settings/notifications"><span style="font-size: 12px">Update notifications preferences</span></a></div><div></div></div></td>
+      </tr>
+    </tbody>
+  </table>
+
   </table><table class="module" role="module" data-type="spacer" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;" data-muid="eAq5DwvRYWV4D7T3oBCXhH">
       <tbody><tr>
         <td style="padding:0px 0px 30px 0px;" role="module-content" bgcolor="">

@@ -987,12 +987,12 @@ const Mutations = {
       eventRSVP => eventRSVP.event.id === rsvp.eventId
     );
 
-    console.log("userRSVP", userRSVP);
+    // console.log("userRSVP", userRSVP);
 
     // If this RSVP is different, update RSVP
     if (userRSVP) {
-      console.log("update rsvp");
-      console.log("rsvp", rsvp);
+      // console.log("update rsvp");
+      // console.log("rsvp", rsvp);
 
       // console.log("before passengers", userRSVP.memberPassengers);
       // console.log("after passengers", rsvp.memberPassengers);
@@ -1110,7 +1110,7 @@ const Mutations = {
       vehicle = {};
     }
 
-    console.log("vehuicle", vehicle);
+    // console.log("vehuicle", vehicle);
 
     await ctx.db.mutation.createRSVP(
       {
@@ -1375,6 +1375,7 @@ const Mutations = {
 
         // Account unlocked
         if (
+          args.data.accountStatus &&
           currentUser.accountStatus === "LOCKED" &&
           args.data.accountStatus !== "LOCKED"
         ) {
@@ -1383,6 +1384,7 @@ const Mutations = {
 
         // Account rejected
         if (
+          args.data.accountStatus &&
           currentUser.accountStatus === "REJECTED" &&
           args.data.accountStatus !== "REJECTED"
         ) {
@@ -2184,6 +2186,56 @@ const Mutations = {
     });
 
     return { message: "Item successfully logged" };
+  },
+  async notifications(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("User must be logged in");
+    }
+
+    const user = await ctx.db.query.user(
+      { where: { id: ctx.req.userId } },
+      "{ id, firstName, lastName, email, userMeta { id } }"
+    );
+
+    if (user && user.userMeta) {
+      const { id } = user.userMeta;
+      const settings = Object.entries(args.settings);
+      const [key, value] = settings[0];
+
+      // Update settings
+      await ctx.db.mutation.updateUserMeta({
+        data: {
+          [key]: value
+        },
+        where: {
+          id
+        }
+      });
+
+      const { firstName, lastName, email } = user;
+      const lowercaseEmail = email.toLowerCase();
+
+      const emailDetails = getRemindWebmasterToSubscribeEmail({
+        email: lowercaseEmail,
+        firstName,
+        lastName,
+        action: value ? "subscribe" : "unsubscribe",
+        newsletter: key
+      });
+
+      // Send webmaster reminder email
+      // TODO: Connect to SendGrid
+      return sendTransactionalEmail(emailDetails)
+        .then(() => ({
+          message: "Setting successfully updated"
+        }))
+        .catch(err => {
+          throw new Error(err.toString());
+        });
+    }
+
+    throw new Error("Unable to update notifications settings");
   }
 };
 

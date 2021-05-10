@@ -216,6 +216,9 @@ type UserMeta {
   firstLoginComplete: Boolean @default(value: false)
   accountSetupComplete: Boolean @default(value: false)
   oldSiteMigrationComplete: Boolean @default(value: false)
+  emailPublicNotifications: Boolean @default(value: true)
+  emailMemberNotifications: Boolean @default(value: true)
+  # emailEventAnnouncements: Boolean @default(value: true)
 }
 
 type Event {
