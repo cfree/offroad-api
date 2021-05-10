@@ -49,7 +49,7 @@ const fn = async () => {
     await users.map(async user => {
       // Set reset token and expiration
       const resetToken = (await promisifiedRandomBytes(20)).toString("hex");
-      const resetTokenExpiry = Date.now() + resetTokenTimeoutInMs;
+      const resetTokenExpiry = new Date(Date.now() + resetTokenTimeoutInMs);
 
       // Create password reset token
       try {

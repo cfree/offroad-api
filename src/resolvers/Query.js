@@ -125,7 +125,7 @@ const Query = {
       {
         where: {
           token: args.token,
-          tokenExpiry_gte: Date.now() - resetTokenTimeoutInMs
+          tokenExpiry_gte: new Date(Date.now() - resetTokenTimeoutInMs)
         },
         first: 1
       },

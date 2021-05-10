@@ -102,7 +102,7 @@ const Mutations = {
           email: lowercaseEmail,
           source,
           token: resetToken,
-          tokenExpiry: Date.now() + resetTokenTimeoutInMs
+          tokenExpiry: new Date(Date.now() + resetTokenTimeoutInMs)
         }
       },
       info
@@ -425,7 +425,7 @@ const Mutations = {
 
     // Set reset token and expiry
     const resetToken = (await promisifiedRandomBytes(20)).toString("hex");
-    const resetTokenExpiry = Date.now() + resetTokenTimeoutInMs;
+    const resetTokenExpiry = new Date(Date.now() + resetTokenTimeoutInMs);
 
     await ctx.db.mutation.updateUser({
       where: { email },
@@ -463,7 +463,7 @@ const Mutations = {
     const [user] = await ctx.db.query.users({
       where: {
         resetToken: args.resetToken,
-        resetTokenExpiry_gte: Date.now() - resetTokenTimeoutInMs
+        resetTokenExpiry_gte: new Date(Date.now() - resetTokenTimeoutInMs)
       }
     });
 

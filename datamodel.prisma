@@ -152,7 +152,7 @@ type User {
   username: String! @unique
   password: String!
   resetToken: String
-  resetTokenExpiry: Float
+  resetTokenExpiry: DateTime
   contactInfo: ContactInfo @relation(name: "UserContactInfo")
   preferences: Preference @relation(name: "UserPreferences")
   userMeta: UserMeta @relation(name: "UserMeta")
