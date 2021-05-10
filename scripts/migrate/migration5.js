@@ -41,7 +41,10 @@ const fn = async () => {
             emailVerified: false,
             firstLoginComplete: false,
             accountSetupComplete: false,
-            oldSiteMigrationComplete: false
+            oldSiteMigrationComplete: false,
+            emailPublicNotifications: true,
+            emailMemberNotifications: true
+            // emailEventAnnouncements: true
           },
           ["id"]
         );
@@ -63,7 +66,7 @@ const fn = async () => {
     console.log("User meta data connected to user data");
 
     /*
-    Activity Message Code
+    2. Activity Message Code
 
     EVENT_ATTENDED: why?
     RUN_LEAD: rsvpsMap / usersMap
