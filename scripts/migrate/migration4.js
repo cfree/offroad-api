@@ -26,10 +26,10 @@ const {
 
 const fn = async () => {
   try {
-    const usersMap = readJsonFile("./generated/users.json");
-    const rsvpsMap = readJsonFile("./generated/rsvps.json");
-    const eventsMap = readJsonFile("./generated/events.json");
-    const trailsMap = readJsonFile("./generated/trails.json");
+    const usersMap = readJsonFile("/generated/users.json");
+    const rsvpsMap = readJsonFile("/generated/rsvps.json");
+    const eventsMap = readJsonFile("/generated/events.json");
+    const trailsMap = readJsonFile("/generated/trails.json");
 
     // TRAILS
 

@@ -328,7 +328,7 @@ module.exports = {
 
       enum ActivityMessageCode {
         EVENT_ATTENDED
-        RUN_LEAD
+        RUN_LED
         EVENT_REVIEW_SUBMITTED
         RUN_REPORT_SUBMITTED
         GALLERY_PHOTO_SUBMITTED

@@ -244,6 +244,7 @@ const fn = async () => {
 
     // Get vehicle data
     const vehicleMap = unserializedUsers.reduce((memo, user) => {
+      console.log("user.ID", user.ID, user.email);
       if (
         !getYear(user.meta["Rig_Year"]) ||
         !user.meta["Rig_Make"] ||

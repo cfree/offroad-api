@@ -14,10 +14,10 @@ const { readJsonFile } = require("./utils");
 
 const fn = async () => {
   try {
-    const usersMap = readJsonFile("./generated/users.json");
-    const rsvpsMap = readJsonFile("./generated/rsvps.json");
-    const eventsMap = readJsonFile("./generated/events.json");
-    const trailsMap = readJsonFile("./generated/trails.json");
+    const usersMap = readJsonFile("/generated/users.json");
+    // const rsvpsMap = readJsonFile("/generated/rsvps.json");
+    // const eventsMap = readJsonFile("/generated/events.json");
+    // const trailsMap = readJsonFile("/generated/trails.json");
 
     // Bug fixes
 
@@ -67,18 +67,41 @@ const fn = async () => {
 
     /*
     2. Activity Message Code
-
-    EVENT_ATTENDED: why?
-    RUN_LEAD: rsvpsMap / usersMap
     JOINED: usersMap.member_since
+
+    Not implementing - just use `user.joined` info
     */
+    // await Promise.all(
+    //   usersMap.map(user => {
+    //     return postgres("ActivityLogItem").insert({
+    //       id: cuid(),
+    //       createdAt: new Date(),
+    //       updatedAt: new Date(),
+    //       time: new Date(user.member_since),
+    //       message: "Joined",
+    //       messageCode: "JOINED",
+    //       user: user.newId
+    //     });
+    //   })
+    // );
 
     /*
-    Membership Message Code
-
+    3. Membership Message Code
     ACCOUNT_CREATED: usersMap.user_registered
-    MEMBERSHIP_GRANTED: usersMap.member_since
     */
+    await Promise.all(
+      usersMap.map(user => {
+        return postgres("MembershipLogItem").insert({
+          id: cuid(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          time: new Date(user.user_registered),
+          message: "Account created",
+          messageCode: "ACCOUNT_CREATED",
+          user: user.newId
+        });
+      })
+    );
 
     // STOP. You're done.
     return Promise.resolve();

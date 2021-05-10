@@ -26,5 +26,6 @@ module.exports.mysql = knex({
 
 // Connect to Postgres - local app staging
 module.exports.postgres = knex(
-  process.env.NODE_ENV === "production" ? prodSettings : devSettings
+  // process.env.NODE_ENV === "production" ? prodSettings : devSettings
+  prodSettings
 );

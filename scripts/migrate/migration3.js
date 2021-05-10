@@ -24,7 +24,6 @@ const fn = async () => {
   try {
     // EVENTS
 
-    // @todo: missing runs for 2019
     // @todo: duplicates?
 
     // Retrieve old events

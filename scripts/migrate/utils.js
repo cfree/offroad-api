@@ -242,7 +242,7 @@ const states = [
 module.exports = {
   createJsonFile: (fileName, data) => {
     fs.writeFileSync(
-      `./generated/${fileName}.json`,
+      __dirname + `/generated/${fileName}.json`,
       JSON.stringify(data, null, 2),
       {
         flag: "w"
@@ -252,7 +252,7 @@ module.exports = {
     console.log(`${fileName}.json generated`);
   },
   readJsonFile: filePath => {
-    const rawUsersData = fs.readFileSync(filePath);
+    const rawUsersData = fs.readFileSync(__dirname + filePath);
     console.log(`${filePath} retrieved`);
     return JSON.parse(rawUsersData);
   },
@@ -445,10 +445,10 @@ module.exports = {
   },
   getYear: year => {
     console.log("year", year, typeof year);
-    const trimmedYear = (year.toString() || "").trim();
+    const trimmedYear = ((year || "").toString() || "").trim();
 
     // blank
-    if (!year || !trimmedYear || isNaN(year)) {
+    if (!year || !trimmedYear || isNaN(year) || year === "N/A") {
       return 0000;
     }
 

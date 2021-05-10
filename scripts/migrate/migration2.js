@@ -21,8 +21,8 @@ const {
 
 const fn = async () => {
   try {
-    const userMap = readJsonFile("./generated/users.json");
-    const vehicleMap = readJsonFile("./generated/vehicles.json");
+    const userMap = readJsonFile("/generated/users.json");
+    const vehicleMap = readJsonFile("/generated/vehicles.json");
 
     // VEHICLES
 

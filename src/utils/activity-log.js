@@ -1,5 +1,5 @@
 //   EVENT_ATTENDED                     TRANSACTIONAL
-//   RUN_LEAD                           TRANSACTIONAL
+//   RUN_LED                           TRANSACTIONAL
 
 //   EVENT_REVIEW_SUBMITTED             TODO
 //   RUN_REPORT_SUBMITTED               TODO
@@ -36,6 +36,18 @@ module.exports.joined = ({ username, userId }) => ({
   message: "Joined",
   messageCode: "JOINED",
   link: `/profile/${username}`,
+  user: {
+    connect: {
+      id: userId
+    }
+  }
+});
+
+module.exports.runLed = ({ eventTitle, eventId, userId }) => ({
+  time: new Date(),
+  message: `Led ${eventTitle}`,
+  messageCode: "RUN_LED",
+  link: `/event/${eventId}`,
   user: {
     connect: {
       id: userId
