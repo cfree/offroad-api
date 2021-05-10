@@ -67,17 +67,28 @@ const Mutations = {
   async register(parent, args, ctx, info) {
     const { firstName, lastName, email, confirmEmail, source } = args;
 
-    const lowercaseEmail = email.toLowerCase();
-    const lowercaseConfirmEmail = confirmEmail.toLowerCase();
-
     // VALIDATION
     if (!email) {
-      ``;
       throw new Error("Email is required");
     }
 
+    if (!confirmEmail) {
+      throw new Error("Email confirmation is required");
+    }
+
+    const lowercaseEmail = email.toLowerCase();
+    const lowercaseConfirmEmail = confirmEmail.toLowerCase();
+
     if (lowercaseEmail !== lowercaseConfirmEmail) {
       throw new Error("Emails do not match");
+    }
+
+    if (!firstName) {
+      throw new Error("Must include a first name");
+    }
+
+    if (!lastName) {
+      throw new Error("Must include a last name");
     }
 
     // Create registration in database
@@ -147,12 +158,21 @@ const Mutations = {
     const email = args.email.toLowerCase();
 
     // VALIDATION
+    if (!args.firstName) {
+      throw new Error("Must include a first name");
+    }
 
-    // TODO Confirm all fields valid
+    if (!args.lastName) {
+      throw new Error("Must include a last name");
+    }
 
-    // TODO Lock out if under 18
-    // STATUS: REJECTED
-    // membershipLog.membershipRejected(ctx.req.userId, "Under 18") // TODO note
+    if (!args.username) {
+      throw new Error("Must include a username");
+    }
+
+    if (!args.password) {
+      throw new Error("Must include a password");
+    }
 
     // Hash the password
     const password = await getHash(args.password);
