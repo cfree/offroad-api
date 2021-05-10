@@ -98,7 +98,10 @@ type Query {
   getRegistration(token: String): User
   getDuesLastReceived(username: String!): SuccessTime
   getOfficer(office: Office!): User!
-  getMembers(accountTypes: [AccountType]): [User]!
+  getMembers(
+    accountTypes: [AccountType]
+    accountStatuses: [AccountStatus]
+  ): [User]!
   getRunLeaders: [User]!
   getMessageRecipients: [User]!
   getUpcomingEvents(count: Int, page: Int): [Event]!

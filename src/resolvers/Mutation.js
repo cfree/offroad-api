@@ -102,7 +102,9 @@ const Mutations = {
           email: lowercaseEmail,
           source,
           token: resetToken,
-          tokenExpiry: new Date(Date.now() + resetTokenTimeoutInMs)
+          tokenExpiry: new Date(
+            Date.now() + resetTokenTimeoutInMs
+          ).toISOString()
         }
       },
       info
@@ -190,7 +192,7 @@ const Mutations = {
             lastName,
             username,
             password,
-            lastLogin: new Date(),
+            lastLogin: new Date().toISOString(),
             membershipLog: {
               create: [membershipLog.accountCreated()]
             }
@@ -379,7 +381,7 @@ const Mutations = {
     }
 
     let updatedUserData = {
-      lastLogin: new Date()
+      lastLogin: new Date().toISOString()
     };
 
     // Check if password is correct
@@ -425,7 +427,9 @@ const Mutations = {
 
     // Set reset token and expiry
     const resetToken = (await promisifiedRandomBytes(20)).toString("hex");
-    const resetTokenExpiry = new Date(Date.now() + resetTokenTimeoutInMs);
+    const resetTokenExpiry = new Date(
+      Date.now() + resetTokenTimeoutInMs
+    ).toISOString();
 
     await ctx.db.mutation.updateUser({
       where: { email },
@@ -463,7 +467,9 @@ const Mutations = {
     const [user] = await ctx.db.query.users({
       where: {
         resetToken: args.resetToken,
-        resetTokenExpiry_gte: new Date(Date.now() - resetTokenTimeoutInMs)
+        resetTokenExpiry_gte: new Date(
+          Date.now() - resetTokenTimeoutInMs
+        ).toISOString()
       }
     });
 
@@ -810,8 +816,8 @@ const Mutations = {
       type: event.type,
       title: event.title,
       description: event.description || "",
-      startTime: new Date(event.startTime),
-      endTime: new Date(event.endTime),
+      startTime: new Date(event.startTime).toISOString(),
+      endTime: new Date(event.endTime).toISOString(),
       address: event.address || "",
       trailDifficulty: event.trailDifficulty || "",
       // trailNotes: event.trailNotes,
@@ -863,15 +869,15 @@ const Mutations = {
           id: eventId
         }
       },
-      info
+      "{ id, rsvps { id, member { id, username } }, host { id, username }, trail { id }, featuredImage { id, publicId } }"
     );
 
     const data = {
       title: event.title,
       type: event.type,
       description: event.description || "",
-      startTime: new Date(event.startTime),
-      endTime: new Date(event.endTime),
+      startTime: new Date(event.startTime).toISOString(),
+      endTime: new Date(event.endTime).toISOString(),
       address: event.address || "",
       trailDifficulty: event.trailDifficulty || "",
       // trailNotes: event.trailNotes,
@@ -888,6 +894,25 @@ const Mutations = {
         }
       }
     };
+
+    // Does host need an RSVP?
+    if (
+      existingEvent.rsvps &&
+      !existingEvent.rsvps.find(rsvp => rsvp.member.username === event.host)
+    ) {
+      data.rsvps = {
+        create: [
+          {
+            member: {
+              connect: {
+                username: event.host
+              }
+            },
+            status: "GOING"
+          }
+        ]
+      };
+    }
 
     if (event.trail && event.trail !== "0") {
       // New trail submitted
@@ -1421,8 +1446,10 @@ const Mutations = {
           lastName: args.data.lastName,
           username: args.data.username,
           gender: args.data.gender,
-          birthdate: new Date(args.data.birthdate),
-          joined: args.data.joined ? new Date(args.data.joined) : null,
+          birthdate: new Date(args.data.birthdate + "12:00:00").toISOString(),
+          joined: args.data.joined
+            ? new Date(args.data.joined + "12:00:00").toISOString()
+            : null,
           contactInfo: {
             upsert: {
               create: {
@@ -1907,7 +1934,7 @@ const Mutations = {
     }
 
     const data = {
-      dateTime: new Date(vote.dateTime),
+      dateTime: new Date(vote.dateTime + "12:00:00").toISOString(),
       ballot: {
         connect: {
           id: vote.ballot

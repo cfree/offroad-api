@@ -125,7 +125,9 @@ const Query = {
       {
         where: {
           token: args.token,
-          tokenExpiry_gte: new Date(Date.now() - resetTokenTimeoutInMs)
+          tokenExpiry_gte: new Date(
+            Date.now() - resetTokenTimeoutInMs
+          ).toISOString()
         },
         first: 1
       },
@@ -214,7 +216,7 @@ const Query = {
       {
         where: {
           AND: [
-            { accountStatus: "ACTIVE" },
+            { accountStatus_in: args.accountStatuses || ["ACTIVE"] },
             { accountType_in: args.accountTypes },
             { office: null }, // No officers
             {

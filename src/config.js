@@ -41,8 +41,8 @@ module.exports = {
   },
   titles: {
     WEBMASTER: "Webmaster",
-    RUN_MASTER: "Run Master",
-    RUN_LEADER: "Run Leader",
+    // RUN_MASTER: "Run Master",
+    // RUN_LEADER: "Run Leader",
     HISTORIAN: "Historian",
     CHARTER_MEMBER: "Charter Member"
   },

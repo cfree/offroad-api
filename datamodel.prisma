@@ -36,8 +36,8 @@ enum Office {
 enum Title {
   WEBMASTER
   HISTORIAN
-  RUN_LEADER
-  RUN_MASTER
+  # RUN_LEADER
+  # RUN_MASTER
   CHARTER_MEMBER
 }
 

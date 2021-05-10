@@ -8,7 +8,7 @@ const User = {
         where: {
           AND: [
             {
-              rsvps_every: {
+              rsvps_some: {
                 AND: [
                   {
                     member: {

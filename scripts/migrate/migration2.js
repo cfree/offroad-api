@@ -55,7 +55,7 @@ const fn = async () => {
             year: getYear(vehicleMap[user.oldId].year),
             make: getMake(vehicleMap[user.oldId].make),
             model: getModel(vehicleMap[user.oldId].model),
-            trim: getTrim(vehicleMap[user.oldId].trim),
+            trim: getTrim(vehicleMap[user.oldId].model),
             outfitLevel: vehicleMap[user.oldId].outfitLevel
           },
           ["id"]
@@ -83,7 +83,7 @@ const fn = async () => {
       })
     );
 
-    console.log("Users updated");
+    // console.log("Users updated");
 
     // Insert vehicle mods
     await Promise.all(
