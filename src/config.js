@@ -24,13 +24,13 @@ module.exports = {
     "RESIGNED", // cannot do anything - locked, contact
     "REJECTED", // cannot do anything
     "LIMITED", // attended too many runs - locked, must become member
-    "LOCKED" // DEFAULT - must be approved
+    "LOCKED", // DEFAULT - must be approved
+    "DECEASED"
   ],
   accountType: [
     "FULL",
     "ASSOCIATE", // No voting rights, no member's only events/discussion
     "EMERITUS", // Same as Associate
-    "DECEASED",
     "GUEST" // DEFAULT - confirmed user. No roster, no voting rights, no member's only events/discussion
   ],
   offices: {

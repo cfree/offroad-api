@@ -16,6 +16,7 @@ enum AccountStatus {
   INACTIVE
   LIMITED
   LOCKED
+  DECEASED
 }
 
 enum AccountType {
@@ -23,7 +24,6 @@ enum AccountType {
   ASSOCIATE
   EMERITUS
   GUEST
-  DECEASED
 }
 
 enum Office {

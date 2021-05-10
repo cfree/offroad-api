@@ -1,5 +1,5 @@
 # source: https://fp-actual-staging-c099dc7930.herokuapp.com
-# timestamp: Sun May 09 2021 22:45:16 GMT-0600 (Mountain Daylight Time)
+# timestamp: Mon May 10 2021 00:51:01 GMT-0600 (Mountain Daylight Time)
 
 enum AccountStatus {
   ACTIVE
@@ -11,6 +11,7 @@ enum AccountStatus {
   INACTIVE
   LIMITED
   LOCKED
+  DECEASED
 }
 
 enum AccountType {
@@ -18,7 +19,6 @@ enum AccountType {
   ASSOCIATE
   EMERITUS
   GUEST
-  DECEASED
 }
 
 type ActivityLogItem implements Node {
