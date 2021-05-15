@@ -4,7 +4,6 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
-const { setHours } = require("date-fns");
 
 const { sendTransactionalEmail } = require("../mail");
 const {
@@ -414,7 +413,10 @@ const Mutations = {
     return { message: "Successfully logged in" };
   },
   logout(parent, args, ctx, info) {
-    ctx.res.clearCookie("token");
+    const { maxAge, ...restTokenSettings } = tokenSettings;
+
+    ctx.res.clearCookie("token", restTokenSettings);
+    ctx.res.cookie("token", token, tokenSettings);
     return { message: "Goodbye" };
   },
   async requestReset(parent, { email }, ctx, info) {
