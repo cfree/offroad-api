@@ -13,6 +13,7 @@ const {
   getUserWelcomeEmail,
   getUserWebsiteRegistrationEmail,
   getUserEventRegistrationEmail,
+  getUserAdminRegistrationEmail,
   getUserResetTokenEmail,
   getUserRejectionEmail
 } = require("../utils/mail-templates");
