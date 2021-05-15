@@ -414,9 +414,7 @@ const Mutations = {
   },
   logout(parent, args, ctx, info) {
     const { maxAge, ...restTokenSettings } = tokenSettings;
-
     ctx.res.clearCookie("token", restTokenSettings);
-    // ctx.res.cookie("token", token, tokenSettings);
     return { message: "Goodbye" };
   },
   async requestReset(parent, { email }, ctx, info) {
