@@ -6,7 +6,8 @@ const {
   getYear,
   getMake,
   getModel,
-  getTrim
+  getTrim,
+  getModifications
 } = require("./utils");
 
 /**
@@ -95,7 +96,9 @@ const fn = async () => {
           return;
         }
 
-        const mods = vehicleDeets.mods.map((mod, i) => ({
+        const parsedMods = getModifications(vehicleDeets.mods);
+
+        const mods = parsedMods.map((mod, i) => ({
           nodeId: vehicleId,
           position: (i + 1) * 1000,
           value: mod

@@ -4,6 +4,7 @@ const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const fetch = require("node-fetch");
 const cloudinary = require("cloudinary").v2;
+const { setHours } = require("date-fns");
 
 const { sendTransactionalEmail } = require("../mail");
 const {
@@ -1446,9 +1447,9 @@ const Mutations = {
           lastName: args.data.lastName,
           username: args.data.username,
           gender: args.data.gender,
-          birthdate: new Date(args.data.birthdate + "12:00:00").toISOString(),
+          birthdate: new Date(args.data.birthdate).toISOString(),
           joined: args.data.joined
-            ? new Date(args.data.joined + "12:00:00").toISOString()
+            ? new Date(args.data.joined).toISOString()
             : null,
           contactInfo: {
             upsert: {

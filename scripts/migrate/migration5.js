@@ -41,9 +41,9 @@ const fn = async () => {
             emailVerified: false,
             firstLoginComplete: false,
             accountSetupComplete: false,
-            oldSiteMigrationComplete: false,
-            emailPublicNotifications: true,
-            emailMemberNotifications: true
+            oldSiteMigrationComplete: false
+            // emailPublicNotifications: true
+            // emailMemberNotifications: true
             // emailEventAnnouncements: true
           },
           ["id"]
@@ -102,6 +102,8 @@ const fn = async () => {
         });
       })
     );
+
+    console.log("Membership Logs added");
 
     // STOP. You're done.
     return Promise.resolve();

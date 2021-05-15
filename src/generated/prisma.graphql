@@ -1,5 +1,5 @@
-# source: https://fp-actual-staging-c099dc7930.herokuapp.com
-# timestamp: Mon May 10 2021 00:51:01 GMT-0600 (Mountain Daylight Time)
+# source: https://fp-actual-prod-3b1ee34998.herokuapp.com
+# timestamp: Fri May 14 2021 15:33:09 GMT-0600 (Mountain Daylight Time)
 
 enum AccountStatus {
   ACTIVE
@@ -5887,7 +5887,7 @@ type Registration implements Node {
   email: String!
   source: String!
   token: String!
-  tokenExpiry: Float!
+  tokenExpiry: DateTime!
 }
 
 """A connection to a list of items."""
@@ -5907,7 +5907,7 @@ input RegistrationCreateInput {
   email: String!
   source: String!
   token: String!
-  tokenExpiry: Float!
+  tokenExpiry: DateTime!
 }
 
 """An edge in a connection."""
@@ -5949,7 +5949,7 @@ type RegistrationPreviousValues {
   email: String!
   source: String!
   token: String!
-  tokenExpiry: Float!
+  tokenExpiry: DateTime!
 }
 
 type RegistrationSubscriptionPayload {
@@ -5995,7 +5995,7 @@ input RegistrationUpdateInput {
   email: String
   source: String
   token: String
-  tokenExpiry: Float
+  tokenExpiry: DateTime
 }
 
 input RegistrationUpdateManyMutationInput {
@@ -6004,7 +6004,7 @@ input RegistrationUpdateManyMutationInput {
   email: String
   source: String
   token: String
-  tokenExpiry: Float
+  tokenExpiry: DateTime
 }
 
 input RegistrationWhereInput {
@@ -6300,28 +6300,28 @@ input RegistrationWhereInput {
 
   """All values not ending with the given string."""
   token_not_ends_with: String
-  tokenExpiry: Float
+  tokenExpiry: DateTime
 
   """All values that are not equal to given value."""
-  tokenExpiry_not: Float
+  tokenExpiry_not: DateTime
 
   """All values that are contained in given list."""
-  tokenExpiry_in: [Float!]
+  tokenExpiry_in: [DateTime!]
 
   """All values that are not contained in given list."""
-  tokenExpiry_not_in: [Float!]
+  tokenExpiry_not_in: [DateTime!]
 
   """All values less than the given value."""
-  tokenExpiry_lt: Float
+  tokenExpiry_lt: DateTime
 
   """All values less than or equal the given value."""
-  tokenExpiry_lte: Float
+  tokenExpiry_lte: DateTime
 
   """All values greater than the given value."""
-  tokenExpiry_gt: Float
+  tokenExpiry_gt: DateTime
 
   """All values greater than or equal the given value."""
-  tokenExpiry_gte: Float
+  tokenExpiry_gte: DateTime
 }
 
 input RegistrationWhereUniqueInput {
@@ -8163,8 +8163,6 @@ type Subscription {
 enum Title {
   WEBMASTER
   HISTORIAN
-  RUN_LEADER
-  RUN_MASTER
   CHARTER_MEMBER
 }
 

@@ -270,8 +270,41 @@ module.exports = {
         return "UNKNOWN";
     }
   },
+  getTrailName: name => {
+    // Lowercase
+    // \'
+    // Ç
+    return name
+      .replace(`\'`, `'`)
+      .replace("Ç", "C")
+      .split(" ")
+      .map(n => {
+        const lowercaseName = n.toLowerCase();
+        return lowercaseName
+          .split("")
+          .map((n, i) => {
+            if (i === 0) {
+              return n.toUpperCase();
+            }
+            return n;
+          })
+          .join("");
+      })
+      .join(" ");
+  },
+  getTrailDescription: desc => {
+    // \'
+    // \"
+    return desc.replace(`\'`, `'`).replace(`\"`, `"`);
+  },
+  getTrailAddress: addr => {
+    // address.join(" ").trim(),
+    // ''
+    const newAddr = addr.join().trim();
+    return !!newAddr ? newAddr : null;
+  },
   getBirthdate: bday => {
-    const epoch = new Date("January 1, 1970").toISOString();
+    const epoch = new Date("January 1, 1970 12:00:00").toISOString();
     const trimmedBday = (bday || "").trim();
 
     // blank
@@ -294,7 +327,7 @@ module.exports = {
       const day = trimmedBday.substr(2, 2);
       const year = trimmedBday.substr(4);
 
-      return new Date(`${month}/${day}/${year}`).toISOString();
+      return new Date(`${month}/${day}/${year} 12:00:00`).toISOString();
     }
 
     // 091989
@@ -309,7 +342,7 @@ module.exports = {
       const month = trimmedBday.substr(0, 2);
       const year = trimmedBday.substr(-2, 2);
 
-      return new Date(`${month}/1/${year}`).toISOString();
+      return new Date(`${month}/1/${year} 12:00:00`).toISOString();
     }
 
     // 09/1973
@@ -322,7 +355,7 @@ module.exports = {
     ) {
       const [month, year] = trimmedBday.split("/");
 
-      return new Date(`${month}/1/${year.substr(2)}`).toISOString();
+      return new Date(`${month}/1/${year.substr(2)} 12:00:00`).toISOString();
     }
 
     // 01/01/1970
@@ -337,12 +370,12 @@ module.exports = {
     // April 15
     // 04 JAN 1981
     // 1969
-    const returnBday = new Date(trimmedBday);
+    const returnBday = new Date(`${trimmedBday} 12:00:00`);
     return isNaN(returnBday) ? epoch : returnBday.toISOString();
   },
   getLastLogin: lastAccess =>
     lastAccess === "0000-00-00 00:00:00"
-      ? new Date("January 1, 1970").toISOString()
+      ? new Date("January 1, 1970 12:00:00").toISOString()
       : lastAccess,
   getGender: gender =>
     gender !== "not specified" ? gender.toUpperCase() : "UNDISCLOSED",
@@ -759,7 +792,46 @@ module.exports = {
     // Modified
     return "MODIFIED";
   },
-  getModifications: () => {},
+  getModifications: mods => {
+    const newMods =
+      mods.length > 1
+        ? mods
+        : mods.reduce((memo, mod) => {
+            if (mod === "") {
+              return memo;
+            }
+
+            return [...memo, ...mod.split(",")];
+          }, []);
+
+    return newMods.reduce((memo, mod) => {
+      const newMod = mod
+        .replace("...", "")
+        .replace("”", "in")
+        .replace('\\"', "in")
+        .replace("\r", ",")
+        .replace("\\'", "'")
+        .replace(",", "")
+        .trim();
+
+      if (
+        newMod.toLowerCase() === "n/a" ||
+        newMod.toLowerCase() === "none" ||
+        newMod === "etc" ||
+        newMod.toLowerCase() === "a lot" ||
+        newMod.toLowerCase() === "more." ||
+        newMod.toLowerCase() === "stock" ||
+        newMod.trim() === ""
+      ) {
+        return memo;
+      }
+
+      return [...memo, newMod];
+    }, []);
+  },
+  getEventTitle: title => {
+    return title.replace(`\'`, `'`).replace(`\"`, `"`);
+  },
   getEventCategory: category => {
     switch (category) {
       case "Pride":
@@ -793,6 +865,41 @@ module.exports = {
         return "Draft";
     }
   },
+  getEventDesription: desc => {
+    return desc.replace(`\'`, `'`).replace(`\"`, `"`);
+  },
+  getEventTrailDifficulty: diff => {
+    const newDiff = (diff || "").trim().toLowerCase();
+
+    if (!newDiff || newDiff === "trails picked onsite") {
+      return "UNKNOWN";
+    }
+
+    switch (newDiff) {
+      case "2-3":
+        return "EASY";
+      case "3-4":
+      case "4":
+      case "moderate":
+      case "easy/intermediate":
+        return "INTERMEDIATE";
+      case "3-5":
+      case "2-5":
+      case "4-7":
+      case "4-5":
+      case "5":
+      case "5-8":
+      case "mg: 4, hg: 5-7":
+      case "8-9":
+      case "3-9":
+      case "easy/intermediate or difficult":
+      case "intermediate/difficult":
+      case "difficult":
+        return "ADVANCED";
+      default:
+        return newDiff.toUpperCase();
+    }
+  },
   getSlug: name =>
     name
       .replace(/[{(\-\&\.\\\/\')}]/g, "")
@@ -801,13 +908,13 @@ module.exports = {
       .reduce((memo, word) => (word.trim() ? [...memo, word.trim()] : memo), [])
       .join("-")
       .toLowerCase(),
-  getTrailAddress: address => address.join(" ").trim(),
+  // getTrailAddress: address => address.join(" ").trim(),
   getTime: (date, time) => {
-    return new Date(`${date} ${time || "10:00"}`);
+    return new Date(`${date} ${time || "10:00"}`).toISOString();
   },
   mapPersonnelToUser: (users, personnel, personnelIds) => {
     if (personnelIds === null) {
-      return null;
+      return "ckomap3wv003f13b72rg7d5ry";
     }
 
     const [firstName, lastName] = personnel

@@ -1,5 +1,6 @@
 endpoint: ${env:PRISMA_ENDPOINT}
 # endpoint: https://fourplayers-staging-0f46ad9926.herokuapp.com/backend/staging
+# endpoint: https://fp-prod-17db404352.herokuapp.com
 datamodel: datamodel.prisma
 # secret: ${env:PRISMA_SECRET}
 hooks:

@@ -4,12 +4,17 @@ const { mysql, postgres } = require("./db");
 const {
   readJsonFile,
   getSlug,
-  getTrailAddress,
   getRsvpMember,
   getNewUserId,
   mapPersonnelToUser,
   getTime,
-  getRsvpStatus
+  getRsvpStatus,
+  getTrailDescription,
+  getTrailAddress,
+  getTrailName,
+  getEventTrailDifficulty,
+  getEventDesription,
+  getEventTitle
 } = require("./utils");
 
 /**
@@ -35,10 +40,19 @@ const fn = async () => {
 
     // Create old-to-new venue IDs map
     let trailsPivot = {};
+    const trailsDoneToDate = [];
 
     // Insert venues/trails
     await Promise.all(
       trailsMap.map(async trail => {
+        const slug = getSlug(trail.name);
+
+        if (trailsDoneToDate.includes(slug)) {
+          return Promise.resolve();
+        }
+
+        trailsDoneToDate.push(slug);
+
         const newId = cuid();
 
         trailsPivot = {
@@ -51,9 +65,9 @@ const fn = async () => {
             id: newId,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
-            slug: getSlug(trail.name),
-            name: trail.name,
-            description: trail.meta.description,
+            slug,
+            name: getTrailName(trail.name),
+            description: getTrailDescription(trail.meta.description),
             address: getTrailAddress([
               trail.address,
               trail.city,
@@ -99,12 +113,14 @@ const fn = async () => {
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             type: event.category,
-            title: event.event_name,
-            description: event.event_desc,
+            title: getEventTitle(event.event_name),
+            description: getEventDesription(event.event_desc),
             startTime: getTime(event.start_date, event.start_time),
             endTime: getTime(event.end_date, event.end_time),
             address: event.address || null,
-            trailDifficulty: event.meta.trail_difficulty,
+            trailDifficulty: getEventTrailDifficulty(
+              event.meta.trail_difficulty
+            ),
             rallyAddress: event.meta.rally_place || null,
             membersOnly: event.member_only,
             host: mapPersonnelToUser(
@@ -113,7 +129,7 @@ const fn = async () => {
               event.person_id
             ),
             creator: getNewUserId(usersMap, 24),
-            maxAttendees:
+            maxRigs:
               event.reg_limit === 999999 || event.reg_limit === 99999
                 ? -1
                 : event.reg_limit

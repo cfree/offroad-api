@@ -135,7 +135,7 @@ type Registration {
   email: String!
   source: String!
   token: String! @unique
-  tokenExpiry: Float!
+  tokenExpiry: DateTime!
 }
 
 type User {

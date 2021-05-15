@@ -112,8 +112,13 @@ const fn = async () => {
             id: newId,
             createdAt: user.user_registered,
             updatedAt: new Date().toISOString(),
-            joined: user.alias === "Member" ? user.member_since : null,
-            lastLogin: getLastLogin(user.last_accessed),
+            joined:
+              user.alias === "Member"
+                ? new Date(
+                    new Date(user.member_since).setHours(12)
+                  ).toISOString()
+                : null,
+            lastLogin: new Date(getLastLogin(user.last_accessed)).toISOString(),
             firstName: user.first_name,
             lastName: user.last_name,
             email:
@@ -177,6 +182,10 @@ const fn = async () => {
         const contactInfoId = contactInfoPivot[user.oldId];
 
         if (!contactInfoId) {
+          console.log(
+            "No contact info id, not inserting contact info for userID",
+            user.oldId
+          );
           // bail
           return;
         }
@@ -232,6 +241,10 @@ const fn = async () => {
 
         if (!prefsId) {
           // bail
+          console.log(
+            "No contact info id, not inserting contact info for userID",
+            user.oldId
+          );
           return;
         }
 
