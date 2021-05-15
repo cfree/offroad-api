@@ -416,7 +416,7 @@ const Mutations = {
     const { maxAge, ...restTokenSettings } = tokenSettings;
 
     ctx.res.clearCookie("token", restTokenSettings);
-    ctx.res.cookie("token", token, tokenSettings);
+    // ctx.res.cookie("token", token, tokenSettings);
     return { message: "Goodbye" };
   },
   async requestReset(parent, { email }, ctx, info) {
