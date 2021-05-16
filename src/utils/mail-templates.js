@@ -804,12 +804,10 @@ module.exports.getMigrationEmail = ({ email, firstName, resetToken }) => ({
 
     It's been a longtime coming, but I'm pleased to announce that the new 4-Players website has finally arrived!
 
-    It has a new look, new features that people have been asking for, and regular tasks have been automated.
+    It has a new look, new features that people have been asking for, and regular tasks have been automated. The site has been optimized for the latest browsers (Google Chrome, Mozilla Firefox, Apple Safari, Microsoft Edge).
 
     Your profile has been migrated over from the old site and in order to access the new site, you'll need to reset your password:
-    ${
-      process.env.FRONTEND_URL
-    }/forgot-password?token=${resetToken}&migration=true
+    https://members.4-playersofcolorado.org/forgot-password?token=${resetToken}&migration=true
 
     Feel free to explore! Please keep in mind that the work on this is ongoing and I'll need your help to make it better. In the footer of each page you'll see a "Submit Feedback" link where you can log bugs and submit feature requests.
 
@@ -825,15 +823,55 @@ module.exports.getMigrationEmail = ({ email, firstName, resetToken }) => ({
     
     <p>It's been a longtime coming, but I'm pleased to announce that the new 4-Players website has finally arrived!</p>
 
-    <p>It has a new look, new features that people have been asking for, and regular tasks have been automated.</p>
-
-    <p>Your profile has been migrated over from the old site and in order to access the new site, you'll need to <a href="${
-      process.env.FRONTEND_URL
-    }/forgot-password?token=${resetToken}&migration=true">reset your password</a>.</p>
+    
+    <p>It has a new look, new features that people have been asking for, and regular tasks have been automated. The site has been optimized for the latest browsers (Google Chrome, Mozilla Firefox, Apple Safari, Microsoft Edge).</p>
+    <p>Your profile has been migrated over from the old site and in order to access the new site, you'll need to <a href="https://members.4-playersofcolorado.org/forgot-password?token=${resetToken}&migration=true">reset your password</a>.</p>
 
     <p>Feel free to explore! Please keep in mind that the work on this is ongoing and I'll need your help to make it better. In the footer of each page you'll see a "Submit Feedback" link where you can log bugs and submit feature requests.</p>
 
     <p>If you have any questions, comments, or suggestions, do not hesitate to contact me.</p>
+
+    <p>
+      Best,<br/>
+      <br/>
+      Craig F<br/>
+      President/Webmaster
+    </p>
+  `
+});
+
+module.exports.getMigrationFollowupEmail = ({
+  email,
+  firstName,
+  resetToken
+}) => ({
+  to: email,
+  from: webmasterAddress,
+  subject: "New Website Announcement Re-Redux",
+  preheader: "website-final-v3",
+  text: `
+    Hi ${firstName}!
+
+    Enough with the emails! You'll need to reset your password in order to gain access to your account. I was trying to be clever and get you halfway there, but that's proving difficult.
+
+    Instead, visit this URL to reset your password if you haven't already: 
+    https://members.4-playersofcolorado.org/forgot-password
+
+    Sorry for the confusion, we'll get there! If you have any questions, comments, or suggestions, do not hesitate to contact me.
+
+    Best,
+    
+    Craig F
+    President/Webmaster
+  `,
+  html: `
+    <p>Hi ${firstName}!</p>
+    
+    <p>Enough with the emails!  You'll need to reset your password in order to gain access to your account. I was trying to be clever and get you halfway there, but that's proving difficult.</p>
+
+    <p>Instead, visit this URL to reset your password if you haven't already: <a href="https://members.4-playersofcolorado.org/forgot-password">reset your password</a></p>
+
+    <p>Sorry for the confusion, we'll get there! If you have any questions, comments, or suggestions, do not hesitate to contact me.</p>
 
     <p>
       Best,<br/>

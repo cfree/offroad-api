@@ -1,14 +1,9 @@
 require("dotenv").config({ path: "../../variables.env" });
-const { promisify } = require("util");
-const { randomBytes } = require("crypto");
 const { postgres } = require("./db");
 const { format, subYears } = require("date-fns");
 
 const { sendTransactionalEmail } = require("../../src/mail");
-const { getMigrationEmail } = require("../../src/utils/mail-templates");
-const { resetTokenTimeoutInMs } = require("../../src/utils");
-
-const promisifiedRandomBytes = promisify(randomBytes);
+const { getMigrationFollowupEmail } = require("../../src/utils/mail-templates");
 
 /**
  * Notify users of new site and procedure
@@ -28,7 +23,7 @@ const fn = async () => {
 
     try {
       currentMembers = await postgres("User")
-        .select("id", "firstName", "email")
+        .select("id", "firstName", "email", "resetToken")
         .where(function() {
           this.where({ accountStatus: "ACTIVE" }).orWhere({
             accountStatus: "PAST_DUE"
@@ -41,7 +36,7 @@ const fn = async () => {
         });
 
       activeGuests = await postgres("User")
-        .select("id", "firstName", "email")
+        .select("id", "firstName", "email", "resetToken")
         .where("accountStatus", "=", "ACTIVE")
         .andWhere("accountType", "=", "GUEST")
         .andWhere("lastLogin", ">", dateOneYearAgo);
@@ -51,34 +46,13 @@ const fn = async () => {
       await users.map(async user => {
         return new Promise((resolve, reject) => {
           setTimeout(async () => {
-            // Set reset token and expiration
-            const resetToken = (await promisifiedRandomBytes(20)).toString(
-              "hex"
-            );
-            const resetTokenExpiry = new Date(
-              Date.now() + resetTokenTimeoutInMs
-            );
-
-            // Create password reset token
-            try {
-              await postgres("User")
-                .update({
-                  resetToken,
-                  resetTokenExpiry
-                })
-                .where({ id: user.id });
-            } catch (e) {
-              console.error(e);
-              reject(e);
-            }
-
             // Send emails
             try {
               await sendTransactionalEmail(
-                getMigrationEmail({
+                getMigrationFollowupEmail({
                   email: user.email,
                   firstName: user.firstName,
-                  resetToken
+                  resetToken: user.resetToken
                 })
               );
             } catch (e) {
