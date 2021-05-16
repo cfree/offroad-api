@@ -59,7 +59,8 @@ const getHash = async pw => {
 
 const tokenSettings = {
   httpOnly: true,
-  maxAge: yearInMs
+  maxAge: yearInMs,
+  domain: ".4-playersofcolorado.org"
   // secure: !isDev,
   // sameSite: isDev ? "lax" : "none"
 };
