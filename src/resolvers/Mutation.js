@@ -61,7 +61,7 @@ const tokenSettings = {
   httpOnly: true,
   maxAge: yearInMs,
   secure: !isDev,
-  sameSite: isDev ? "lax" : "none"
+  sameSite: isDev ? "lax" : "None"
 };
 
 const Mutations = {
