@@ -59,9 +59,9 @@ const getHash = async pw => {
 
 const tokenSettings = {
   httpOnly: true,
-  maxAge: yearInMs,
-  secure: !isDev,
-  sameSite: isDev ? "lax" : "None"
+  maxAge: yearInMs
+  // secure: !isDev,
+  // sameSite: isDev ? "lax" : "none"
 };
 
 const Mutations = {
