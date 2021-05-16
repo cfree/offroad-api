@@ -371,11 +371,11 @@ const Mutations = {
         throw new Error(err);
       });
   },
-  async login(parent, { username, password }, ctx, info) {
+  async login(parent, { email, password }, ctx, info) {
     // Check if there is a user with that username
     const user = await ctx.db.query.user(
-      { where: { username } },
-      "{ id, password, userMeta { firstLoginComplete } }"
+      { where: { email } },
+      "{ id, username, password, userMeta { firstLoginComplete } }"
     );
 
     if (!user) {
@@ -390,7 +390,7 @@ const Mutations = {
     const valid = await bcrypt.compare(password, user.password);
 
     if (!valid) {
-      throw new Error("Invalid password"); // fix
+      throw new Error("Username or password incorrect"); // fix
     }
 
     // Generate the JWT token
