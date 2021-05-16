@@ -60,9 +60,9 @@ const getHash = async pw => {
 const tokenSettings = {
   httpOnly: true,
   maxAge: yearInMs,
-  domain: "4-playersofcolorado.org"
-  // secure: !isDev,
-  // sameSite: isDev ? "lax" : "none"
+  // domain: "4-playersofcolorado.org"
+  secure: !isDev,
+  sameSite: isDev ? "lax" : "none"
 };
 
 const Mutations = {
