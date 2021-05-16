@@ -189,7 +189,7 @@ const Mutations = {
         {
           data: {
             ...newUser,
-            email,
+            email: email.toLowerCase(),
             firstName,
             lastName,
             username,
@@ -221,7 +221,7 @@ const Mutations = {
             getUserNewAccountEmail({
               firstName,
               lastName,
-              email,
+              email: email.toLowerCase(),
               username
             })
           )
@@ -374,7 +374,7 @@ const Mutations = {
   async login(parent, { email, password }, ctx, info) {
     // Check if there is a user with that username
     const user = await ctx.db.query.user(
-      { where: { email } },
+      { where: { email: email.toLowerCase() } },
       "{ id, username, password, userMeta { firstLoginComplete } }"
     );
 
@@ -420,8 +420,9 @@ const Mutations = {
   },
   async requestReset(parent, { email }, ctx, info) {
     // Check if this is a real user
+    const lowerEmail = email.toLowerCase();
     const user = await ctx.db.query.user({
-      where: { email }
+      where: { email: lowerEmail }
     });
 
     if (!user) {
@@ -435,7 +436,7 @@ const Mutations = {
     ).toISOString();
 
     await ctx.db.mutation.updateUser({
-      where: { email },
+      where: { email: lowerEmail },
       data: { resetToken, resetTokenExpiry }
     });
 
