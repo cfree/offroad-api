@@ -32,7 +32,7 @@ const corsOptions = {
 
 const app = express();
 
-if (process.env.NODE_ENC !== "production") {
+if (process.env.NODE_ENV !== "production") {
   app.get("/backblaze", backblaze.getDocs);
 }
 
@@ -41,6 +41,19 @@ if (process.env.NODE_ENC !== "production") {
 // app.get("/calendar/?year={year}", () => {});
 // app.get("/calendar/?filter={remaining}", () => {});
 
+function requireHTTPS(req, res, next) {
+  // The 'x-forwarded-proto' check is for Heroku
+  if (
+    !req.secure &&
+    req.get("x-forwarded-proto") !== "https" &&
+    process.env.NODE_ENV !== "development"
+  ) {
+    return res.redirect("https://" + req.get("host") + req.url);
+  }
+  next();
+}
+
+app.use(requireHTTPS);
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
