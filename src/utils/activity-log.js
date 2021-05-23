@@ -31,16 +31,10 @@ module.exports.newRigbookPhoto = ({ username, userId }) => ({
   }
 });
 
-module.exports.joined = ({ username, userId }) => ({
-  time: new Date(),
+module.exports.joined = ({ joined }) => ({
+  time: new Date(joined).toISOString(),
   message: "Joined",
-  messageCode: "JOINED",
-  link: `/profile/${username}`,
-  user: {
-    connect: {
-      id: userId
-    }
-  }
+  messageCode: "JOINED"
 });
 
 module.exports.runLed = ({ eventTitle, eventId, userId }) => ({

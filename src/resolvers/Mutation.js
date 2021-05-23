@@ -1403,8 +1403,7 @@ const Mutations = {
         ) {
           activityLogs.push(
             activityLog.joined({
-              username: ctx.req.user.username,
-              userId: ctx.req.userId
+              joined: args.data.joined
             })
           );
         }
@@ -1416,8 +1415,7 @@ const Mutations = {
         ) {
           activityLogs.push(
             activityLog.joined({
-              username: ctx.req.user.username,
-              userId: ctx.req.userId
+              joined: args.data.joined
             })
           );
         }
