@@ -91,7 +91,7 @@ module.exports.yearInMs = 1000 * 60 * 60 * 24 * 365; // 1 year
 module.exports.monthInMs = 1000 * 60 * 60 * 24 * 30;
 module.exports.resetTokenTimeoutInMs = 3600000 * 24; // 1 hour x 24
 
-module.exports.datePrintFormat = "M/D/YYYY hh:mma";
+module.exports.datePrintFormat = "M/D/YYYY h:mma";
 
 module.exports.getUploadLocation = appendage =>
   process.env.NODE_ENV === "development"

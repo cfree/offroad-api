@@ -4,6 +4,8 @@
 - https://stackoverflow.com/questions/13345664/using-heroku-scheduler-with-node-js#answer-49524719
 */
 require("dotenv").config({ path: "variables.env" });
+const { formatToTimeZone } = require("date-fns-timezone");
+
 const {
   startOfDay,
   endOfDay,
@@ -22,7 +24,10 @@ const {
 } = require("../utils/mail-templates");
 const activityLog = require("../utils/activity-log");
 const membershipLog = require("../utils/membership-log");
+const { datePrintFormat } = require("../utils");
 const { guestMaxRuns } = require("../config");
+
+const urlBase = "https://members.4-playersofcolorado.org";
 
 const nightly = async () =>
   Promise.all([
@@ -43,8 +48,10 @@ const eventReminders = async () =>
           where: {
             AND: [
               { type: "RUN" },
-              { startTime_gte: startOfDay(addDays(new Date(), 1)) },
-              { startTime_lt: endOfDay(addDays(new Date(), 1)) },
+              {
+                startTime_gte: startOfDay(addDays(new Date(), 1)).toISOString()
+              },
+              { startTime_lt: endOfDay(addDays(new Date(), 1)).toISOString() },
               {
                 rsvps_some: {
                   status: "GOING"
@@ -70,13 +77,22 @@ const eventReminders = async () =>
           if (status === "GOING") {
             emailCount++;
 
+            const formattedStartTime = formatToTimeZone(
+              startTime,
+              datePrintFormat,
+              {
+                timeZone: "America/Denver"
+              }
+            );
+
             await sendTransactionalEmail(
               getRunReminderEmail(email, firstName, lastName, {
                 id,
                 title,
                 type,
-                startTime,
-                rallyAddress
+                startTime: formattedStartTime,
+                rallyAddress,
+                urlBase
               })
             );
           }
@@ -107,8 +123,8 @@ const runReportReminders = async () =>
               {
                 OR: [{ type: "RUN" }, { type: "CAMPING" }]
               },
-              { endTime_gte: startOfDay(subDays(new Date(), 1)) },
-              { endTime_lt: endOfDay(subDays(new Date(), 1)) },
+              { endTime_gte: startOfDay(subDays(new Date(), 1)).toISOString() },
+              { endTime_lt: endOfDay(subDays(new Date(), 1)).toISOString() },
               {
                 rsvps_some: { status: "GOING" }
               }
@@ -122,11 +138,16 @@ const runReportReminders = async () =>
         events.map(async event => {
           const { id, title, endTime, host } = event;
 
+          const formattedEndTime = formatToTimeZone(endTime, datePrintFormat, {
+            timeZone: "America/Denver"
+          });
+
           return sendTransactionalEmail(
             getReportReminderEmail(host.email, host.firstName, host.lastName, {
               id,
               title,
-              endTime
+              endTime: formattedEndTime,
+              urlBase
             })
           );
         })
@@ -151,10 +172,15 @@ const guestLockouts = async () =>
             AND: [
               { status: "GOING" },
               {
+                OR: [{ isRider: false }, { isRider: null }]
+              },
+              {
                 event: {
                   AND: [
-                    { startTime_gte: startOfYear(new Date()) },
-                    { endTime_lt: endOfDay(subDays(new Date(), 1)) }
+                    { startTime_gte: startOfYear(new Date()).toISOString() },
+                    {
+                      endTime_lt: endOfDay(subDays(new Date().toISOString(), 1))
+                    }
                   ]
                 }
               },
@@ -223,7 +249,10 @@ const guestLockouts = async () =>
       if (filteredUsers && filteredUsers.length > 0) {
         await Promise.all(
           filteredUsers.map(async user => {
-            const events = Object.values(user.events);
+            const events = Object.values(user.events).map(event => {
+              console.log("event", event);
+              return event;
+            });
 
             // Update records
             await db.mutation.updateUser({

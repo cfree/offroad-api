@@ -260,7 +260,8 @@ module.exports.getRunReminderEmail = (
   email,
   firstName,
   lastName,
-  eventDetails
+  eventDetails,
+  urlBase
 ) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
@@ -272,11 +273,11 @@ module.exports.getRunReminderEmail = (
     You have an event coming up soon!
 
     ${eventDetails.title}
-    Start time: ${format(new Date(eventDetails.startTime), datePrintFormat)}
+    Start time: ${eventDetails.startTime}
     Rally location: ${eventDetails.rallyAddress}
 
     For more details or to edit your RSVP, please visit:
-    ${process.env.FRONTEND_URL}/event/${eventDetails.id}
+    ${urlBase || process.env.FRONTEND_URL}/event/${eventDetails.id}
 
     If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count.
   `,
@@ -287,16 +288,14 @@ module.exports.getRunReminderEmail = (
 
     <p>
       ${eventDetails.title}<br/>
-      Start time: ${format(
-        new Date(eventDetails.startTime),
-        datePrintFormat
-      )}<br/>
+      Start time: ${eventDetails.startTime}<br/>
       Rally location: ${eventDetails.rallyAddress}
     </p>
 
-    <p>For more details or to edit your RSVP, please see <a href="${
-      process.env.FRONTEND_URL
-    }/event/${eventDetails.id}">the event details on the website</a>.</p>
+    <p>For more details or to edit your RSVP, please see <a href="${urlBase ||
+      process.env.FRONTEND_URL}/event/${
+    eventDetails.id
+  }">the event details on the website</a>.</p>
     
     <p>If you can no longer attend, please update your RSVP so the Run Leader can get an accurate head count.</p>
   `
@@ -306,7 +305,8 @@ module.exports.getReportReminderEmail = (
   email,
   firstName,
   lastName,
-  eventDetails
+  eventDetails,
+  urlBase
 ) => ({
   to: getUserAddress(firstName, lastName, email),
   from: noReplyAddress,
@@ -318,10 +318,12 @@ module.exports.getReportReminderEmail = (
     How was your run?
 
     ${eventDetails.title}
-    End time: ${format(new Date(eventDetails.endTime), datePrintFormat)}
+    End time: ${eventDetails.endTime}
 
     Please submit a run report at your earliest convenience:
-    ${process.env.FRONTEND_URL}/event/${eventDetails.id}/submit-report
+    ${urlBase || process.env.FRONTEND_URL}/event/${
+    eventDetails.id
+  }/submit-report
   `,
   html: `
     <p>${firstName},</p>
@@ -330,10 +332,10 @@ module.exports.getReportReminderEmail = (
 
     <p>
       ${eventDetails.title}<br/>
-      End time: ${format(new Date(eventDetails.endTime), datePrintFormat)}
+      End time: ${eventDetails.endTime}
     </p>
     
-    <p>Please <a href="${process.env.FRONTEND_URL}/event/${
+    <p>Please <a href="${urlBase || process.env.FRONTEND_URL}/event/${
     eventDetails.id
   }/submit-report">submit a run report</a> at your earliest convenience.</p>
   `
