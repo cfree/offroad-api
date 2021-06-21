@@ -48,6 +48,7 @@ const {
 } = require("../utils");
 const { roles, emailGroups } = require("../config");
 const stripe = require("../utils/stripe");
+const EventEmitter = require("events");
 // const { getDocs } = require("../");
 
 // const docs = require("./partials/docs");
@@ -827,6 +828,8 @@ const Mutations = {
       // trailNotes: event.trailNotes,
       rallyAddress: event.rallyAddress || "",
       membersOnly: event.membersOnly,
+      maxAttendees: event.maxAttendees || -1,
+      maxRigs: event.maxRigs || -1,
       creator: {
         connect: { id: ctx.req.userId }
       },
