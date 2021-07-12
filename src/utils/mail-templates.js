@@ -20,7 +20,7 @@ const getUserAddress = (firstName, lastName, email) =>
   `${firstName} ${lastName} <${email}>`;
 
 module.exports.getSecretaryNewUserEmail = username => ({
-  to: secretaryAddress,
+  to: `${secretaryAddress}, ${vpAddress}`,
   from: noReplyAddress,
   subject: "New Account Registration",
   preheader: "A new guest account has been created",

@@ -215,7 +215,7 @@ const Mutations = {
       // Set the JWT as a cookie
       // ctx.res.cookie("token", jwToken, tokenSettings);
 
-      // Send email to secretary
+      // Send email to secretary/VP
       return sendTransactionalEmail(getSecretaryNewUserEmail(username))
         .then(
           sendTransactionalEmail(
