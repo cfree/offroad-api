@@ -135,6 +135,8 @@ type Query {
   # guestsAskedToJoin: [User]!
   # guestsEligibleForMembership: [User]!
   notifications: UserMeta
+  runReportInfo: Event
+  runReportUsers: [User]
 }
 
 type Registration {
@@ -232,6 +234,7 @@ type Event {
   runReports: [RunReport]
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
 }
 
 type RSVP {
@@ -350,6 +353,7 @@ input UpsertEventInput {
   newFeaturedImage: CloudinaryImageInput
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
 }
 
 input ElectionInput {

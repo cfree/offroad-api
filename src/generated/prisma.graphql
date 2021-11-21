@@ -1,5 +1,5 @@
-# source: https://fp-actual-prod-3b1ee34998.herokuapp.com
-# timestamp: Fri May 14 2021 15:33:09 GMT-0600 (Mountain Daylight Time)
+# source: https://us1.prisma.sh/four-players-co/four-players-co/dev
+# timestamp: Sun Nov 21 2021 13:40:22 GMT-0700 (Mountain Standard Time)
 
 enum AccountStatus {
   ACTIVE
@@ -3263,6 +3263,7 @@ type Event implements Node {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
 }
 
 """A connection to a list of items."""
@@ -3289,6 +3290,7 @@ input EventCreateInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3342,6 +3344,7 @@ input EventCreateWithoutBandaidsInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3364,6 +3367,7 @@ input EventCreateWithoutCreatorInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
   rsvps: RSVPCreateManyWithoutEventInput
@@ -3386,6 +3390,7 @@ input EventCreateWithoutHostInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   rsvps: RSVPCreateManyWithoutEventInput
@@ -3408,6 +3413,7 @@ input EventCreateWithoutRsvpsInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3430,6 +3436,7 @@ input EventCreateWithoutRunReportsInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3452,6 +3459,7 @@ input EventCreateWithoutTrailInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserCreateOneWithoutEventsCreatedInput!
   featuredImage: CloudinaryImageCreateOneInput
   host: UserCreateOneWithoutEventsHostedInput
@@ -3500,6 +3508,8 @@ enum EventOrderByInput {
   maxAttendees_DESC
   maxRigs_ASC
   maxRigs_DESC
+  changeDisabled_ASC
+  changeDisabled_DESC
 }
 
 type EventPreviousValues {
@@ -3518,6 +3528,7 @@ type EventPreviousValues {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
 }
 
 input EventScalarWhereInput {
@@ -3925,6 +3936,10 @@ input EventScalarWhereInput {
 
   """All values greater than or equal the given value."""
   maxRigs_gte: Int
+  changeDisabled: Boolean
+
+  """All values that are not equal to given value."""
+  changeDisabled_not: Boolean
 }
 
 type EventSubscriptionPayload {
@@ -3987,6 +4002,7 @@ input EventUpdateInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4009,6 +4025,7 @@ input EventUpdateManyDataInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
 }
 
 input EventUpdateManyMutationInput {
@@ -4024,6 +4041,7 @@ input EventUpdateManyMutationInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
 }
 
 input EventUpdateManyWithoutCreatorInput {
@@ -4105,6 +4123,7 @@ input EventUpdateWithoutBandaidsDataInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4126,6 +4145,7 @@ input EventUpdateWithoutCreatorDataInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
   rsvps: RSVPUpdateManyWithoutEventInput
@@ -4147,6 +4167,7 @@ input EventUpdateWithoutHostDataInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   rsvps: RSVPUpdateManyWithoutEventInput
@@ -4168,6 +4189,7 @@ input EventUpdateWithoutRsvpsDataInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4189,6 +4211,7 @@ input EventUpdateWithoutRunReportsDataInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4210,6 +4233,7 @@ input EventUpdateWithoutTrailDataInput {
   membersOnly: Boolean
   maxAttendees: Int
   maxRigs: Int
+  changeDisabled: Boolean
   creator: UserUpdateOneRequiredWithoutEventsCreatedInput
   featuredImage: CloudinaryImageUpdateOneInput
   host: UserUpdateOneWithoutEventsHostedInput
@@ -4671,6 +4695,10 @@ input EventWhereInput {
 
   """All values greater than or equal the given value."""
   maxRigs_gte: Int
+  changeDisabled: Boolean
+
+  """All values that are not equal to given value."""
+  changeDisabled_not: Boolean
   creator: UserWhereInput
   featuredImage: CloudinaryImageWhereInput
   host: UserWhereInput

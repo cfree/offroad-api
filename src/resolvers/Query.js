@@ -331,7 +331,7 @@ const Query = {
       };
     }
 
-    return ctx.db.query.events(
+    return ctx.db.query.event(
       {
         where: {
           startTime_gte: new Date().toISOString()
@@ -1002,6 +1002,46 @@ const Query = {
     }
 
     return null;
+  },
+  async runReportInfo(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    // Is active run leader
+
+    return ctx.db.query.events(
+      {
+        where: {
+          id: args.eventId,
+          rsvps_every: {
+            status: "GOING"
+          }
+        },
+        first: 1
+      },
+      info
+    );
+  },
+  async runReportUsers(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    // Is active run leader
+
+    return await ctx.db.query.users(
+      {
+        where: {
+          accountType_not_in: [],
+          accountStatus_not_in: [],
+          role_not_in: []
+        }
+      },
+      info
+    );
   },
   ...docs.queries
 };

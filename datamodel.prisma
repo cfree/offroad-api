@@ -244,6 +244,7 @@ type Event {
   membersOnly: Boolean
   maxAttendees: Int @default(value: -1)
   maxRigs: Int @default(value: -1)
+  changeDisabled: Boolean @default(value: false)
 }
 
 type RSVP {

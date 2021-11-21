@@ -830,6 +830,7 @@ const Mutations = {
       membersOnly: event.membersOnly,
       maxAttendees: event.maxAttendees || -1,
       maxRigs: event.maxRigs || -1,
+      changeDisabled: event.changeDisabled || false,
       creator: {
         connect: { id: ctx.req.userId }
       },
@@ -892,6 +893,7 @@ const Mutations = {
       membersOnly: event.membersOnly,
       maxAttendees: event.maxAttendees,
       maxRigs: event.maxRigs,
+      changeDisabled: event.changeDisabled,
       creator: {
         connect: { id: ctx.req.userId }
       },
@@ -989,7 +991,7 @@ const Mutations = {
     // Query the current user
     const currentUser = await ctx.db.query.user(
       { where: { id: rsvp.userId } },
-      "{ id, accountStatus, accountType, eventsRSVPd { id, status, event { id }, vehicle { id }, guestCount } }"
+      "{ id, accountStatus, accountType, eventsRSVPd { id, status, event { id, changeDisabled }, vehicle { id }, guestCount } }"
     );
 
     if (!currentUser) {
@@ -1072,6 +1074,13 @@ const Mutations = {
       // connect
       // is there an existing vehicle but member is no longer bringing one?
       // disconnect
+
+      // Is changeDisabled?
+      if (userRSVP.event.changeDisabled && userRSVP.status !== null) {
+        throw new Error(
+          "You cannot change your RSVP once it has been submitted."
+        );
+      }
 
       let vehicle;
 
