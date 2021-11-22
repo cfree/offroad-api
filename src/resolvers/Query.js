@@ -331,7 +331,7 @@ const Query = {
       };
     }
 
-    return ctx.db.query.event(
+    return ctx.db.query.events(
       {
         where: {
           startTime_gte: new Date().toISOString()
