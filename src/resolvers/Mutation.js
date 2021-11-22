@@ -1132,7 +1132,7 @@ const Mutations = {
         info
       );
 
-      return { message: "Thank you for updating your RSVP" };
+      return { message: "Your RSVP has been recorded." };
     }
 
     // console.log("new rsvp", rsvp.memberPassengers);
