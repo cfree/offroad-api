@@ -9,7 +9,7 @@
 - https://stackoverflow.com/questions/13345664/using-heroku-scheduler-with-node-js#answer-49524719
 */
 require("dotenv").config({ path: "variables.env" });
-
+const { startOfDay } = require("date-fns");
 const { guestMaxRuns } = require("../config");
 
 const db = require("../db");
@@ -22,8 +22,17 @@ const {
 } = require("../utils/mail-templates");
 const membershipLog = require("../utils/membership-log");
 
-const jan1 = async () =>
-  Promise.all([deactivate(), badger(), cleanSlateProtocol()]);
+const jan1 = async () => {
+  const date = startOfDay(new Date());
+
+  if (date.getMonth() === 0 && date.getDate() === 1) {
+    console.log("It is January 1st - game time!");
+    return Promise.all([deactivate(), badger(), cleanSlateProtocol()]);
+  }
+
+  console.log("Not today, satan");
+  return Promise.resolve();
+};
 
 // Automatically change Delinquent Full Member status to Inactive
 //   if no dues received in the last year

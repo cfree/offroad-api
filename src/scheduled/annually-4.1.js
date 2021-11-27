@@ -4,7 +4,7 @@
 - https://stackoverflow.com/questions/13345664/using-heroku-scheduler-with-node-js#answer-49524719
 */
 require("dotenv").config({ path: "variables.env" });
-
+const { startOfDay } = require("date-fns");
 const db = require("../db");
 const { sendTransactionalEmail } = require("../mail");
 const {
@@ -13,7 +13,17 @@ const {
 } = require("../utils/mail-templates");
 const membershipLog = require("../utils/membership-log");
 
-const april1 = async () => Promise.all([delinquentize()]);
+const april1 = async () => {
+  const date = startOfDay(new Date());
+
+  if (date.getMonth() === 3 && date.getDate() === 1) {
+    console.log("It is April 1st - game time!");
+    return Promise.all([delinquentize()]);
+  }
+
+  console.log("Not yet.");
+  return Promise.resolve();
+};
 
 // Automatically change Past Due Full Member status to Delinquent
 //   if no dues received after 3/31 of each year

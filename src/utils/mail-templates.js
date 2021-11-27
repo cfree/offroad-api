@@ -563,6 +563,8 @@ module.exports.getNotifyBoardOfDelinquentsEmail = users => {
     <p>Any member whose dues have been delinquent less than 1 (one) year may be
     reinstated upon payment of dues and approval of the Executive Committee,
     providing an opening exists.</p>
+
+    <p><strong>Don't forget to remove them from Mailchimp.</strong></p>
     
     <p>This email has been automatically generated.</p>
   `
