@@ -41,7 +41,7 @@ const {
   hasAccountType,
   isSelf,
   getUploadLocation,
-  getDuesAmountIncludingFees,
+  getDuesAmount,
   convertToCents,
   determineTitleChanges,
   determineOfficeChanges
@@ -2160,7 +2160,7 @@ const Mutations = {
 
     // Recalculate amount due (confirm)
     // const duesAmount = getDuesAmountIncludingFees(x, y);
-    const duesAmount = getDuesAmountIncludingFees();
+    const duesAmount = getDuesAmount();
 
     // if (args.amount !== duesAmount) {
     //   throw new Error(

@@ -98,9 +98,18 @@ module.exports.getUploadLocation = appendage =>
     ? `dev_${appendage}`
     : `prod_${appendage}`;
 
-module.exports.getDuesAmountIncludingFees = (
+module.exports.getFullMemberDuesAmount = () => {
+  return parseInt(process.env.FULL_MEMBERSHIP_DUES, 10);
+};
+
+module.exports.getAssociateMemberDuesAmount = () => {
+  return parseInt(process.env.ASSOCIATE_MEMBERSHIP_DUES, 10);
+};
+
+module.exports.getDuesAmount = (
   fullMemberCount = 1,
-  associateMemberCount = 0
+  associateMemberCount = 0,
+  includeFees = false
 ) => {
   // Current: Stripe
   // 2.9% + $0.30 per transaction
@@ -112,7 +121,7 @@ module.exports.getDuesAmountIncludingFees = (
 
   const dues = fullMemberDues + associateMemberDues;
 
-  return ((dues + 0.3) / (1 - 0.029)).toFixed(2);
+  return includeFees ? ((dues + 0.3) / (1 - 0.029)).toFixed(2) : dues;
 };
 
 module.exports.convertToCents = dollarAmt => {
