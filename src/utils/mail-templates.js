@@ -683,6 +683,64 @@ module.exports.getNotifyUserOfPastDueStatusEmail = (
   };
 };
 
+module.exports.getRemindUserOfPastDueStatusEmail = (
+  email,
+  firstName,
+  lastName
+) => {
+  return {
+    to: getUserAddress(firstName, lastName, email),
+    from: vpAddress,
+    subject: `Annual Dues Payment Reminder`,
+    preheader: "Time to pay your membership dues",
+    text: `
+    Hi ${firstName},
+
+    It's ${new Date().getFullYear()} and you have not yet paid your membership dues!
+
+    You can log into your website account and pay:
+    ${process.env.FRONTEND_URL}/settings/account
+    
+    Alternatively, you can give 
+    cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
+    check to the club: 
+    
+    4-Players of Colorado
+    PO Box 300442
+    Denver, CO 80203
+    
+    Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
+    not paid by March 31st will be dropped from the rolls of the current membership. Please pay soon to 
+    avoid a lapse. 
+
+    If you have any questions, please contact vicepresident@4-playersofcolorado.org
+  `,
+    html: `
+    <p>Hi ${firstName},</p>
+
+    <p>It's ${new Date().getFullYear()} and you have not yet paid your membership dues!</p>
+
+    <p>You can log into <a href="${
+      process.env.FRONTEND_URL
+    }/settings/account">your website account</a> and pay from there. Alternatively, you can give 
+    cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
+    check to the club:</p>
+    
+    <p>
+    4-Players of Colorado<br/>
+    PO Box 300442<br/>
+    Denver, CO 80203<br/>
+    </p>
+    
+    <p>Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
+    not paid by March 31st will be dropped from the rolls of the current membership. Please pay soon to 
+    avoid a lapse.</p>
+
+    <p>If you have any questions, please contact the <a href="mailto:vicepresident@4-playersofcolorado.org">Vice President</a></p>
+  `
+  };
+};
+
 module.exports.getNotifyUserOfRestrictedResetEmail = (
   email,
   firstName,

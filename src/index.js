@@ -36,11 +36,6 @@ if (process.env.NODE_ENV !== "production") {
   app.get("/backblaze", backblaze.getDocs);
 }
 
-// TODO
-// app.get("/calendar", () => {});
-// app.get("/calendar/?year={year}", () => {});
-// app.get("/calendar/?filter={remaining}", () => {});
-
 function requireHTTPS(req, res, next) {
   // The 'x-forwarded-proto' check is for Heroku
   if (
@@ -54,6 +49,12 @@ function requireHTTPS(req, res, next) {
 }
 
 app.use(requireHTTPS);
+
+// TODO
+// app.get("/calendar/upcoming?limit=10", () => {}); // Public events, now to end of the year
+// app.get("/calendar", () => {});  // All events ever
+// Ability to add to calendar
+
 app.use(cors(corsOptions));
 app.use(cookieParser());
 
