@@ -58,7 +58,24 @@ module.exports = {
   ],
   timezoneOffsetInMs: 25200000,
   defaultPaginationSize: 20,
-  guestMaxRuns: 3
+  guestMaxRuns: 3,
+  months: {
+    0: "January",
+    1: "February",
+    2: "March",
+    3: "April",
+    4: "May",
+    5: "June",
+    6: "July",
+    7: "August",
+    8: "September",
+    9: "October",
+    10: "November",
+    11: "December"
+  },
+  meetingLocation: "Charlie's Denver, 900 E Colfax Ave, Denver, CO 80218",
+  meetingStartTime: "19:00", // 7pm
+  meetingEndTime: "20:30" // 8:30pm
 };
 
 /**

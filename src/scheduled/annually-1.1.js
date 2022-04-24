@@ -9,8 +9,9 @@
 - https://stackoverflow.com/questions/13345664/using-heroku-scheduler-with-node-js#answer-49524719
 */
 require("dotenv").config({ path: "variables.env" });
-const { startOfDay } = require("date-fns");
-const { guestMaxRuns } = require("../config");
+const { startOfDay, setHours, setMinutes } = require("date-fns");
+const { parseFromTimeZone } = require("date-fns-timezone");
+const { guestMaxRuns, months } = require("../config");
 
 const db = require("../db");
 const { sendTransactionalEmail } = require("../mail");
@@ -18,16 +19,28 @@ const {
   getNotifyBoardOfInactiveMembersEmail,
   getNotifyUserOfPastDueStatusEmail,
   getNotifyUserOfRestrictedResetEmail,
-  getNotifyBoardOfRestrictedResetEmail
+  getNotifyBoardOfRestrictedResetEmail,
+  getNotifyWebmasterOfMeetingEventsGeneration
 } = require("../utils/mail-templates");
 const membershipLog = require("../utils/membership-log");
+const { getSecondMondayInMonth } = require("../utils");
+const {
+  meetingLocation,
+  meetingStartTime,
+  meetingEndTime
+} = require("../config");
 
 const jan1 = async () => {
   const date = startOfDay(new Date());
 
   if (date.getMonth() === 0 && date.getDate() === 1) {
     console.log("It is January 1st - game time!");
-    return Promise.all([deactivate(), badger(), cleanSlateProtocol()]);
+    return Promise.all([
+      deactivate(),
+      badger(),
+      cleanSlateProtocol(),
+      monthlyMeetingRefill()
+    ]);
   }
 
   console.log("Not today, satan");
@@ -205,6 +218,80 @@ const cleanSlateProtocol = async () =>
       return resolve();
     } catch (e) {
       console.log("Clean slate report error", e);
+      return resolve();
+    }
+  });
+
+// Generate monthly meetings
+const monthlyMeetingRefill = async () =>
+  new Promise(async (resolve, reject) => {
+    try {
+      const currentDate = new Date().toISOString(); // ex: 1/1/20xx UTC
+      const events = Object.keys(months).map(async month => {
+        const localDate = startOfDay(
+          parseFromTimeZone(currentDate, {
+            timeZone: "America/Denver"
+          })
+        ); // local
+
+        const eventDate = getSecondMondayInMonth(month, localDate); // local
+
+        const startTime = setMinutes(
+          setHours(
+            eventDate,
+            meetingStartTime.split(":")[0] // hour,
+          ),
+          meetingStartTime.split(":")[1] // minutes
+        ); // local
+
+        const endTime = setMinutes(
+          setHours(
+            eventDate,
+            meetingEndTime.split(":")[0] // hour
+          ),
+          meetingEndTime.split(":")[1] // minutes
+        ); // local
+
+        const president = {
+          connect: {
+            office: "PRESIDENT"
+          }
+        };
+
+        return db.mutation.createEvent({
+          data: {
+            type: "MEETING",
+            title: `${months[month]} Membership Meeting`,
+            description: "",
+            startTime: startTime.toISOString(),
+            endTime: endTime.toISOString(),
+            address: meetingLocation,
+            membersOnly: false,
+            creator: president,
+            host: president,
+            rsvps: {
+              create: [
+                {
+                  member: president,
+                  status: "GOING"
+                }
+              ]
+            }
+          }
+        });
+      });
+
+      await sendTransactionalEmail(
+        getNotifyWebmasterOfMeetingEventsGeneration()
+      );
+
+      console.log(
+        `Monthly meeting refill completed. ${events.length} created.`
+      );
+
+      return resolve();
+    } catch (e) {
+      console.log("Monthly meeting refill report error", e);
       return resolve();
     }
   });

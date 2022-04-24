@@ -856,6 +856,23 @@ module.exports.getRemindWebmasterToSubscribeEmail = ({
   `
 });
 
+module.exports.getNotifyWebmasterOfMeetingEventsGeneration = () => ({
+  to: webmasterAddress,
+  from: noReplyAddress,
+  subject: "Meeting Events Generated",
+  preheader: "Monthly Meeting Events have been Generated",
+  text: `
+    Website events for the monthly meetings have been auto-generated. Please review at your convenience.
+
+    This email has been automatically generated.
+  `,
+  html: `
+    <p>Website events for the monthly meetings have been auto-generated. Please review at your convenience.</p>
+
+    <p>This email has been automatically generated.</p>
+  `
+});
+
 module.exports.getMigrationEmail = ({ email, firstName, resetToken }) => ({
   to: email,
   from: webmasterAddress,

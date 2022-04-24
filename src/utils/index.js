@@ -1,5 +1,5 @@
 const isEqual = require("lodash/isEqual");
-
+const { isMonday, addDays, getDay } = require("date-fns");
 const membershipLog = require("../utils/membership-log");
 
 module.exports.hasRole = function hasRole(
@@ -215,4 +215,28 @@ module.exports.determineOfficeChanges = (
   }
 
   return [toRemove, toAdd, toLog];
+};
+
+module.exports.getSecondMondayInMonth = (month, date) => {
+  const tempDate = date;
+  tempDate.setDate(1);
+  tempDate.setMonth(month);
+
+  switch (getDay(tempDate)) {
+    case 0: // sun
+      return addDays(tempDate, 8);
+    case 1: // mon
+      return addDays(tempDate, 7);
+    case 2: // tues
+      return addDays(tempDate, 13);
+    case 3: // weds
+      return addDays(tempDate, 12);
+    case 4: // thurs
+      return addDays(tempDate, 11);
+    case 5: // fri
+      return addDays(tempDate, 10);
+    case 6: // sat
+    default:
+      return addDays(tempDate, 9);
+  }
 };
