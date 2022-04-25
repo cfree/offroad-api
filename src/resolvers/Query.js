@@ -1,4 +1,6 @@
 const { addFragmentToInfo } = require("graphql-binding");
+const mailchimp = require("@mailchimp/mailchimp_marketing");
+const md5 = require("md5");
 const {
   hasRole,
   hasAccountType,
@@ -1043,7 +1045,41 @@ const Query = {
       info
     );
   },
-  ...docs.queries
+  ...docs.queries,
+  async newsletterPreferences(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("You must be logged in");
+    }
+
+    mailchimp.setConfig({
+      apiKey: process.env.NEWSLETTER_API_KEY,
+      server: process.env.NEWSLETTER_API_SERVER
+    });
+
+    const list =
+      args.list === "MEMBERS"
+        ? process.env.NEWSLETTER_LIST_MEMBERS
+        : process.env.NEWSLETTER_LIST_GENERAL;
+
+    try {
+      const subscriberHash = md5(ctx.req.user.email.toLowerCase());
+
+      // the MD5 hash of the lowercase version of the list member's email address
+      const result = await mailchimp.lists.getListMember(list, subscriberHash);
+
+      return {
+        status: result.status === "subscribed" ? "SUBSCRIBE" : "UNSUBSCRIBE"
+      };
+    } catch (err) {
+      if (err.status === 404) {
+        return { status: "UNSUBSCRIBE" };
+      } else {
+        console.log(err);
+        throw new Error("Failed to unsubscribe email");
+      }
+    }
+  }
 };
 
 module.exports = Query;

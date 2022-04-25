@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const { randomBytes } = require("crypto");
 const { promisify } = require("util");
 const fetch = require("node-fetch");
+const mailchimp = require("@mailchimp/mailchimp_marketing");
+const md5 = require("md5");
 const cloudinary = require("cloudinary").v2;
 
 const { sendTransactionalEmail } = require("../mail");
@@ -1104,8 +1106,6 @@ const Mutations = {
         // existing vehicle on this rsvp, no change needed
         vehicle = {};
       }
-
-      console.log("vehicle", vehicle);
 
       await ctx.db.mutation.updateRSVP(
         {
@@ -2297,6 +2297,111 @@ const Mutations = {
     }
 
     throw new Error("Unable to update notifications settings");
+  },
+  async editNewsletterPreferences(parent, args, ctx, info) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("User must be logged in");
+    }
+
+    const list =
+      args.list === "MEMBERS"
+        ? process.env.NEWSLETTER_LIST_MEMBERS
+        : process.env.NEWSLETTER_LIST_GENERAL;
+
+    const email = ctx.req.user.email.toLowerCase();
+    const subscriberHash = md5(email);
+
+    mailchimp.setConfig({
+      apiKey: process.env.NEWSLETTER_API_KEY,
+      server: process.env.NEWSLETTER_API_SERVER
+    });
+
+    // get user
+    const user = await ctx.db.query.user(
+      { where: { id: ctx.req.userId } },
+      "{ id, firstName, lastName, email, accountStatus, accountType }"
+    );
+
+    // getListMember from mailchimp
+    let mailchimpUser = null;
+
+    try {
+      const result = await mailchimp.lists.getListMember(list, subscriberHash);
+      mailchimpUser = result;
+    } catch (e) {
+      console.error(e);
+    }
+
+    // SUBSCRIBE
+    if (args.action === "SUBSCRIBE") {
+      // Non-members cannot subscribe to membership newsletter
+      if (
+        args.list === "MEMBERS" &&
+        (!["ACTIVE", "PAST_DUE"].includes(user.accountStatus) ||
+          user.accountType === "GUEST")
+      ) {
+        throw new Error("Non-member cannot subscribe to membership list");
+      }
+
+      // if mailchimp user found, update:
+      if (mailchimpUser) {
+        try {
+          await mailchimp.lists.updateListMember(list, subscriberHash, {
+            status: "subscribed"
+          });
+          return { message: "Email successfully subscribed" };
+        } catch (e) {
+          const text = JSON.parse(err.response.res.text);
+
+          if (err.status === 400 && text.title === "Member Exists") {
+            throw new Error("Email already subscribed");
+          } else {
+            throw new Error("Failed to subscribe email");
+          }
+        }
+      } else {
+        // if no mailchimp user found, add:
+        try {
+          await mailchimp.lists.addListMember(list, {
+            email_address: email,
+            status: "subscribed",
+            merge_fields: {
+              FNAME: user.firstName,
+              LNAME: user.lastName
+            }
+          });
+
+          return { message: "Email successfully subscribed" };
+        } catch (err) {
+          const text = JSON.parse(err.response.res.text);
+
+          if (err.status === 400 && text.title === "Member Exists") {
+            throw new Error("Email already subscribed");
+          } else {
+            throw new Error("Failed to subscribe email");
+          }
+        }
+      }
+    }
+
+    // UNSUBSCRIBE
+    // if mailchimp user found, update:
+    if (mailchimpUser) {
+      try {
+        // the MD5 hash of the lowercase version of the list member's email address
+        await mailchimp.lists.updateListMember(list, subscriberHash, {
+          status: "unsubscribed"
+        });
+
+        return { message: "Email successfully unsubscribed" };
+      } catch (err) {
+        throw new Error("Failed to unsubscribe email");
+      }
+    } else {
+      // if no mailchimp user found, do nothing
+      return { message: "Nothing to do, email not subscribed" };
+    }
   }
 };
 

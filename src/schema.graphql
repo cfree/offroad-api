@@ -16,6 +16,16 @@ type Sample {
   meow: Int
 }
 
+enum NewsletterAction {
+  SUBSCRIBE
+  UNSUBSCRIBE
+}
+
+enum NewsletterList {
+  GENERAL
+  MEMBERS
+}
+
 type Mutation {
   register(
     firstName: String
@@ -82,6 +92,10 @@ type Mutation {
     userId: ID!
   ): SuccessMessage
   notifications(settings: NotificationsSettingsInput): SuccessMessage
+  editNewsletterPreferences(
+    action: NewsletterAction!
+    list: NewsletterList!
+  ): SuccessMessage
 }
 
 type Query {
@@ -137,6 +151,11 @@ type Query {
   notifications: UserMeta
   runReportInfo: Event
   runReportUsers: [User]
+  newsletterPreferences(list: NewsletterList): NewsletterPreference!
+}
+
+type NewsletterPreference {
+  status: NewsletterAction
 }
 
 type Registration {
