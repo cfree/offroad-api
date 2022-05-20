@@ -41,7 +41,7 @@ const getIcal = async (req, res) => {
   try {
     const events = await db.query.events(
       { orderBy: "startTime_ASC" },
-      "{ id title startTime }"
+      "{ id title startTime endTime }"
     );
 
     // Format
