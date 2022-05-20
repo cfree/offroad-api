@@ -17,6 +17,7 @@ const Trail = require("./resolvers/Trail");
 const User = require("./resolvers/User");
 
 const backblaze = require("./routes/backblaze");
+const calendar = require("./routes/calendar");
 
 const corsOptions = {
   credentials: true,
@@ -51,8 +52,9 @@ function requireHTTPS(req, res, next) {
 app.use(requireHTTPS);
 
 // TODO
-// app.get("/calendar/upcoming?limit=10", () => {}); // Public events, now to end of the year
+app.get("/calendar/upcoming/:count", calendar.getUpcoming); // Public events, now to end of the year
 // app.get("/calendar", () => {});  // All events ever
+// app.get("gcal", () => {}); // GCAL feed
 // Ability to add to calendar
 
 app.use(cors(corsOptions));
