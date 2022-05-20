@@ -4,6 +4,11 @@ const ical = require("ical-generator");
 const db = require("../db");
 
 const getUpcoming = async (req, res) => {
+  // allow from public site, override global cors settings
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://4-playersofcolorado.org"
+  );
   const { count } = req.params;
 
   try {
@@ -29,6 +34,8 @@ const getUpcoming = async (req, res) => {
 };
 
 const getIcal = async (req, res) => {
+  // allow from all origins, override global cors settings
+  res.setHeader("Access-Control-Allow-Origin", "*");
   const calendar = ical({ name: "4-Players" });
 
   try {

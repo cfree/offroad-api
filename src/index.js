@@ -24,6 +24,8 @@ const corsOptions = {
   origin: process.env.FRONTEND_URL
 };
 
+const calendarCorsOptions = {};
+
 // Transactional Emails:
 
 // Post run report:
