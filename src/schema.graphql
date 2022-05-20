@@ -62,6 +62,7 @@ type Mutation {
   updateOffice(office: Office, userId: ID!): User
   updateTitles(titles: [Title], userId: ID!): User
   createEvent(event: UpsertEventInput!): SuccessMessage
+  deleteEvent(id: ID!): SuccessMessage
   updateEvent(id: ID!, event: UpsertEventInput!): SuccessMessage
   setRSVP(rsvp: RSVPInput): SuccessMessage
   sendMessage(

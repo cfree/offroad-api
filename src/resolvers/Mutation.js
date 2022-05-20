@@ -6,6 +6,7 @@ const fetch = require("node-fetch");
 const mailchimp = require("@mailchimp/mailchimp_marketing");
 const md5 = require("md5");
 const cloudinary = require("cloudinary").v2;
+const knex = require("knex");
 
 const { sendTransactionalEmail } = require("../mail");
 const {
@@ -857,6 +858,73 @@ const Mutations = {
     const results = await ctx.db.mutation.createEvent({ data }, info);
 
     return { message: "Your event has been created" };
+  },
+  async deleteEvent(parent, args, ctx) {
+    // Logged in?
+    if (!ctx.req.userId) {
+      throw new Error("User must be logged in");
+    }
+
+    // Have proper roles to do this?
+    hasRole(ctx.req.user, ["ADMIN", "OFFICER", "RUN_MASTER"]);
+
+    // Requesting user has proper account status?
+    hasAccountStatus(ctx.req.user, ["ACTIVE", "PAST_DUE"]);
+
+    const { id: eventId } = args;
+
+    const existingEvent = await ctx.db.query.event(
+      {
+        where: {
+          id: eventId
+        }
+      },
+      "{ id, title, rsvps { id }, featuredImage { id },  }"
+    );
+
+    try {
+      const db = knex({
+        client: "pg",
+        connection: {
+          connectionString: process.env.DATABASE_URL,
+          ssl: {
+            rejectUnauthorized: false
+          }
+        },
+        searchPath: ["default$default"]
+      });
+
+      // get event
+
+      // delete featured image
+      if (existingEvent.featuredImage && existingEvent.featuredImage.id) {
+        await ctx.db.mutation.deleteCloudinaryImage({
+          where: { id: existingEvent.featuredImage.id }
+        });
+      }
+
+      // _EventTrail
+      await db("_EventTrail").where("A", eventId);
+
+      // delete rsvps
+      if (existingEvent.rsvps && existingEvent.rsvps.length > 0) {
+        await existingEvent.rsvps.map(async ({ id }) => {
+          await ctx.db.mutation.deleteRSVP({
+            where: { id }
+          });
+        });
+      }
+
+      // delete event
+      await db("Event")
+        .where("id", eventId)
+        .delete();
+
+      return { message: `${existingEvent.title} event has been deleted` };
+    } catch (e) {
+      console.error(e);
+      throw new Error("Could not delete event");
+    }
   },
   async updateEvent(parent, args, ctx, info) {
     // Logged in?
