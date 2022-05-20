@@ -51,11 +51,8 @@ function requireHTTPS(req, res, next) {
 
 app.use(requireHTTPS);
 
-// TODO
-app.get("/calendar/upcoming/:count", calendar.getUpcoming); // Public events, now to end of the year
-// app.get("/calendar", () => {});  // All events ever
-// app.get("gcal", () => {}); // GCAL feed
-// Ability to add to calendar
+app.get("/calendar/upcoming/:count", calendar.getUpcoming);
+app.get("/calendar/ical", calendar.getIcal);
 
 app.use(cors(corsOptions));
 app.use(cookieParser());

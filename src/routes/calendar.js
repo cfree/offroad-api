@@ -1,4 +1,5 @@
 const { startOfDay, endOfYear } = require("date-fns");
+const ical = require("ical-generator");
 
 const db = require("../db");
 
@@ -27,6 +28,35 @@ const getUpcoming = async (req, res) => {
   }
 };
 
+const getIcal = async (req, res) => {
+  const calendar = ical({ name: "4-Players" });
+
+  try {
+    const events = await db.query.events(
+      { orderBy: "startTime_ASC" },
+      "{ id title startTime }"
+    );
+
+    // Format
+    events.forEach(event => {
+      calendar.createEvent({
+        start: event.startTime,
+        end: event.endTime,
+        summary: event.title,
+        // description: ``,
+        // location: 'my room',
+        url: `https://members.4-playersofcolorado.org/event/${event.id}`
+      });
+    });
+
+    return calendar.serve(res);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e.toString());
+  }
+};
+
 module.exports = {
-  getUpcoming
+  getUpcoming,
+  getIcal
 };
