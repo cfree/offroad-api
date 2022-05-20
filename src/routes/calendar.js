@@ -50,7 +50,11 @@ const getIcal = async (req, res) => {
         start: event.startTime,
         end: event.endTime,
         summary: event.title,
-        // description: ``,
+        description: `
+          <a href="https://members.4-playersofcolorado.org/event/${
+            event.id
+          }">Read event details</a>
+        `,
         // location: 'my room',
         url: `https://members.4-playersofcolorado.org/event/${event.id}`
       });
