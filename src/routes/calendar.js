@@ -44,30 +44,21 @@ const getIcal = async (req, res) => {
       "{ id createdAt updatedAt title type startTime endTime trailDifficulty }"
     );
 
-    const difficulty =
-      event.type === "RUN" ? `<p>Difficulty: ${event.trailDifficulty}</p>` : "";
-
     // Format
     events.forEach(event => {
+      const url = `https://members.4-playersofcolorado.org/event/${event.id}`;
+
       calendar.createEvent({
         id: event.id,
         uid: event.id,
-        created: event.createdAt,
-        lastModified: event.updatedAt,
-        start: event.startTime,
-        end: event.endTime,
+        created: new Date(event.createdAt),
+        lastModified: new Date(event.updatedAt),
+        start: new Date(event.startTime),
+        end: new Date(event.endTime),
         summary: event.title,
         category: [event.type],
-        description: `
-          ${difficulty}
-          <p>
-            <a href="https://members.4-playersofcolorado.org/event/${
-              event.id
-            }">Read event details</a>
-          <p>
-        `,
-        // location: 'my room',
-        url: `https://members.4-playersofcolorado.org/event/${event.id}`
+        description: url,
+        url
       });
     });
 
