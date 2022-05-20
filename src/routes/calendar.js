@@ -23,7 +23,7 @@ const getUpcoming = async (req, res) => {
         orderBy: "startTime_ASC",
         first: Number(count) || 10
       },
-      "{ id title startTime }"
+      "{ id title startTime trailDifficulty }"
     );
 
     res.send(events);
@@ -41,19 +41,30 @@ const getIcal = async (req, res) => {
   try {
     const events = await db.query.events(
       { orderBy: "startTime_ASC" },
-      "{ id title startTime endTime }"
+      "{ id createdAt updatedAt title type startTime endTime trailDifficulty }"
     );
+
+    const difficulty =
+      event.type === "RUN" ? `<p>Difficulty: ${event.trailDifficulty}</p>` : "";
 
     // Format
     events.forEach(event => {
       calendar.createEvent({
+        id: event.id,
+        uid: event.id,
+        created: event.createdAt,
+        lastModified: event.updatedAt,
         start: event.startTime,
         end: event.endTime,
         summary: event.title,
+        category: [event.type],
         description: `
-          <a href="https://members.4-playersofcolorado.org/event/${
-            event.id
-          }">Read event details</a>
+          ${difficulty}
+          <p>
+            <a href="https://members.4-playersofcolorado.org/event/${
+              event.id
+            }">Read event details</a>
+          <p>
         `,
         // location: 'my room',
         url: `https://members.4-playersofcolorado.org/event/${event.id}`
