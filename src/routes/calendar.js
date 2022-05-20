@@ -36,7 +36,7 @@ const getUpcoming = async (req, res) => {
 const getIcal = async (req, res) => {
   // allow from all origins, override global cors settings
   res.setHeader("Access-Control-Allow-Origin", "*");
-  const calendar = ical({ name: "4-Players" });
+  const calendar = ical({ name: "4-Players", ttl: 3600 });
 
   try {
     const events = await db.query.events(
