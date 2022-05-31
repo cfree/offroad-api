@@ -3,6 +3,9 @@ const ical = require("ical-generator");
 
 const db = require("../db");
 
+const MIN_DAYS = 1;
+const MAX_DAYS = 10;
+
 const getUpcoming = async (req, res) => {
   // allow from public site, override global cors settings
   res.setHeader(
@@ -10,6 +13,7 @@ const getUpcoming = async (req, res) => {
     "https://4-playersofcolorado.org"
   );
   const { count } = req.params;
+  const numberCount = Number(count);
 
   try {
     const events = await db.query.events(
@@ -21,7 +25,10 @@ const getUpcoming = async (req, res) => {
           ]
         },
         orderBy: "startTime_ASC",
-        first: Number(count) || 10
+        first:
+          numberCount >= MIN_DAYS && numberCount < MAX_DAYS
+            ? numberCount
+            : MAX_DAYS
       },
       "{ id title startTime trailDifficulty }"
     );
