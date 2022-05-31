@@ -1,4 +1,4 @@
-const { startOfDay, endOfYear } = require("date-fns");
+const { startOfDay, endOfYear, startOfYear } = require("date-fns");
 const ical = require("ical-generator");
 
 const db = require("../db");
@@ -47,7 +47,12 @@ const getIcal = async (req, res) => {
 
   try {
     const events = await db.query.events(
-      { orderBy: "startTime_ASC" },
+      {
+        where: {
+          startTime_gte: startOfYear(new Date()).toISOString()
+        },
+        orderBy: "startTime_ASC"
+      },
       "{ id createdAt updatedAt title type startTime endTime trailDifficulty }"
     );
 
