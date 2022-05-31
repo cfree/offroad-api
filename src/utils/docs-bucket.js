@@ -51,15 +51,25 @@ const getFiles = async (apiUrl, authToken, bucketId, downloadUrl, prefix) => {
     const listJson = await listResp.json();
     const { files } = listJson;
 
-    return files.map(file => {
-      const name = removePrefix(file.fileName, prefix);
+    return files
+      .map(file => {
+        const name = removePrefix(file.fileName, prefix);
 
-      return {
-        date: getFileDate(name),
-        name: getFileName(name),
-        link: getDownloadLink(downloadUrl, file.fileId)
-      };
-    });
+        return {
+          date: getFileDate(name),
+          name: getFileName(name),
+          link: getDownloadLink(downloadUrl, file.fileId)
+        };
+      })
+      .sort((a, b) => {
+        if (a.date > b.date) {
+          return -1;
+        }
+        if (a.date < b.date) {
+          return 1;
+        }
+        return 0;
+      });
   } catch (e) {
     console.error(e);
     throw new Error("Unable to retrieve file names from docs service");
