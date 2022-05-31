@@ -1019,16 +1019,17 @@ const Mutations = {
           }
         }
       };
-    } else if (
-      existingEvent.featuredImage &&
-      existingEvent.featuredImage.publicId &&
-      !event.newFeaturedImage
-    ) {
-      // Remove old featured image
-      data.featuredImage = {
-        delete: true
-      };
     }
+    // else if (
+    //   existingEvent.featuredImage &&
+    //   existingEvent.featuredImage.publicId &&
+    //   !event.newFeaturedImage
+    // ) {
+    //   // Remove old featured image
+    //   data.featuredImage = {
+    //     delete: true
+    //   };
+    // }
 
     const results = await ctx.db.mutation.updateEvent(
       {
