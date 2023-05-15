@@ -321,9 +321,7 @@ module.exports.getReportReminderEmail = (
     End time: ${eventDetails.endTime}
 
     Please submit a run report at your earliest convenience:
-    ${urlBase || process.env.FRONTEND_URL}/event/${
-    eventDetails.id
-  }/submit-report
+    ${urlBase || process.env.FRONTEND_URL}/event/${eventDetails.id}/report
   `,
   html: `
     <p>${firstName},</p>
@@ -337,7 +335,7 @@ module.exports.getReportReminderEmail = (
     
     <p>Please <a href="${urlBase || process.env.FRONTEND_URL}/event/${
     eventDetails.id
-  }/submit-report">submit a run report</a> at your earliest convenience.</p>
+  }/report">submit a run report</a> at your earliest convenience.</p>
   `
 });
 

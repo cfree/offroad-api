@@ -1,5 +1,3 @@
-# import * from './generated/prisma.graphql'
-
 type SuccessMessage {
   message: String
 }
@@ -150,7 +148,7 @@ type Query {
   # guestsAskedToJoin: [User]!
   # guestsEligibleForMembership: [User]!
   notifications: UserMeta
-  runReportInfo: Event
+  runReportInfo(eventId: ID!): Event
   runReportUsers: [User]
   newsletterPreferences(list: NewsletterList): NewsletterPreference!
 }

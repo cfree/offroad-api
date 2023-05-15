@@ -1013,18 +1013,30 @@ const Query = {
 
     // Is active run leader
 
-    return ctx.db.query.events(
+    const results = await ctx.db.query.events(
       {
         where: {
-          id: args.eventId,
-          rsvps_every: {
-            status: "GOING"
-          }
+          AND: [
+            { id: args.eventId },
+            {
+              rsvps_every: {
+                status: "GOING"
+              }
+            }
+          ]
         },
         first: 1
       },
       info
     );
+
+    if (results && results.length > 0 && results[0].type !== "RUN") {
+      throw new Error("You can only submit a report for a run");
+    }
+
+    console.log(results);
+
+    return results[0];
   },
   async runReportUsers(parent, args, ctx, info) {
     // Logged in?

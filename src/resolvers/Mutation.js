@@ -398,7 +398,7 @@ const Mutations = {
     }
 
     // Generate the JWT token
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET);
 
     // Set the cookie with the token
     ctx.res.cookie("token", token, tokenSettings);
@@ -499,7 +499,7 @@ const Mutations = {
     });
 
     // Generate JWT
-    const token = jwt.sign({ userId: updatedUser.id }, process.env.JWT_SECRET);
+    const token = jwt.sign({ userId: updatedUser.id }, JWT_SECRET);
 
     // Set JWT cookie
     ctx.res.cookie("token", token, tokenSettings);
@@ -531,7 +531,7 @@ const Mutations = {
     });
 
     // // Generate JWT
-    // const token = jwt.sign({ userId: updatedUser.id }, process.env.JWT_SECRET);
+    // const token = jwt.sign({ userId: updatedUser.id }, JWT_SECRET);
 
     // // Set JWT cookie
     // ctx.res.cookie('token', token, tokenSettings);
