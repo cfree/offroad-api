@@ -1077,6 +1077,10 @@ const Mutations = {
     }
 
     if (currentUser.accountType === "GUEST") {
+      const event = await ctx.db.query.event(
+        { where: { id: rsvp.eventId } },
+        "{ id, type }"
+      );
       const rsvps = await ctx.db.query.rSVPs(
         {
           where: {
@@ -1100,7 +1104,11 @@ const Mutations = {
         "{ id }"
       );
 
-      if (rsvps.length >= 3 && rsvp.status === "GOING") {
+      if (
+        event.type === "RUN" &&
+        rsvp.status === "GOING" &&
+        rsvps.length >= 3
+      ) {
         throw new Error(
           "Guests can only attend 3 runs. Please become a member to attend more."
         );
