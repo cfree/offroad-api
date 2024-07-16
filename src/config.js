@@ -75,7 +75,11 @@ module.exports = {
   },
   meetingLocation: "Charlie's Denver, 900 E Colfax Ave, Denver, CO 80218",
   meetingStartTime: "19:00", // 7pm
-  meetingEndTime: "20:30" // 8:30pm
+  meetingEndTime: "20:30", // 8:30pm
+  clubName: "4-Players of Colorado",
+  clubPOBox: "PO Box 300001",
+  clubCityStateZip: "Denver, CO 80203",
+  clubAddress: `${this.clubPOBox}, ${this.clubCityStateZip}`
 };
 
 /**

@@ -1,6 +1,7 @@
 const { format } = require("date-fns");
 
 const { datePrintFormat } = require("./index");
+const { clubCityStateZip, clubPOBox, clubName } = require("../config");
 
 const isStaging =
   process.env.STAGING_ENV && process.env.STAGING_ENV === "staging";
@@ -647,9 +648,9 @@ module.exports.getNotifyUserOfPastDueStatusEmail = (
     cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
     check to the club: 
     
-    4-Players of Colorado
-    PO Box 300442
-    Denver, CO 80203
+    ${clubName}
+    ${clubPOBox}
+    ${clubCityStateZip}
     
     Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
     not paid by March 31st will be dropped from the rolls of the current membership. Please pay soon to 
@@ -669,9 +670,9 @@ module.exports.getNotifyUserOfPastDueStatusEmail = (
     check to the club:</p>
     
     <p>
-    4-Players of Colorado<br/>
-    PO Box 300442<br/>
-    Denver, CO 80203<br/>
+    ${clubName}<br/>
+    ${clubPOBox}<br/>
+    ${clubCityStateZip}<br/>
     </p>
     
     <p>Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
@@ -705,9 +706,9 @@ module.exports.getRemindUserOfPastDueStatusEmail = (
     cash or check (payable to 4-Players of Colorado) to the Treasurer or you can mail a 
     check to the club: 
     
-    4-Players of Colorado
-    PO Box 300442
-    Denver, CO 80203
+    ${clubName}
+    ${clubPOBox}
+    ${clubCityStateZip}
     
     Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
     not paid by March 31st will be dropped from the rolls of the current membership. Please pay soon to 
@@ -727,9 +728,9 @@ module.exports.getRemindUserOfPastDueStatusEmail = (
     check to the club:</p>
     
     <p>
-    4-Players of Colorado<br/>
-    PO Box 300442<br/>
-    Denver, CO 80203<br/>
+    ${clubName}<br/>
+    ${clubPOBox}<br/>
+    ${clubCityStateZip}<br/>
     </p>
     
     <p>Per our bylaws, dues are payable per membership year (January lst to December 31st) and any member whose dues are
@@ -895,7 +896,7 @@ module.exports.getMigrationEmail = ({ email, firstName, resetToken }) => ({
     Best,
     
     Craig F
-    President/Webmaster
+    Webmaster
   `,
   html: `
     <p>Hi ${firstName}!</p>
@@ -914,7 +915,7 @@ module.exports.getMigrationEmail = ({ email, firstName, resetToken }) => ({
       Best,<br/>
       <br/>
       Craig F<br/>
-      President/Webmaster
+      Webmaster
     </p>
   `
 });
@@ -941,7 +942,7 @@ module.exports.getMigrationFollowupEmail = ({
     Best,
     
     Craig F
-    President/Webmaster
+    Webmaster
   `,
   html: `
     <p>Hi ${firstName}!</p>
@@ -956,7 +957,7 @@ module.exports.getMigrationFollowupEmail = ({
       Best,<br/>
       <br/>
       Craig F<br/>
-      President/Webmaster
+      Webmaster
     </p>
   `
 });

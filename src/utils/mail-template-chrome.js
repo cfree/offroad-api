@@ -1,3 +1,5 @@
+const { clubAddress } = require("../config");
+
 const getTransactionalTemplate = (preheader, subject, body) => `
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html data-editor-version="2" class="sg-campaigns" xmlns="http://www.w3.org/1999/xhtml">
@@ -275,7 +277,7 @@ const getTransactionalTemplate = (preheader, subject, body) => `
     <tbody>
       <tr>
         <td style="padding:18px 0px 18px 0px; line-height:14px; text-align:inherit;" height="100%" valign="top" bgcolor="" role="module-content"><div><div style="font-family: inherit; text-align: center"><span style="font-size: 12px">4-Players of Colorado</span></div>
-        <div style="font-family: inherit; text-align: center"><span style="font-size: 12px">PO Box 300442, Denver, CO 80203</span></div>
+        <div style="font-family: inherit; text-align: center"><span style="font-size: 12px">${clubAddress}</span></div>
         <div style="font-family: inherit; text-align: center"><br></div>
         <div style="font-family: inherit; text-align: center"><a href="https://members.4-playersofcolorado.org/settings/notifications"><span style="font-size: 12px">Update notifications preferences</span></a></div><div></div></div></td>
       </tr>
