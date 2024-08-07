@@ -79,7 +79,7 @@ module.exports = {
   clubName: "4-Players of Colorado",
   clubPOBox: "PO Box 300001",
   clubCityStateZip: "Denver, CO 80203",
-  clubAddress: `${this.clubPOBox}, ${this.clubCityStateZip}`
+  clubAddress: "PO Box 300001, Denver, CO 80203"
 };
 
 /**
