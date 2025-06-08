@@ -180,7 +180,8 @@ const guestLockouts = async () =>
                     { startTime_gte: startOfYear(new Date()).toISOString() },
                     {
                       endTime_lt: endOfDay(subDays(new Date().toISOString(), 1))
-                    }
+                    },
+                    { type: "RUN" }
                   ]
                 }
               },
