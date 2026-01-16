@@ -38,7 +38,7 @@
     "gulp": "4.0.2",
     "ical-generator": "^3.4.3",
     "jsonwebtoken": "8.3.0",
-    "knex": "^2.0.0",
+    "knex": "^2.4.0",
     "md5": "^2.3.0",
     "node-fetch": "^2.6.0",
     "nodemailer": "^4.6.8",
