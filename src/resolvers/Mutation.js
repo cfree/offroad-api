@@ -2237,7 +2237,8 @@ const Mutations = {
 
     // Recalculate amount due (confirm)
     // const duesAmount = getDuesAmountIncludingFees(x, y);
-    const duesAmount = getDuesAmount();
+    const isAssociate = ctx.req.user.accountType === 'ASSOCIATE';
+    const duesAmount = getDuesAmount(isAssociate ? 0 : 1, isAssociate ? 1 : 0);
 
     // if (args.amount !== duesAmount) {
     //   throw new Error(
