@@ -879,23 +879,10 @@ const Mutations = {
           id: eventId
         }
       },
-      "{ id, title, rsvps { id }, featuredImage { id },  }"
+      "{ id, title, rsvps { id }, featuredImage { id }, trail { id } }"
     );
 
     try {
-      const db = knex({
-        client: "pg",
-        connection: {
-          connectionString: process.env.DATABASE_URL,
-          ssl: {
-            rejectUnauthorized: false
-          }
-        },
-        searchPath: ["default$default"]
-      });
-
-      // get event
-
       // delete featured image
       if (existingEvent.featuredImage && existingEvent.featuredImage.id) {
         await ctx.db.mutation.deleteCloudinaryImage({
@@ -903,22 +890,23 @@ const Mutations = {
         });
       }
 
-      // _EventTrail
-      await db("_EventTrail").where("A", eventId);
-
-      // delete rsvps
-      if (existingEvent.rsvps && existingEvent.rsvps.length > 0) {
-        await existingEvent.rsvps.map(async ({ id }) => {
-          await ctx.db.mutation.deleteRSVP({
-            where: { id }
-          });
+      // disconnect trail junction row
+      if (existingEvent.trail && existingEvent.trail.id) {
+        await ctx.db.mutation.updateEvent({
+          where: { id: eventId },
+          data: { trail: { disconnect: true } }
         });
       }
 
+      // delete rsvps
+      if (existingEvent.rsvps && existingEvent.rsvps.length > 0) {
+        await Promise.all(existingEvent.rsvps.map(({ id }) =>
+          ctx.db.mutation.deleteRSVP({ where: { id } })
+        ));
+      }
+
       // delete event
-      await db("Event")
-        .where("id", eventId)
-        .delete();
+      await ctx.db.mutation.deleteEvent({ where: { id: eventId } });
 
       return { message: `${existingEvent.title} event has been deleted` };
     } catch (e) {

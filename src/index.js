@@ -56,7 +56,9 @@ app.use(requireHTTPS);
 app.get("/calendar/upcoming/:count", calendar.getUpcoming);
 app.get("/calendar/ical", calendar.getIcal);
 
-app.use(cors(corsOptions));
+if (process.env.NODE_ENV === "production") {
+  app.use(cors(corsOptions));
+}
 app.use(cookieParser());
 
 // Decode the JWT to get user ID on each request
@@ -113,7 +115,7 @@ server.applyMiddleware({ app, cors: false });
 
 if (process.env.NODE_ENV === "development") {
   app.listen({ port: process.env.PORT }, () =>
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
+    console.log(`🚀 Server ready at http://localhost:${process.env.PORT}${server.graphqlPath}`)
   );
 } else {
   app.listen({ port: process.env.PORT }, () =>
