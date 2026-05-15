@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "cuid": "^2.1.8",
-    "knex": "^0.95.2",
+    "knex": "^2.4.0",
     "mysql": "^2.18.1",
     "pg": "^8.5.1",
     "php-serialize": "^4.0.2",
